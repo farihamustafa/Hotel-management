@@ -13,11 +13,12 @@ function Staffmanagement() {
       {/* Table (Responsive) */}
       <div className="overflow-x-auto min-w-full">
         <table className="w-full text-sm text-left rtl:text-right text-gray-800 dark:text-gray-400">
-          <thead className="text-xl text-gray-700 uppercase bg-blue-400 dark:text-gray-400">
+          <thead className="text-xl text-gray-700 uppercase bg-gray-200 dark:text-gray-400">
             <tr>
               <th className="px-4 py-3">#</th>
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Email</th>
+              <th className="px-4 py-3">Role</th>
               <th className="px-4 py-3">Phone</th>
               <th className="px-4 py-3">Address</th>
               <th className="px-4 py-3">CNIC</th>
@@ -29,6 +30,7 @@ function Staffmanagement() {
               <td className="px-4 py-3 border border-gray-300">1</td>
               <td className="px-4 py-3 border border-gray-300">John Doe</td>
               <td className="px-4 py-3 border border-gray-300">johndoe@example.com</td>
+              <td className="px-4 py-3 border border-gray-300">Role</td>
               <td className="px-4 py-3 border border-gray-300">123-456-7890</td>
               <td className="px-4 py-3 border border-gray-300 text-left">Address</td>
               <td className="px-4 py-3 border border-gray-300">13567778888</td>
@@ -51,6 +53,8 @@ function Staffmanagement() {
               <td className="px-4 py-3 border border-gray-300">2</td>
               <td className="px-4 py-3 border border-gray-300">Jane Smith</td>
               <td className="px-4 py-3 border border-gray-300">janesmith@example.com</td>
+              <td className="px-4 py-3 border border-gray-300">Role</td>
+
               <td className="px-4 py-3 border border-gray-300">987-654-3210</td>
               <td className="px-4 py-3 border border-gray-300">Address</td>
               <td className="px-4 py-3 border border-gray-300">13567778888</td>
