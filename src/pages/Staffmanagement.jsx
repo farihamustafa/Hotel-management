@@ -1,75 +1,80 @@
 import React from 'react';
+import { FaTrash, FaEdit, FaEnvelope } from 'react-icons/fa';
 
 function Staffmanagement() {
   return (
-    <div>
-      {/* Create New Staff Button */}
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">Staff Management</h1>
+      </div>
+
       <div className="mb-4">
         <button className="px-6 py-3 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-300">
-          Create New Staff
+          + Create New Staff
         </button>
       </div>
 
-      {/* Table (Responsive) */}
-      <div className="overflow-x-auto min-w-full">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-800 dark:text-gray-400">
-          <thead className="text-xl text-gray-700 uppercase bg-gray-200 dark:text-gray-400">
+      <div className="overflow-x-auto rounded-lg shadow-lg bg-white">
+        <table className="min-w-full text-sm text-left text-gray-800">
+          <thead className="bg-gray-500 text-white text-base uppercase">
             <tr>
-              <th className="px-4 py-3">#</th>
-              <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">Email</th>
-              <th className="px-4 py-3">Role</th>
-              <th className="px-4 py-3">Phone</th>
-              <th className="px-4 py-3">Address</th>
-              <th className="px-4 py-3">CNIC</th>
-              <th className="px-4 py-3">Actions</th>
+              <th className="px-6 py-3">#</th>
+              <th className="px-6 py-3">Name</th>
+              <th className="px-6 py-3">Email</th>
+              <th className="px-6 py-3">Role</th>
+              <th className="px-6 py-3">Phone</th>
+              <th className="px-6 py-3">Address</th>
+              <th className="px-6 py-3">CNIC</th>
+              <th className="px-6 py-3">Status</th>
+              <th className="px-6 py-3 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr className="bg-gray-50 hover:bg-gray-100 transition-colors">
-              <td className="px-4 py-3 border border-gray-300">1</td>
-              <td className="px-4 py-3 border border-gray-300">John Doe</td>
-              <td className="px-4 py-3 border border-gray-300">johndoe@example.com</td>
-              <td className="px-4 py-3 border border-gray-300">Role</td>
-              <td className="px-4 py-3 border border-gray-300">123-456-7890</td>
-              <td className="px-4 py-3 border border-gray-300 text-left">Address</td>
-              <td className="px-4 py-3 border border-gray-300">13567778888</td>
-              <td className="px-4 py-3 border border-gray-300 flex space-x-2">
-                <button className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300">
-                  Edit
+            <tr className="border-b hover:bg-gray-100 transition">
+              <td className="px-6 py-4">1</td>
+              <td className="px-6 py-4">John Doe</td>
+              <td className="px-6 py-4">johndoe@example.com</td>
+              <td className="px-6 py-4">Role</td>
+              <td className="px-6 py-4">123-456-7890</td>
+              <td className="px-6 py-4">Address</td>
+              <td className="px-6 py-4">13567778888</td>
+              <td className="px-6 py-4">
+                <span className="px-3 py-1 bg-green-100 text-green-800 rounded-md">
+                  <button>Active</button></span>
+              </td>
+              <td className="px-6 py-4 flex justify-center items-center space-x-4">
+                <button className="text-blue-500 hover:text-blue-700" title="Edit">
+                  <FaEdit size={18} />
                 </button>
-                <button className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300">
-                  Delete
+                <button className="text-red-500 hover:text-red-700" title="Delete">
+                  <FaTrash size={18} />
                 </button>
-                <button className="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-300">
-                  Status
-                </button>
-                <button className="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-300">
-                  Send Email
+                <button className="text-yellow-500 hover:text-yellow-700" title="Send Email">
+                  <FaEnvelope size={18} />
                 </button>
               </td>
             </tr>
-            <tr className="bg-gray-50 hover:bg-gray-100 transition-colors">
-              <td className="px-4 py-3 border border-gray-300">2</td>
-              <td className="px-4 py-3 border border-gray-300">Jane Smith</td>
-              <td className="px-4 py-3 border border-gray-300">janesmith@example.com</td>
-              <td className="px-4 py-3 border border-gray-300">Role</td>
 
-              <td className="px-4 py-3 border border-gray-300">987-654-3210</td>
-              <td className="px-4 py-3 border border-gray-300">Address</td>
-              <td className="px-4 py-3 border border-gray-300">13567778888</td>
-              <td className="px-4 py-3 border border-gray-300 flex space-x-2">
-                <button className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300">
-                  Edit
+            <tr className="border-b hover:bg-gray-100 transition">
+              <td className="px-6 py-4">2</td>
+              <td className="px-6 py-4">Jane Smith</td>
+              <td className="px-6 py-4">janesmith@example.com</td>
+              <td className="px-6 py-4">Role</td>
+              <td className="px-6 py-4">987-654-3210</td>
+              <td className="px-6 py-4">Address</td>
+              <td className="px-6 py-4">13567778888</td>
+              <td className="px-6 py-4">
+                <span className="px-3 py-1 bg-red-100 text-red-800 rounded-md">Inactive</span>
+              </td>
+              <td className="px-6 py-4 flex justify-center items-center space-x-4">
+                <button className="text-blue-500 hover:text-blue-700" title="Edit">
+                  <FaEdit size={18} />
                 </button>
-                <button className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300">
-                  Delete
+                <button className="text-red-500 hover:text-red-700" title="Delete">
+                  <FaTrash size={18} />
                 </button>
-                <button className="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-300">
-                  Status
-                </button>
-                <button className="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-300">
-                  Send Email
+                <button className="text-yellow-500 hover:text-yellow-700" title="Send Email">
+                  <FaEnvelope size={18} />
                 </button>
               </td>
             </tr>
