@@ -7,8 +7,13 @@ export default {
     flowbite.content(),
   ],
   theme: {
-    extend: {},
+    colors: {
+      primary: "maroon", 
+      hoverbutton:"#404040",
+      secondary: "#5A5A5A",//colour for button
+      light: "#FAFAFA", 
   },
+},
   plugins: [
     flowbite.plugin(),
   ],
