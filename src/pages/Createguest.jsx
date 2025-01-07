@@ -1,19 +1,21 @@
-import React from 'react';
+import React from 'react'
 import { FiX } from 'react-icons/fi'; 
 
-function Createstaff() {
+function Createguest() {
   return (
     <div className="bg-slate-200 min-h-screen flex items-center justify-center px-4">
       <div className="max-w-3xl w-full bg-white shadow-2xl rounded-3xl p-8 relative">
+        {/* Cancel Icon Button */}
         <button className="absolute top-4 right-4 text-gray-500 hover:text-gray-800">
           <FiX className="h-6 w-6" aria-hidden="true" /> 
         </button>
 
+        {/* Form Heading */}
         <h1 className="text-4xl font-bold text-gray-800 mb-6 text-left border-b pb-4 border-gray-300">
-          Add <span className="text-red-800">New</span> Staff
+          Add <span className="text-red-800">New</span> Guest
         </h1>
-
         <form>
+          {/* Input Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
             <div>
               <label className="block text-sm text-gray-600 mb-2">S.No</label>
@@ -44,7 +46,7 @@ function Createstaff() {
               <input
                 type="text"
                 className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition"
-                placeholder="Manager"
+                placeholder="Guest"
               />
             </div>
             <div>
@@ -64,34 +66,36 @@ function Createstaff() {
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-600 mb-2">CNIC</label>
+              <label className="block text-sm text-gray-600 mb-2">Nationality</label>
               <input
                 type="text"
                 className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition"
-                placeholder="12345-6789012-3"
+                placeholder="American"
               />
             </div>
             <div>
               <label className="block text-sm text-gray-600 mb-2">Status</label>
-              <select className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition">
+              <select
+                className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition"
+              >
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
               </select>
             </div>
           </div>
-
+          {/* Submit Button */}
           <div className="text-left">
             <button
               type="submit"
-              className="px-6 py-3 rounded-xl bg-secondary text-white font-medium hover:bg-hoverbutton transition shadow-lg"
+              className="px-6 py-3 rounded-xl bg-gray-600 text-white font-medium hover:bg-red-800 transition shadow-lg"
             >
-              Save Staff
+              Save Guest
             </button>
           </div>
         </form>
       </div>
     </div>
-  );
+  )
 }
 
-export default Createstaff;
+export default Createguest

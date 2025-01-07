@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; 
 
 const RoomBooking = () => {
-  // Static data for rooms
-  const [rooms, setRooms] = useState([
+  const navigate = useNavigate();
+
+  const handleCreateNewBooking = () => {
+    navigate('/newbooking');
+  };
+
+
+ 
+  const [rooms] = useState([
     {
       id: 1,
       type: 'Single Room',
@@ -26,16 +34,6 @@ const RoomBooking = () => {
     },
   ]);
 
-  // Function to handle room booking
-  const handleBooking = (roomId, guestName) => {
-    setRooms(rooms.map((room) => {
-      if (room.id === roomId && room.status === 'Available') {
-        return { ...room, status: 'Occupied', guest: guestName };
-      }
-      return room;
-    }));
-  };
-
   return (
     <div className="p-6 bg-light min-h-screen">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Room Booking</h1>
@@ -49,7 +47,7 @@ const RoomBooking = () => {
               <th className="px-6 py-3">Status</th>
               <th className="px-6 py-3">Price</th>
               <th className="px-6 py-3">Guest</th>
-              <th className="px-6 py-3 text-center">Actions</th>
+              <th className="px-6 py-3">Newbooking</th>
             </tr>
           </thead>
           <tbody>
@@ -70,24 +68,7 @@ const RoomBooking = () => {
                 </td>
                 <td className="px-6 py-4">{room.price}</td>
                 <td className="px-6 py-4">{room.guest ? room.guest : 'N/A'}</td>
-                <td className="px-6 py-4 flex justify-center items-center space-x-4">
-                  {room.status === 'Available' ? (
-                    <button
-                      className="text-blue-500 hover:text-blue-700"
-                      onClick={() => {
-                        const guestName = prompt('Enter guest name:');
-                        if (guestName) {
-                          handleBooking(room.id, guestName);
-                        }
-                      }}
-                      title="Book Room"
-                    >
-                      Book Now
-                    </button>
-                  ) : (
-                    <span className="text-gray-400">Booked</span>
-                  )}
-                </td>
+                <td><button     onClick={handleCreateNewBooking} >book now</button></td>
               </tr>
             ))}
           </tbody>

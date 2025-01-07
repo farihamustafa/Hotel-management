@@ -8,7 +8,7 @@ export default {
   ],
   theme: {
     colors: {
-      primary: "maroon", 
+      primary: "#850b11		", 
       hoverbutton:"#404040",
       secondary: "#5A5A5A",//colour for button
       light: "#FAFAFA", 
