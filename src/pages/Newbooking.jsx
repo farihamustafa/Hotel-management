@@ -41,7 +41,7 @@ function NewBooking() {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen p-8">
+  
       <div className="max-w-6xl mx-auto bg-white p-8 rounded-lg shadow-md">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold leading-4">
@@ -289,7 +289,6 @@ function NewBooking() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
 

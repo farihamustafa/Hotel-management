@@ -11,12 +11,12 @@ const SideNavigation = () => {
 
   return (
     <nav className="text-secondary min-h-screen w-64 p-4 shadow-lg bg-white">
-      <ul className="space-y-6">
+      <ul className="space-y-2"> {/* Reduced margin between list items */}
         {/* Dashboard */}
         <li className="group">
           <Link
             to="/"
-            className="flex items-center p-3 rounded-lg group-hover:bg-primary hover:shadow-md hover:text-white transition-all"
+            className="flex items-center p-2 rounded-lg group-hover:bg-primary hover:shadow-md hover:text-white transition-all"
           >
             <FaTachometerAlt className="text-xl mr-4" />
             <span className="text-lg font-semibold">Dashboard</span>
@@ -27,7 +27,7 @@ const SideNavigation = () => {
         <li className="group">
           <Link
             to="/staffmanagement"
-            className="flex items-center p-3 rounded-lg group-hover:bg-primary hover:shadow-md hover:text-white transition-all"
+            className="flex items-center p-2 rounded-lg group-hover:bg-primary hover:shadow-md hover:text-white transition-all"
           >
             <FaUsers className="text-xl mr-4" />
             <span className="text-lg font-semibold">Staff Management</span>
@@ -38,7 +38,7 @@ const SideNavigation = () => {
         <li className="group">
           <Link
             to="/guestmanagement"
-            className="flex items-center p-3 rounded-lg group-hover:bg-primary hover:shadow-md hover:text-white transition-all"
+            className="flex items-center p-2 rounded-lg group-hover:bg-primary hover:shadow-md hover:text-white transition-all"
           >
             <FaHotel className="text-xl mr-4" />
             <span className="text-lg font-semibold">Guest Management</span>
@@ -49,7 +49,7 @@ const SideNavigation = () => {
         <li className="group">
           <div
             onClick={toggleRoomDropdown}
-            className="flex items-center p-3 rounded-lg cursor-pointer group-hover:bg-primary hover:shadow-md hover:text-white transition-all"
+            className="flex items-center p-2 rounded-lg cursor-pointer group-hover:bg-primary hover:shadow-md hover:text-white transition-all"
           >
             <FaDoorOpen className="text-xl mr-4" />
             <span className="text-lg font-semibold">Room Management</span>
@@ -58,11 +58,11 @@ const SideNavigation = () => {
             </span>
           </div>
           {isRoomDropdownOpen && (
-            <ul className="ml-6 mt-2 space-y-3">
+            <ul className="ml-6 mt-1 space-y-1"> {/* Reduced margin in dropdown */}
               <li className="group">
                 <Link
                   to="/roommanagement/roominventory"
-                  className="flex items-center p-2 rounded-lg group-hover:bg-primary hover:text-white transition-all"
+                  className="flex items-center p-1 rounded-lg group-hover:bg-primary hover:text-white transition-all"
                 >
                   <FaBed className="text-xl mr-4" />
                   <span className="text-md">Room Inventory</span>
@@ -71,7 +71,7 @@ const SideNavigation = () => {
               <li className="group">
                 <Link
                   to="/roombooking"
-                  className="flex items-center p-2 rounded-lg group-hover:bg-primary hover:text-white transition-all"
+                  className="flex items-center p-1 rounded-lg group-hover:bg-primary hover:text-white transition-all"
                 >
                   <FaCalendarCheck className="text-xl mr-4" />
                   <span className="text-md">Room Booking</span>

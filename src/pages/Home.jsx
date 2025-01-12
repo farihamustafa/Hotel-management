@@ -70,9 +70,9 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen p-6 bg-gray-100 text-gray-800">
+    <>
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
         <StatsCard title="Sales" amount="$424,652" chartColor="text-blue-400" />
         <StatsCard title="Expenses" amount="$235,312" chartColor="text-gray-300" />
         <StatsCard title="Profits" amount="$135,965" chartColor="text-blue-600" />
@@ -199,8 +199,8 @@ const Home = () => {
     </div>
   </div>
 </div>
+</>
 
-</div>
 
     
   );
