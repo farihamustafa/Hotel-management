@@ -11,6 +11,7 @@ import RoomInventory from './pages/Roominventory';
 import RoomBooking from './pages/Roombooking';
 import Createguest from './pages/Createguest';
 import Newbooking from './pages/Newbooking';
+import Notification from './pages/Notification';
 
 
 function App() {
@@ -27,7 +28,8 @@ function App() {
   <Route path='/roommanagement/roominventory' element={<Authlayout><RoomInventory/></Authlayout>}  />
   <Route path='/roombooking' element={<Authlayout><RoomBooking/></Authlayout>}  />
   <Route path='/newbooking' element={<Authlayout><Newbooking/></Authlayout>}  />
-  v
+  <Route path='/notifications' element={<Authlayout><Notification/></Authlayout>}  />
+  
   </Routes>
   </BrowserRouter>
 
