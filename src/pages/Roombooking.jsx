@@ -68,10 +68,10 @@ const RoomBooking = () => {
                 </td>
                 <td className="px-6 py-4">{room.price}</td>
                 <td className="px-6 py-4">{room.guest ? room.guest : 'N/A'}</td>
-                <td className="text-center">
+                <td className="px-6 py-4">
   <button
     onClick={handleCreateNewBooking}
-    className=" text-blue-700 font-semibold hover:text-red-700"
+    className="text-blue-700 font-semibold hover:text-red-700"
   >
     Book Now
   </button>

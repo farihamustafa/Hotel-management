@@ -42,11 +42,11 @@ const Notification = () => {
       date: 'Jan 8',
       isRead: true,
     },
-
   ];
 
-  const [notificationList, setNotificationList] = useState(notifications.slice(0, 3));
-  const [visibleCount, setVisibleCount] = useState(3); 
+  const [notificationList, setNotificationList] = useState([notifications[0]]);
+  const [visibleCount, setVisibleCount] = useState(1);
+
   const markAsRead = (id) => {
     const updatedNotifications = notificationList.map((notif) =>
       notif.id === id ? { ...notif, isRead: true } : notif
@@ -54,7 +54,6 @@ const Notification = () => {
     setNotificationList(updatedNotifications);
   };
 
-  
   const markAsUnread = (id) => {
     const updatedNotifications = notificationList.map((notif) =>
       notif.id === id ? { ...notif, isRead: false } : notif
@@ -62,16 +61,15 @@ const Notification = () => {
     setNotificationList(updatedNotifications);
   };
 
-
   const loadMoreNotifications = () => {
-    const nextVisibleCount = visibleCount + 3; 
-    setVisibleCount(nextVisibleCount);
-    setNotificationList(notifications.slice(0, nextVisibleCount)); 
+    if (visibleCount < notifications.length) {
+      setNotificationList([...notificationList, notifications[visibleCount]]);
+      setVisibleCount(visibleCount + 1);
+    }
   };
 
   return (
-   <>
-      
+    <>
       <div className="space-y-4">
         {notificationList.map((notif) => (
           <div
@@ -84,7 +82,6 @@ const Notification = () => {
               <span className="text-xs text-gray-500">{notif.date}</span>
               <span className="text-xs text-gray-500">{notif.time}</span>
             </div>
-
             <h3 className="font-semibold text-lg">{notif.title}</h3>
             <p className="text-sm text-gray-600">{notif.description}</p>
             <div className="flex justify-between items-center mt-2">
@@ -111,10 +108,10 @@ const Notification = () => {
         ))}
       </div>
       {visibleCount < notifications.length && (
-        <div className=" mt-4">
+        <div className="mt-4">
           <button
             onClick={loadMoreNotifications}
-            className=" text-secondary px-4 py-2 rounded-md"
+            className="text-secondary px-4 py-2 rounded-md"
           >
             Load More
           </button>
