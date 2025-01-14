@@ -36,10 +36,10 @@ const Navbar = () => {
         <span className="text-xl font-bold text-white">Hotel Management</span>
 
         {/* Notification and User Profile */}
-        <div className="flex items-center space-x-4 relative">
+        <div className="flex items-center space-x-5 relative">
           {/* Notification Button */}
           <button
-            className="text-white hover:text-secondary relative"
+            className="text-white hover"
             aria-label="Notifications"
             onClick={toggleDropdown}
           >

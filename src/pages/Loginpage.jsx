@@ -5,7 +5,7 @@ const LoginPage = () => {
     <div className="flex min-h-screen">
       <div className="hidden md:flex md:w-3/5 bg-gray-200">
         <img
-          src="https://live.staticflickr.com/8525/8536511914_0f44f12b47_b.jpg"
+          src="/assets/img/hotelimage.jpg"
           alt="Login Illustration"
           className="object-cover w-full h-full"
         />
