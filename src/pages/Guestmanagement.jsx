@@ -9,7 +9,6 @@ function Guestmanagement() {
     navigate('/createguest');
   };
 
-  // Example static data for guests (could be dynamic in the future)
   const guests = [
     {
       id: 1,
@@ -30,9 +29,13 @@ function Guestmanagement() {
       status: 'Inactive',
     },
   ];
+  
+  const handleEditGuest = (guest) => {
+    navigate('/editguest/:id', { guest: { guest } });
+  };
 
   return (
-    <div className="p-6 bg-light min-h-screen"> {/* Replaced bg-light with bg-gray-100 for consistency */}
+    <div className="p-6 bg-light min-h-screen"> 
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Guest Management</h1>
       </div>
@@ -79,7 +82,11 @@ function Guestmanagement() {
                   </span>
                 </td>
                 <td className="px-6 py-4 flex justify-center items-center space-x-4">
-                  <button className="text-blue-500 hover:text-blue-700" title="Edit">
+                <button
+                    onClick={() => handleEditGuest(guest)}
+                    className="text-blue-500 hover:text-blue-700"
+                    title="Edit"
+                  >
                     <FaEdit size={18} />
                   </button>
                   <button className="text-red-500 hover:text-red-700" title="Delete">

@@ -10,7 +10,7 @@ function Staffmanagement() {
   };
 
   const handleEditStaff = (staff) => {
-    navigate('/editstaff', { state: { staff } });
+    navigate('/editstaff/:id', { state: { staff } });
   };
 
   const staffList = [
