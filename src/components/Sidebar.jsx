@@ -94,6 +94,15 @@ const SideNavigation = () => {
                   <span className="text-md">Room Booking</span>
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/createroom"
+                  className={`flex items-center p-1 rounded-lg transition-all ${isActive('/roombooking') ? 'bg-primary text-white' : 'hover:bg-primary hover:text-white'}`}
+                >
+                  <FaCalendarCheck className="text-xl mr-4" />
+                  <span className="text-md">Create Room</span>
+                </Link>
+              </li>
             </ul>
           )}
         </li>

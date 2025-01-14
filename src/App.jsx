@@ -17,6 +17,7 @@ import LoginPage from './pages/Loginpage';
 import EditStaff from './pages/EditStaff';
 import EditProfile from './pages/EditProfile';
 import EditGuest from './pages/EditGuest';
+import CreateRoom from './pages/Createroom';
 
 
 
@@ -38,6 +39,7 @@ function App() {
   <Route path='/roommanagement/roominventory' element={<Authlayout><RoomInventory/></Authlayout>}  />
   <Route path='/roombooking' element={<Authlayout><RoomBooking/></Authlayout>}  />
   <Route path='/newbooking' element={<Authlayout><Newbooking/></Authlayout>}  />
+  <Route path='/createroom' element={<Authlayout><CreateRoom/></Authlayout>}  />
 
   <Route path='/notifications' element={<Authlayout><Notification/></Authlayout>}  />
 
