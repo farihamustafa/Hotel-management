@@ -108,28 +108,8 @@ function EditProfile() {
                 placeholder="john@example.com"
               />
             </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-2">Phone</label>
-              <input
-                type="text"
-                name="phone"
-                value={profile.phone}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition"
-                placeholder="123-456-7890"
-              />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-2">Address</label>
-              <input
-                type="text"
-                name="address"
-                value={profile.address}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition"
-                placeholder="123 Main St"
-              />
-            </div>
+  
+           
             <div>
               <label className="block text-sm text-gray-600 mb-2">Status</label>
               <select
