@@ -23,8 +23,14 @@ function App() {
   <Routes>
   <Route path='/' element={<Authlayout><Home/></Authlayout>}  />
   <Route path='/staffmanagement' element={<Authlayout><Staffmanagement/></Authlayout>}  />
+  <Route path="/editstaff/:id" element={<Authlayout><Staffmanagement/></Authlayout>}/>
+  <Route path="/editstaff" element={<EditStaff />} />
+  <Route path="/editprofile"  element={<EditProfile/> }/>
+
   <Route path='/guestmanagement' element={<Authlayout><Guestmanagement/></Authlayout>}  />
   <Route path='/createstaff' element={<Authlayout><Createstaff/></Authlayout>}  />
+  
+  <Route path='/editstaff/:id' element={<Authlayout><EditStaff/></Authlayout>}  />
   <Route path='/createguest' element={<Authlayout><Createguest/></Authlayout>}  />
   <Route path='/roommanagement/roominventory' element={<Authlayout><RoomInventory/></Authlayout>}  />
   <Route path='/roombooking' element={<Authlayout><RoomBooking/></Authlayout>}  />

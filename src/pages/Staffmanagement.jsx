@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaTrash, FaEdit, FaEnvelope } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 
 function Staffmanagement() {
   const navigate = useNavigate();
@@ -8,6 +8,35 @@ function Staffmanagement() {
   const handleCreateNewStaff = () => {
     navigate('/createstaff');
   };
+
+  const handleEditStaff = (staff) => {
+    navigate('/editstaff', { state: { staff } });
+  };
+
+  const staffList = [
+    {
+      id: 1,
+      serialNo: 1,
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      role: 'Manager',
+      phone: '123-456-7890',
+      address: '123 Main St',
+      cnic: '12345-6789012-3',
+      status: 'Active',
+    },
+    {
+      id: 2,
+      serialNo: 2,
+      name: 'Jane Smith',
+      email: 'janesmith@example.com',
+      role: 'Assistant',
+      phone: '987-654-3210',
+      address: '456 Elm St',
+      cnic: '98765-4321098-7',
+      status: 'Inactive',
+    },
+  ];
 
   return (
     <div className="p-6 bg-light min-h-screen">
@@ -17,7 +46,7 @@ function Staffmanagement() {
 
       <div className="mb-4">
         <button
-          onClick={handleCreateNewStaff} 
+          onClick={handleCreateNewStaff}
           className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
         >
           + Create New Staff
@@ -40,56 +69,45 @@ function Staffmanagement() {
             </tr>
           </thead>
           <tbody>
-           <tr className="border-b hover:bg-gray-100 transition">
-                           <td className="px-6 py-4">1</td>
-                           <td className="px-6 py-4">John Doe</td>
-                           <td className="px-6 py-4">johndoe@example.com</td>
-                           <td className="px-6 py-4">Role</td>
-                           <td className="px-6 py-4">123-456-7890</td>
-                           <td className="px-6 py-4">Address</td>
-                           <td className="px-6 py-4">13567778888</td>
-                           <td className="px-6 py-4">
-                             <span className="px-3 py-1 bg-green-100 text-green-800 rounded-md">
-                               <button>Active</button></span>
-                           </td>
-                           <td className="px-6 py-4 flex justify-center items-center space-x-4">
-                             <button className="text-blue-500 hover:text-blue-700" title="Edit">
-                               <FaEdit size={18} />
-                             </button>
-                             <button className="text-red-500 hover:text-red-700" title="Delete">
-                               <FaTrash size={18} />
-                             </button>
-                             <button className="text-yellow-500 hover:text-yellow-700" title="Send Email">
-                               <FaEnvelope size={18} />
-                             </button>
-                           </td>
-                         </tr>
-             
-                         <tr className="border-b hover:bg-gray-100 transition">
-                           <td className="px-6 py-4">2</td>
-                           <td className="px-6 py-4">Jane Smith</td>
-                           <td className="px-6 py-4">janesmith@example.com</td>
-                           <td className="px-6 py-4">Role</td>
-                           <td className="px-6 py-4">987-654-3210</td>
-                           <td className="px-6 py-4">Address</td>
-                           <td className="px-6 py-4">13567778888</td>
-                           <td className="px-6 py-4">
-                             <span className="px-3 py-1 bg-red-100 text-red-800 rounded-md">Inactive</span>
-                           </td>
-                           <td className="px-6 py-4 flex justify-center items-center space-x-4">
-                             <button className="text-blue-500 hover:text-blue-700" title="Edit">
-                               <FaEdit size={18} />
-                             </button>
-                             <button className="text-red-500 hover:text-red-700" title="Delete">
-                               <FaTrash size={18} />
-                             </button>
-                             <button className="text-yellow-500 hover:text-yellow-700" title="Send Email">
-                               <FaEnvelope size={18} />
-                             </button>
-                           </td>
-                         </tr>
-                       </tbody>
-                     </table>
+            {staffList.map((staff) => (
+              <tr key={staff.id} className="border-b hover:bg-gray-100 transition">
+                <td className="px-6 py-4">{staff.serialNo}</td>
+                <td className="px-6 py-4">{staff.name}</td>
+                <td className="px-6 py-4">{staff.email}</td>
+                <td className="px-6 py-4">{staff.role}</td>
+                <td className="px-6 py-4">{staff.phone}</td>
+                <td className="px-6 py-4">{staff.address}</td>
+                <td className="px-6 py-4">{staff.cnic}</td>
+                <td className="px-6 py-4">
+                  <span
+                    className={`px-3 py-1 rounded-md ${
+                      staff.status === 'Active'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'
+                    }`}
+                  >
+                    {staff.status}
+                  </span>
+                </td>
+                <td className="px-6 py-4 flex justify-center items-center space-x-4">
+                  <button
+                    onClick={() => handleEditStaff(staff)}
+                    className="text-blue-500 hover:text-blue-700"
+                    title="Edit"
+                  >
+                    <FaEdit size={18} />
+                  </button>
+                  <button className="text-red-500 hover:text-red-700" title="Delete">
+                    <FaTrash size={18} />
+                  </button>
+                  <button className="text-yellow-500 hover:text-yellow-700" title="Send Email">
+                    <FaEnvelope size={18} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
