@@ -26,7 +26,7 @@ function App() {
   <Route path='/staffmanagement' element={<Authlayout><Staffmanagement/></Authlayout>}  />
   <Route path="/editstaff/:id" element={<Authlayout><EditStaff/></Authlayout>}/>
   <Route path="/editguest/:id" element={<Authlayout><EditGuest/></Authlayout>}/>
-
+  
 
   <Route path='/guestmanagement' element={<Authlayout><Guestmanagement/></Authlayout>}  />
   <Route path='/createstaff' element={<Authlayout><Createstaff/></Authlayout>}  />
@@ -34,7 +34,7 @@ function App() {
   <Route path='/roommanagement/roominventory' element={<Authlayout><RoomInventory/></Authlayout>}  />
   <Route path='/roombooking' element={<Authlayout><RoomBooking/></Authlayout>}  />
   <Route path='/newbooking' element={<Authlayout><Newbooking/></Authlayout>}  />
-  v
+ 
   </Routes>
   </BrowserRouter>
 
