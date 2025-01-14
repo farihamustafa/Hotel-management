@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FaBell } from 'react-icons/fa';
 const Breadcrumb = () => {
@@ -78,12 +78,7 @@ const Navbar = () => {
           <Breadcrumb />
         </div>
 
-        {/* User Profile */}
-        <img
-          src="https://th.bing.com/th/id/OIP.M4cV2XkzqBU0CZK4efhDsgHaHa?w=201&h=200&c=7&r=0&o=5&dpr=1.1&pid=1.7"
-          alt="User Profile"
-          className="h-10 w-10 rounded-full border-2 border-white"
-        />
+       
 
        
         {/* Notification and User Profile */}
