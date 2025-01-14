@@ -85,7 +85,7 @@ const CreateRoom = () => {
                   type="checkbox"
                   name="facilities"
                   value={facility}
-                  className="mr-2"
+                  className="mr-2 rounded-full w-5 h-5 border border-gray-300"
                 />
                 {facility}
               </label>

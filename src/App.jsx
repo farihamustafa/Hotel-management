@@ -37,9 +37,9 @@ function App() {
   <Route path='/createstaff' element={<Authlayout><Createstaff/></Authlayout>}  />
     <Route path='/createguest' element={<Authlayout><Createguest/></Authlayout>}  />
   <Route path='/roommanagement/roominventory' element={<Authlayout><RoomInventory/></Authlayout>}  />
-  <Route path='/roombooking' element={<Authlayout><RoomBooking/></Authlayout>}  />
+  <Route path='/roommanagement/roombooking' element={<Authlayout><RoomBooking/></Authlayout>}  />
   <Route path='/newbooking' element={<Authlayout><Newbooking/></Authlayout>}  />
-  <Route path='/createroom' element={<Authlayout><CreateRoom/></Authlayout>}  />
+  <Route path='/roommanagement/createroom' element={<Authlayout><CreateRoom/></Authlayout>}  />
 
   <Route path='/notifications' element={<Authlayout><Notification/></Authlayout>}  />
 
