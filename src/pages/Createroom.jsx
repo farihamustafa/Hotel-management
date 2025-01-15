@@ -1,10 +1,47 @@
 import React from "react";
+import {
+  FaWifi,
+  FaCoffee,
+  FaBath,
+  FaParking,
+  FaSwimmer,
+  FaUtensils,
+  FaDumbbell,
+  FaGlassCheers,
+  FaTshirt,
+} from "react-icons/fa";
+const facilitiesData = [
+  { name: "WiFi", icon: <FaWifi /> },
+  { name: "Coffee", icon: <FaCoffee /> },
+  { name: "Bath", icon: <FaBath /> },
+  { name: "Parking Space", icon: <FaParking /> },
+  { name: "Swimming Pool", icon: <FaSwimmer /> },
+  { name: "Breakfast", icon: <FaUtensils /> },
+  { name: "Gym", icon: <FaDumbbell /> },
+  { name: "Drinks", icon: <FaGlassCheers /> },
+  { name: "Laundry", icon: <FaTshirt /> },
+];
 
 const CreateRoom = () => {
   return (
     <>
-      <h2 className="text-2xl font-semibold mb-6 text-center">Create a Room</h2>
-      <form className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">Create a Room</h2>
+      <form className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Room Title */}
+        <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+          <label htmlFor="roomTitle" className="block text-gray-700 mb-1">
+            Room Title
+          </label>
+          <input
+            type="text"
+            id="roomTitle"
+            name="roomTitle"
+            placeholder="Enter Room Title"
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            required
+          />
+        </div>
+
         {/* Room Type */}
         <div>
           <label htmlFor="roomType" className="block text-gray-700 mb-1">
@@ -68,30 +105,24 @@ const CreateRoom = () => {
         {/* Facilities */}
         <div className="col-span-1 sm:col-span-2 lg:col-span-3">
           <label className="block text-gray-700 mb-2">Facilities</label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-gray-700">
-            {[
-              "WiFi",
-              "Coffee",
-              "Bath",
-              "Parking Space",
-              "Swimming Pool",
-              "Breakfast",
-              "Gym",
-              "Drinks",
-              "Laundry",
-            ].map((facility) => (
-              <label key={facility} className="flex items-center">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-gray-700">
+            {facilitiesData.map((facility) => (
+              <label key={facility.name} className="flex items-center">
                 <input
                   type="checkbox"
                   name="facilities"
-                  value={facility}
-                  className="mr-2 rounded-full w-5 h-5 border border-gray-300"
+                  value={facility.name}
+                  className="mr-2 rounded w-5 h-5 border border-gray-300"
                 />
-                {facility}
+                <span className="flex items-center space-x-2">
+                  {facility.icon}
+                  <span>{facility.name}</span>
+                </span>
               </label>
             ))}
           </div>
         </div>
+
 
         {/* Price */}
         <div>
@@ -108,37 +139,44 @@ const CreateRoom = () => {
           />
         </div>
 
-        {/* Images (Side by side) */}
-        <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex space-x-4">
-          <div className="w-full">
+        {/* Images */}
+        <div className="col-span-1 sm:col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
             <label className="block text-gray-700 mb-1" htmlFor="file_input_1">
               Upload file
             </label>
             <input
-              className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+              className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
               id="file_input_1"
               type="file"
             />
           </div>
-          <div className="w-full">
+          <div>
             <label className="block text-gray-700 mb-1" htmlFor="file_input_2">
               Upload file
             </label>
             <input
-              className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+              className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
               id="file_input_2"
               type="file"
             />
           </div>
         </div>
 
-        {/* Submit Button */}
-        <div className="flex justify-center items-center col-span-1 sm:col-span-2 lg:col-span-3">
+        {/* Submit and Cancel Buttons */}
+        <div className="flex justify-end items-center col-span-1 sm:col-span-2 lg:col-span-3 space-x-4">
+         
           <button
-            type="button"
+            type="submit"
             className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
           >
-            Create Room
+            Create
+          </button>
+          <button
+            type="button"
+            className="px-6 py-3 bg-red-700 text-white rounded-md hover:bg-red-800 text-white transition duration-300"
+          >
+            Cancel
           </button>
         </div>
       </form>
