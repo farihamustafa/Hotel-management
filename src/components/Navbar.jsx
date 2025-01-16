@@ -28,7 +28,7 @@ const Breadcrumb = () => {
               ) : (
                 <Link
                   to={path}
-                  className="text-white font-semibold hover:underline"
+                  className="text-white font-bold hover:underline"
                 >
                   {part.charAt(0).toUpperCase() + part.slice(1)}
                 </Link>

@@ -43,7 +43,7 @@ function App() {
   <Route path='/roommanagement/createroom' element={<Authlayout><CreateRoom/></Authlayout>}  />
 
   <Route path='/notifications' element={<Authlayout><Notification/></Authlayout>}  />
-  <Route path='/roomreports' element={<Authlayout><Roomreports/></Authlayout>}  />
+  <Route path='/housekeeping/roomreport' element={<Authlayout><Roomreports/></Authlayout>}  />
 
  
 

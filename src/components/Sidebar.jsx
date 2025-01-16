@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaTachometerAlt, FaUsers, FaHotel, FaDoorOpen, FaBed, FaCalendarCheck ,FaPlusSquare } from 'react-icons/fa';
+import { FaTachometerAlt, FaUsers, FaHotel, FaDoorOpen, FaBed, FaCalendarCheck, FaPlusSquare, FaBroom,FaListAlt   } from 'react-icons/fa';
 
 const SideNavigation = () => {
   const [isRoomDropdownOpen, setRoomDropdownOpen] = useState(false);
-  const location = useLocation();  // Get current route
+  const [isHousekeepingDropdownOpen, setHousekeepingDropdownOpen] = useState(false); // New state for housekeeping dropdown
+  const location = useLocation(); // Get current route
 
   // Toggle Room Management dropdown
   const toggleRoomDropdown = () => {
     setRoomDropdownOpen(!isRoomDropdownOpen);
+  };
+
+  // Toggle Housekeeping dropdown
+  const toggleHousekeepingDropdown = () => {
+    setHousekeepingDropdownOpen(!isHousekeepingDropdownOpen);
   };
 
   // Helper function to check if the link is active
@@ -19,15 +25,14 @@ const SideNavigation = () => {
       <ul className="space-y-2">
         {/* Logo */}
         <li className="flex justify-center">
-  <Link to="/" className="w-full p-2">
-    <img 
-      src="https://www.designmantic.com/logo-images/727.png?company=Company%20Name&keyword=hotel&slogan=&verify=1"  // Logo URL
-      alt="Logo"
-      className="w-48 h-16 object-contain"  // Adjust width to 48 and height to 16 to make the logo rectangular
-    />
-  </Link>
-</li>
-
+          <Link to="/" className="w-full p-2">
+            <img
+              src="https://www.designmantic.com/logo-images/727.png?company=Company%20Name&keyword=hotel&slogan=&verify=1"
+              alt="Logo"
+              className="w-48 h-16 object-contain"
+            />
+          </Link>
+        </li>
 
         {/* Dashboard */}
         <li>
@@ -99,21 +104,39 @@ const SideNavigation = () => {
                   to="/roommanagement/createroom"
                   className={`flex items-center p-1 rounded-lg transition-all ${isActive('/roombooking') ? 'bg-primary text-white' : 'hover:bg-primary hover:text-white'}`}
                 >
-                  <FaPlusSquare  className="text-xl mr-4" />
+                  <FaPlusSquare className="text-xl mr-4" />
                   <span className="text-md">Create Room</span>
                 </Link>
               </li>
             </ul>
           )}
         </li>
+
+        {/* Housekeeping */}
         <li>
-          <Link
-            to="/roomreports"
-            className={`flex items-center p-2 rounded-lg transition-all ${isActive('/guestmanagement') ? 'bg-primary text-white' : 'hover:bg-primary hover:shadow-md hover:text-white'}`}
+          <div
+            onClick={toggleHousekeepingDropdown}
+            className={`flex items-center p-2 rounded-lg cursor-pointer transition-all ${isHousekeepingDropdownOpen ? 'bg-primary text-white' : 'hover:bg-primary hover:shadow-md hover:text-white'}`}
           >
-            <FaHotel className="text-xl mr-4" />
-            <span className="text-lg font-semibold">Hoousekeeping </span>
-          </Link>
+            <FaBroom className="text-xl mr-4" />
+            <span className="text-lg font-semibold">Housekeeping</span>
+            <span className={`ml-auto text-sm transition-transform ${isHousekeepingDropdownOpen ? 'rotate-180' : ''}`}>
+              ▼
+            </span>
+          </div>
+          {isHousekeepingDropdownOpen && (
+            <ul className="ml-6 mt-1 space-y-1">
+              <li>
+                <Link
+                  to="/housekeeping/roomreport"
+                  className={`flex items-center p-1 rounded-lg transition-all ${isActive('/housekeeping/cleaning') ? 'bg-primary text-white' : 'hover:bg-primary hover:text-white'}`}
+                >
+                  <FaListAlt  className="text-xl mr-4" />
+                  <span className="text-md">Room Report</span>
+                </Link>
+             </li>
+            </ul>
+          )}
         </li>
       </ul>
     </nav>

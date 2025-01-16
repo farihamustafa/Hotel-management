@@ -47,7 +47,8 @@ const CreateRoom = () => {
     description: "",
     facilities: [],
     price: "",
-    images: [],
+    image:"",
+    imagelg:""
   };
 
   const handleSubmit = (values) => {
@@ -192,33 +193,34 @@ const CreateRoom = () => {
               <ErrorMessage name="price" component="div" className="text-red-600 text-sm" />
             </div>
 
-            {/* Images */}
-            <div className="col-span-1 sm:col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-gray-700 mb-1" htmlFor="file_input_1">
-                  Upload file
-                </label>
-                <input
-                  type="file"
-                  id="file_input_1"
-                  name="images"
-                  onChange={(event) => setFieldValue("images", event.currentTarget.files)}
-                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 mb-1" htmlFor="file_input_2">
-                  Upload file
-                </label>
-                <input
-                  type="file"
-                  id="file_input_2"
-                  name="images"
-                  onChange={(event) => setFieldValue("images", event.currentTarget.files)}
-                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
-                />
-              </div>
-            </div>
+            {/* Images */} 
+<div className="col-span-1 sm:col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div>
+    <label className="block text-gray-700 mb-1" htmlFor="image">
+      Upload Image
+    </label>
+    <input
+      type="file"
+      id="image"
+      name="image"
+      onChange={(event) => setFieldValue("image", event.currentTarget.files)}
+      className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+    />
+  </div>
+  <div>
+    <label className="block text-gray-700 mb-1" htmlFor="imagelg">
+      Upload Large Image
+    </label>
+    <input
+      type="file"
+      id="imagelg"
+      name="imagelg"
+      onChange={(event) => setFieldValue("imagelg", event.currentTarget.files)}
+      className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+    />
+  </div>
+</div>
+
 
             {/* Submit and Cancel Buttons */}
             <div className="flex justify-end items-center col-span-1 sm:col-span-2 lg:col-span-3 space-x-4">
