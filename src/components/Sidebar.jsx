@@ -69,7 +69,7 @@ const SideNavigation = () => {
             className={`flex items-center p-2 rounded-lg cursor-pointer transition-all ${isRoomDropdownOpen ? 'bg-primary text-white' : 'hover:bg-primary hover:shadow-md hover:text-white'}`}
           >
             <FaDoorOpen className="text-xl mr-4" />
-            <span className="text-lg font-semibold">Room Management</span>
+            <span className="text-lg font-semibold">Manage Room</span>
             <span className={`ml-auto text-sm transition-transform ${isRoomDropdownOpen ? 'rotate-180' : ''}`}>
               ▼
             </span>
@@ -105,6 +105,15 @@ const SideNavigation = () => {
               </li>
             </ul>
           )}
+        </li>
+        <li>
+          <Link
+            to="/roomreports"
+            className={`flex items-center p-2 rounded-lg transition-all ${isActive('/guestmanagement') ? 'bg-primary text-white' : 'hover:bg-primary hover:shadow-md hover:text-white'}`}
+          >
+            <FaHotel className="text-xl mr-4" />
+            <span className="text-lg font-semibold">Hoousekeeping </span>
+          </Link>
         </li>
       </ul>
     </nav>

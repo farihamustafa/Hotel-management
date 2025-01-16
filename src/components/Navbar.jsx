@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaBell } from 'react-icons/fa';
+import { FaBell, FaUser } from 'react-icons/fa';
 
 const Breadcrumb = () => {
   const location = useLocation();
@@ -8,7 +8,7 @@ const Breadcrumb = () => {
 
   return (
     <nav className="bg-primary text-white px-4 py-2 rounded-b-xl shadow-sm">
-      <ol className="flex space-x-2 text-lg"> {/* Updated text size to 'text-lg' */}
+      <ol className="flex space-x-2 text-lg">
         <li>
           <Link to="/" className="text-white font-bold hover:underline">
             Home
@@ -42,18 +42,27 @@ const Breadcrumb = () => {
 };
 
 const Navbar = () => {
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-  const dropdownRef = useRef(null);
+  const [isNotificationDropdownVisible, setIsNotificationDropdownVisible] = useState(false);
+  const [isProfileDropdownVisible, setIsProfileDropdownVisible] = useState(false);
+  const notificationDropdownRef = useRef(null);
+  const profileDropdownRef = useRef(null);
 
-  const toggleDropdown = () => {
-    setIsDropdownVisible(!isDropdownVisible);
+  const toggleNotificationDropdown = () => {
+    setIsNotificationDropdownVisible(!isNotificationDropdownVisible);
   };
 
-  // Close the dropdown when clicking outside
+  const toggleProfileDropdown = () => {
+    setIsProfileDropdownVisible(!isProfileDropdownVisible);
+  };
+
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownVisible(false);
+      if (notificationDropdownRef.current && !notificationDropdownRef.current.contains(event.target)) {
+        setIsNotificationDropdownVisible(false);
+      }
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+        setIsProfileDropdownVisible(false);
       }
     };
 
@@ -63,9 +72,9 @@ const Navbar = () => {
     };
   }, []);
 
-  // Close the dropdown when the "See all" button is clicked
+  // Close notification dropdown when "See all" is clicked
   const handleSeeAllClick = () => {
-    setIsDropdownVisible(false);
+    setIsNotificationDropdownVisible(false);
   };
 
   return (
@@ -83,15 +92,15 @@ const Navbar = () => {
           <button
             className="text-white hover"
             aria-label="Notifications"
-            onClick={toggleDropdown}
+            onClick={toggleNotificationDropdown}
           >
-            <FaBell className="h-5 w-5" /> {/* Reduced size of bell icon */}
+            <FaBell className="h-5 w-5" />
           </button>
 
-          {/* Dropdown */}
-          {isDropdownVisible && (
+          {/* Notification Dropdown */}
+          {isNotificationDropdownVisible && (
             <div
-              ref={dropdownRef}
+              ref={notificationDropdownRef}
               className="absolute top-full right-full mt-2 w-60 bg-white rounded-md shadow-lg py-2 z-50"
             >
               <ul>
@@ -116,14 +125,34 @@ const Navbar = () => {
             </div>
           )}
 
-          {/* User Profile */}
-          <img
-            src="https://th.bing.com/th/id/OIP.M4cV2XkzqBU0CZK4efhDsgHaHa?w=201&h=200&c=7&r=0&o=5&dpr=1.1&pid=1.7"
-            alt="User Profile"
-            className="h-8 w-8 rounded-full border-2 border-white" 
-          />
-        </div>
+          {/* User Profile Button */}
+          <button
+            onClick={toggleProfileDropdown}
+            className="h-8 w-8 flex items-center justify-center rounded-full border-2 border-white bg-gray-200 hover:bg-gray-300"
+          >
+            <FaUser className="text-gray-700" />
+          </button>
 
+          {/* Profile Dropdown */}
+          {isProfileDropdownVisible && (
+            <div
+              ref={profileDropdownRef}
+              className="absolute top-full right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-50"
+            >
+              <ul>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  <Link to="/profile">Profile</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  <Link to="/settings">Settings</Link>
+                </li>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  <Link to="/logout">Logout</Link>
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );
