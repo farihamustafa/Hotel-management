@@ -19,6 +19,7 @@ import EditGuest from './pages/EditGuest';
 import CreateRoom from './pages/Createroom';
 
 import Task from './pages/Task';
+import Taskdetail from './pages/Taskdetail';
 
 
 
@@ -41,6 +42,7 @@ function App() {
   <Route path='/roommanagement/roombooking' element={<Authlayout><RoomBooking/></Authlayout>}  />
   <Route path='/newbooking' element={<Authlayout><Newbooking/></Authlayout>}  />
   <Route path='/roommanagement/createroom' element={<Authlayout><CreateRoom/></Authlayout>}  />
+  <Route path='/housekeeping/tasks/taskdetails' element={<Authlayout><Taskdetail/></Authlayout>}  />
 
   <Route path='/notifications' element={<Authlayout><Notification/></Authlayout>}  />
   <Route path='/housekeeping/tasks' element={<Authlayout><Task/></Authlayout>}  />

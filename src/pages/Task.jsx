@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const tasks = [
   { id: 1, roomCode: 'R001', taskName: 'Electrical Work', priority: 'High', status: 'Pending', deadline: '2025-02-01' },
@@ -8,8 +9,11 @@ const tasks = [
 ];
 
 function Task() {
+  const navigate = useNavigate();
+
   const handleDetailsClick = (task) => {
-    alert(`Details for Task: ${task.taskName}`);
+    // Navigate to the task details page, passing the task data via state
+    navigate('/housekeeping/tasks/taskdetails', { state: { task } });
   };
 
   return (
