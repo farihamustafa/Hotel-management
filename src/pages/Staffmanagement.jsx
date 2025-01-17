@@ -1,19 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaTrash, FaEdit, FaEnvelope } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 function Staffmanagement() {
   const navigate = useNavigate();
 
-  const handleCreateNewStaff = () => {
-    navigate('/createstaff');
-  };
-
-  const handleEditStaff = (staff) => {
-    navigate('/editstaff/:id', { state: { staff } });
-  };
-
-  const staffList = [
+  const [staffList, setStaffList] = useState([
     {
       id: 1,
       serialNo: 1,
@@ -36,7 +28,20 @@ function Staffmanagement() {
       cnic: '98765-4321098-7',
       status: 'Inactive',
     },
-  ];
+  ]);
+
+  const handleCreateNewStaff = () => {
+    navigate('/createstaff');
+  };
+
+  const handleEditStaff = (staff) => {
+    navigate('/editstaff/:id', { state: { staff } });
+  };
+
+  const handleDeleteStaff = (id) => {
+    const updatedList = staffList.filter((staff) => staff.id !== id);
+    setStaffList(updatedList);
+  };
 
   return (
     <div className="p-6 bg-light min-h-screen">
@@ -97,7 +102,11 @@ function Staffmanagement() {
                   >
                     <FaEdit size={18} />
                   </button>
-                  <button className="text-red-500 hover:text-red-700" title="Delete">
+                  <button
+                    onClick={() => handleDeleteStaff(staff.id)}
+                    className="text-red-500 hover:text-red-700"
+                    title="Delete"
+                  >
                     <FaTrash size={18} />
                   </button>
                   <button className="text-yellow-500 hover:text-yellow-700" title="Send Email">

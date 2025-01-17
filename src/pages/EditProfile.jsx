@@ -9,10 +9,6 @@ function EditProfile() {
   const [profile, setProfile] = useState({
     name: '',
     email: '',
-    phone: '',
-    address: '',
-    status: 'active',
-    image: null, // Add image state
   });
 
   useEffect(() => {
@@ -27,20 +23,6 @@ function EditProfile() {
       ...prevState,
       [name]: value,
     }));
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfile((prevState) => ({
-          ...prevState,
-          image: reader.result, // Store base64 string of image
-        }));
-      };
-      reader.readAsDataURL(file); // Convert image to base64
-    }
   };
 
   const handleSave = (e) => {
@@ -61,28 +43,6 @@ function EditProfile() {
         <h1 className="text-4xl font-bold text-gray-800 mb-6 text-left border-b pb-4 border-gray-300">
           Edit Profile
         </h1>
-
-        {/* Image Upload Section */}
-        <div className="mb-6 text-center">
-          <label htmlFor="profile-image" className="cursor-pointer">
-            <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4">
-              {profile.image ? (
-                <img src={profile.image} alt="Profile" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full bg-gray-300 flex items-center justify-center">
-                  <span className="text-gray-600">Upload Image</span>
-                </div>
-              )}
-            </div>
-            <input
-              id="profile-image"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-            />
-          </label>
-        </div>
 
         <form onSubmit={handleSave}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
@@ -107,20 +67,6 @@ function EditProfile() {
                 className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition"
                 placeholder="john@example.com"
               />
-            </div>
-  
-           
-            <div>
-              <label className="block text-sm text-gray-600 mb-2">Status</label>
-              <select
-                name="status"
-                value={profile.status}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition"
-              >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
             </div>
           </div>
 

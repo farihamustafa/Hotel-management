@@ -1,15 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaTrash, FaEdit, FaEnvelope } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 
 function Guestmanagement() {
   const navigate = useNavigate();
 
-  const handleCreateNewGuest = () => {
-    navigate('/createguest');
-  };
-
-  const guests = [
+  // State to manage the guests list
+  const [guests, setGuests] = useState([
     {
       id: 1,
       name: 'John Doe',
@@ -28,14 +25,23 @@ function Guestmanagement() {
       nationalId: '13567778888',
       status: 'Inactive',
     },
-  ];
-  
+  ]);
+
+  const handleCreateNewGuest = () => {
+    navigate('/createguest');
+  };
+
   const handleEditGuest = (guest) => {
-    navigate('/editguest/:id', { guest: { guest } });
+    navigate('/editguest/:id', { state: { guest } });
+  };
+
+  const handleDeleteGuest = (id) => {
+    const updatedGuests = guests.filter((guest) => guest.id !== id);
+    setGuests(updatedGuests);
   };
 
   return (
-    <div className="p-6 bg-light min-h-screen"> 
+    <div className="p-6 bg-light min-h-screen">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Guest Management</h1>
       </div>
@@ -82,14 +88,18 @@ function Guestmanagement() {
                   </span>
                 </td>
                 <td className="px-6 py-4 flex justify-center items-center space-x-4">
-                <button
+                  <button
                     onClick={() => handleEditGuest(guest)}
                     className="text-blue-500 hover:text-blue-700"
                     title="Edit"
                   >
                     <FaEdit size={18} />
                   </button>
-                  <button className="text-red-500 hover:text-red-700" title="Delete">
+                  <button
+                    onClick={() => handleDeleteGuest(guest.id)}
+                    className="text-red-500 hover:text-red-700"
+                    title="Delete"
+                  >
                     <FaTrash size={18} />
                   </button>
                   <button className="text-yellow-500 hover:text-yellow-700" title="Send Email">

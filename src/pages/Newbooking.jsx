@@ -2,6 +2,7 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Select from 'react-select';
+import toast, { Toaster } from 'react-hot-toast';
 
 const NewBooking = () => {
   const initialValues = {
@@ -38,7 +39,7 @@ const NewBooking = () => {
 
   const handleSubmit = (values) => {
     console.log('Booking Data:', values);
-    alert('Booking saved successfully');
+    toast.success('Booking saved successfully!');
   };
 
   const additionalServicesOptions = [
@@ -50,9 +51,10 @@ const NewBooking = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto bg-white p-8 rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold leading-4">
+    <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 rounded-lg shadow-md">
+      <Toaster position="top-center" reverseOrder={false} />
+      <div className="flex flex-wrap justify-between items-center mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold">
           New <span className="border-b-4 border-red-800">Booking</span>
         </h1>
       </div>
@@ -64,7 +66,7 @@ const NewBooking = () => {
       >
         {({ setFieldValue, errors, touched }) => (
           <Form>
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
               {/* About Booking Section */}
               <div>
                 <h2 className="text-lg font-semibold mb-4">About Booking</h2>
@@ -80,7 +82,7 @@ const NewBooking = () => {
                     <ErrorMessage name="guests" component="div" className="text-red-600 text-sm" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium"> Room Type</label>
+                    <label className="block text-sm font-medium">Room Type</label>
                     <Field as="select" name="roomType" className="w-full border rounded-md p-2">
                       <option value="Single Room">Single Room</option>
                       <option value="Double Room">Double Room</option>
@@ -130,7 +132,7 @@ const NewBooking = () => {
                       isMulti
                       name="additionalServices"
                       options={additionalServicesOptions}
-                      className="w-full border rounded-md p-1"
+                      className="w-full"
                       onChange={(selectedOptions) =>
                         setFieldValue(
                           'additionalServices',
@@ -173,10 +175,10 @@ const NewBooking = () => {
               </div>
             </div>
 
-            <div className="mt-8">
+            <div className="mt-6">
               <button
                 type="submit"
-                className="bg-red-800 text-white px-4 py-2 rounded-md hover:bg-gray-400"
+                className="bg-red-800 text-white px-4 py-2 rounded-md hover:bg-red-700 transition"
               >
                 Save
               </button>
