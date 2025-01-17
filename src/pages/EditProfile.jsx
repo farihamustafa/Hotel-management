@@ -64,7 +64,7 @@ function EditProfile() {
                 name="email"
                 value={profile.email}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition"
+                className="w-full px-4 py-3 rounded-xl border bg-gray-200 focus:bg-white focus:border-blue-400 focus:outline-none transition"
                 placeholder="john@example.com"
               />
             </div>
