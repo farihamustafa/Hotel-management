@@ -8,10 +8,10 @@ const RoomInventory = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
 
   const rooms = [
-    { id: 1, type: 'Single Room', availability: 'Available', status: 'Available', price: '$100' },
-    { id: 2, type: 'Double Room', availability: 'Occupied', status: 'Occupied', price: '$150' },
-    { id: 3, type: 'Suite', availability: 'Available', status: 'Available', price: '$300' },
-    { id: 4, type: 'Single Room', availability: 'Available', status: 'Cleaning', price: '$100' },
+    { id: 1, code: 'R001', type: 'Single Room', availability: 'Available', status: 'Available', price: '$100' },
+    { id: 2, code: 'R002', type: 'Double Room', availability: 'Occupied', status: 'Occupied', price: '$150' },
+    { id: 3, code: 'R003', type: 'Suite', availability: 'Available', status: 'Available', price: '$300' },
+    { id: 4, code: 'R004', type: 'Single Room', availability: 'Available', status: 'Cleaning', price: '$100' },
   ];
 
   const openModal = (room) => {
@@ -39,13 +39,14 @@ const RoomInventory = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Room Inventory</h1>
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">Room Code</h1>
 
       <div className="overflow-x-auto rounded-lg shadow-md bg-white">
         <table className="w-full text-sm text-left text-gray-800">
           <thead className="bg-gray-700 text-white uppercase text-base">
             <tr>
               <th className="px-6 py-3">#</th>
+              <th className="px-6 py-3">Room Code</th>
               <th className="px-6 py-3">Room Type</th>
               <th className="px-6 py-3">Availability</th>
               <th className="px-6 py-3">Status</th>
@@ -60,6 +61,7 @@ const RoomInventory = () => {
                 className="border-b hover:bg-gray-100 transition duration-200"
               >
                 <td className="px-6 py-4">{room.id}</td>
+                <td className="px-6 py-4">{room.code}</td> {/* Changed to show room code */}
                 <td className="px-6 py-4">{room.type}</td>
                 <td className="px-6 py-4">{room.availability}</td>
                 <td className="px-6 py-4">

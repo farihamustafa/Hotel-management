@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { Button } from "flowbite-react";
+
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Staffmanagement from './pages/Staffmanagement';
 import Authlayout from './layouts/Authlayout';
@@ -15,10 +14,11 @@ import Notification from './pages/Notification';
 import LoginPage from './pages/Loginpage';
 
 import EditStaff from './pages/EditStaff';
-import EditProfile from './pages/EditProfile';
+
 import EditGuest from './pages/EditGuest';
 import CreateRoom from './pages/Createroom';
-import Roomreports from './pages/Roomreports';
+
+import Task from './pages/Task';
 
 
 
@@ -43,7 +43,8 @@ function App() {
   <Route path='/roommanagement/createroom' element={<Authlayout><CreateRoom/></Authlayout>}  />
 
   <Route path='/notifications' element={<Authlayout><Notification/></Authlayout>}  />
-  <Route path='/housekeeping/roomreport' element={<Authlayout><Roomreports/></Authlayout>}  />
+  <Route path='/housekeeping/tasks' element={<Authlayout><Task/></Authlayout>}  />
+  
 
  
 

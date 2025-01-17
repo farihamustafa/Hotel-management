@@ -128,11 +128,11 @@ const SideNavigation = () => {
             <ul className="ml-6 mt-1 space-y-1">
               <li>
                 <Link
-                  to="/housekeeping/roomreport"
+                  to="/housekeeping/tasks"
                   className={`flex items-center p-1 rounded-lg transition-all ${isActive('/housekeeping/cleaning') ? 'bg-primary text-white' : 'hover:bg-primary hover:text-white'}`}
                 >
                   <FaListAlt  className="text-xl mr-4" />
-                  <span className="text-md">Room Report</span>
+                  <span className="text-md">Tasks</span>
                 </Link>
              </li>
             </ul>
