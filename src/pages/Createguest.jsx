@@ -2,6 +2,7 @@ import React from 'react';
 import { FiX } from 'react-icons/fi';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { toast, Toaster } from 'react-hot-toast';
 
 // Validation schema
 const validationSchema = Yup.object().shape({
@@ -32,10 +33,16 @@ function Createguest() {
   const handleSubmit = (values) => {
     console.log('Form Submitted:', values);
     // Perform actions like sending data to the server
+
+    // Show success notification
+    toast.success('New guest created successfully!');
   };
 
   return (
     <div className="bg-slate-200 min-h-screen flex items-center justify-center px-4">
+      {/* Toaster to display notifications */}
+      <Toaster position="top-right" reverseOrder={false} />
+
       <div className="max-w-3xl w-full bg-white shadow-2xl rounded-3xl p-8 relative">
         {/* Cancel Icon Button */}
         <button className="absolute top-4 right-4 text-gray-500 hover:text-gray-800">

@@ -51,10 +51,9 @@ const NewBooking = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 rounded-lg shadow-md">
-      <Toaster position="top-center" reverseOrder={false} />
-      <div className="flex flex-wrap justify-between items-center mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold">
+  <>      <Toaster position="top-center"  reverseOrder={false} />
+      <div className="flex flex-wrap justify-between items-center mb-8">
+        <h1 className="text-xl sm:text-3xl font-bold " >
           New <span className="border-b-4 border-red-800">Booking</span>
         </h1>
       </div>
@@ -66,7 +65,7 @@ const NewBooking = () => {
       >
         {({ setFieldValue, errors, touched }) => (
           <Form>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-4 lg:gap-6">
               {/* About Booking Section */}
               <div>
                 <h2 className="text-lg font-semibold mb-4">About Booking</h2>
@@ -186,7 +185,8 @@ const NewBooking = () => {
           </Form>
         )}
       </Formik>
-    </div>
+      </>
+
   );
 };
 

@@ -31,8 +31,9 @@ function App() {
   <Route path='/staffmanagement' element={<Authlayout><Staffmanagement/></Authlayout>}  />
   <Route path="/editstaff/:id" element={<Authlayout><EditStaff/></Authlayout>}/>
   <Route path="/editguest/:id" element={<Authlayout><EditGuest/></Authlayout>}/>
-  
 
+  <Route path='/editprofile' element={<Authlayout><EditProfile/></Authlayout>}  />
+  
   <Route path='/guestmanagement' element={<Authlayout><Guestmanagement/></Authlayout>}  />
   <Route path='/createstaff' element={<Authlayout><Createstaff/></Authlayout>}  />
     <Route path='/createguest' element={<Authlayout><Createguest/></Authlayout>}  />

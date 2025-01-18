@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FiX } from 'react-icons/fi';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import toast, { Toaster } from 'react-hot-toast'; // Import react-hot-toast
 
 // Validation Schema
 const validationSchema = Yup.object().shape({
@@ -35,12 +36,15 @@ function EditGuest() {
 
   const handleSave = (values) => {
     console.log('Updated Guest Data:', values);
-    // Save the updated guest data (e.g., API call or state update)
+    toast.success('Guest details saved successfully!'); // Show success message
     navigate('/guestmanagement'); // Navigate back to Guest Management
   };
 
   return (
     <div className="bg-slate-200 min-h-screen flex items-center justify-center px-4">
+      {/* Toaster Component */}
+      <Toaster position="top-right" reverseOrder={false} />
+      
       <div className="max-w-3xl w-full bg-white shadow-2xl rounded-3xl p-8 relative">
         <button
           onClick={() => navigate('/guestmanagement')}

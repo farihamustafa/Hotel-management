@@ -58,7 +58,7 @@ function EditProfile() {
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-600 mb-2">Email</label>
+              <label className="block text-sm text-gray-600 mb-4">Email</label>
               <input
                 type="email"
                 name="email"
