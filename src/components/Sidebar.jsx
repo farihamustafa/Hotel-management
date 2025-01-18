@@ -138,6 +138,15 @@ const SideNavigation = () => {
             </ul>
           )}
         </li>
+        <li>
+          <Link
+            to="/additionalservices"
+            className={`flex items-center p-2 rounded-lg transition-all ${isActive('/guestmanagement') ? 'bg-primary text-white' : 'hover:bg-primary hover:shadow-md hover:text-white'}`}
+          >
+            <FaHotel className="text-xl mr-4" />
+            <span className="text-lg font-semibold">Additional services</span>
+          </Link>
+        </li>
       </ul>
     </nav>
   );

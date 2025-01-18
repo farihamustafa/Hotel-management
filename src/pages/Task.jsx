@@ -2,17 +2,17 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const tasks = [
-  { id: 1, roomCode: 'R001', taskName: 'Electrical Work', priority: 'High', status: 'Pending', deadline: '2025-02-01' },
-  { id: 2, roomCode: 'R002', taskName: 'Plumbing', priority: 'Medium', status: 'In Progress', deadline: '2025-01-25' },
+  { id: 1, roomCode: 'R001', taskName: 'Electrical Work', priority: 'Urgent', status: 'Pending', deadline: '2025-02-01' },
+  { id: 2, roomCode: 'R002', taskName: 'Plumbing', priority: 'Flexible', status: 'In Progress', deadline: '2025-01-25' },
   { id: 3, roomCode: 'R003', taskName: 'Cleaning', priority: 'Low', status: 'Completed', deadline: '2025-01-10' },
-  { id: 4, roomCode: 'R004', taskName: 'Air Conditioning', priority: 'High', status: 'Pending', deadline: '2025-01-20' },
+  { id: 4, roomCode: 'R004', taskName: 'Air Conditioning', priority: 'Urgent', status: 'Pending', deadline: '2025-01-20' },
 ];
 
 function Task() {
   const navigate = useNavigate();
 
   const handleDetailsClick = (task) => {
-    // Navigate to the task details page, passing the task data via state
+   
     navigate('/housekeeping/tasks/taskdetails', { state: { task } });
   };
 

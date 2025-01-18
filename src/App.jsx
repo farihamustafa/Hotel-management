@@ -20,6 +20,7 @@ import CreateRoom from './pages/Createroom';
 
 import Task from './pages/Task';
 import Taskdetail from './pages/Taskdetail';
+import Additionalservice from './pages/Additionalservice';
 
 
 
@@ -46,6 +47,7 @@ function App() {
 
   <Route path='/notifications' element={<Authlayout><Notification/></Authlayout>}  />
   <Route path='/housekeeping/tasks' element={<Authlayout><Task/></Authlayout>}  />
+  <Route path='/additionalservices' element={<Authlayout><Additionalservice/></Authlayout>}  />
   
 
  

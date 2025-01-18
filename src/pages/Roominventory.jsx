@@ -106,140 +106,153 @@ const RoomInventory = () => {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-1/2">
-            <h2 className="text-2xl font-bold mb-4">Schedule Maintenance</h2>
-            <Formik
-              initialValues={{
-                maintenanceType: '',
-                priority: '',
-                deadline: '',
-                assignTo: '',
-                additionalServices: '',
-              }}
-              validationSchema={validationSchema}
-              onSubmit={handleMaintenanceSubmit}
-            >
-              <Form>
-                <div className="grid grid-cols-3 gap-4 mb-4">
-                  <div>
-                    <label
-                      htmlFor="maintenanceType"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Maintenance Type
-                    </label>
-                    <Field
-                      as="select"
-                      name="maintenanceType"
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option value="" disabled>
-                        Select Type
-                      </option>
-                      <option value="Electrical">Electrical</option>
-                      <option value="Plumbing">Plumbing</option>
-                      <option value="Cleaning">Cleaning</option>
-                      <option value="Other">Other</option>
-                    </Field>
-                    <ErrorMessage name="maintenanceType" component="div" className="text-red-500 text-sm" />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="priority"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Priority
-                    </label>
-                    <Field
-                      as="select"
-                      name="priority"
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option value="" disabled>
-                        Select Priority
-                      </option>
-                      <option value="Low">Low</option>
-                      <option value="Medium">Medium</option>
-                      <option value="High">High</option>
-                    </Field>
-                    <ErrorMessage name="priority" component="div" className="text-red-500 text-sm" />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="deadline"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Deadline
-                    </label>
-                    <Field
-                      type="date"
-                      name="deadline"
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    />
-                    <ErrorMessage name="deadline" component="div" className="text-red-500 text-sm" />
-                  </div>
-                </div>
-
-                <div className="mb-4">
-                  <label
-                    htmlFor="assignTo"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Assign To
-                  </label>
-                  <Field
-                    as="select"
-                    name="assignTo"
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="" disabled>
-                      Select Person/Team
-                    </option>
-                    <option value="Team A">Team A</option>
-                    <option value="Team B">Team B</option>
-                    <option value="John Doe">John Doe</option>
-                    <option value="Jane Doe">Jane Doe</option>
-                  </Field>
-                  <ErrorMessage name="assignTo" component="div" className="text-red-500 text-sm" />
-                </div>
-
-                <div className="mb-4">
-                  <label
-                    htmlFor="additionalServices"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Additional Services
-                  </label>
-                  <Field
-                    as="textarea"
-                    name="additionalServices"
-                    rows="3"
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-
-                <div className="flex justify-end gap-4">
-                  <button
-                    type="button"
-                    className="px-6 py-3 bg-red-700 text-white rounded-md hover:bg-red-800 transition duration-300"
-                    onClick={closeModal}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
-                  >
-                    Submit
-                  </button>
-                </div>
-              </Form>
-            </Formik>
-          </div>
-        </div>
+         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+         <div className="bg-white rounded-lg shadow-lg p-6 w-1/2">
+           <h2 className="text-2xl font-bold mb-4">Schedule Maintenance</h2>
+           <Formik
+             initialValues={{
+               maintenanceType: '',
+               priority: '',
+               deadline: '',
+               assignTo: '',
+               additionalServices: [],
+             }}
+             validationSchema={validationSchema}
+             onSubmit={handleMaintenanceSubmit}
+           >
+             <Form>
+               <div className="grid grid-cols-3 gap-4 mb-4">
+                 {/* Maintenance Type */}
+                 <div>
+                   <label
+                     htmlFor="maintenanceType"
+                     className="block text-sm font-medium text-gray-700"
+                   >
+                     Maintenance Type
+                   </label>
+                   <Field
+                     as="select"
+                     name="maintenanceType"
+                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                   >
+                     <option value="" disabled>
+                       Select Type
+                     </option>
+                     <option value="Electrical">Electrical</option>
+                     <option value="Plumbing">Plumbing</option>
+                     <option value="Cleaning">Cleaning</option>
+                     <option value="Other">Other</option>
+                   </Field>
+                   <ErrorMessage name="maintenanceType" component="div" className="text-red-500 text-sm" />
+                 </div>
+   
+                 {/* Priority */}
+                 <div>
+                   <label
+                     htmlFor="priority"
+                     className="block text-sm font-medium text-gray-700"
+                   >
+                     Priority
+                   </label>
+                   <Field
+                     as="select"
+                     name="priority"
+                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                   >
+                     <option value="" disabled>
+                       Select Priority
+                     </option>
+                     <option value="Urgent">Urgent</option>
+                     <option value="Flexible">Flexible</option>
+                     <option value="Low">Low</option>
+                   </Field>
+                   <ErrorMessage name="priority" component="div" className="text-red-500 text-sm" />
+                 </div>
+   
+                 {/* Deadline */}
+                 <div>
+                   <label
+                     htmlFor="deadline"
+                     className="block text-sm font-medium text-gray-700"
+                   >
+                     Deadline
+                   </label>
+                   <Field
+                     type="date"
+                     name="deadline"
+                     className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                   />
+                   <ErrorMessage name="deadline" component="div" className="text-red-500 text-sm" />
+                 </div>
+               </div>
+   
+               {/* Assign To */}
+               <div className="mb-4">
+                 <label
+                   htmlFor="assignTo"
+                   className="block text-sm font-medium text-gray-700"
+                 >
+                   Assign To
+                 </label>
+                 <Field
+                   as="select"
+                   name="assignTo"
+                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                 >
+                   <option value="" disabled>
+                     Select Person/Team
+                   </option>
+                   <option value="Team A">Team A</option>
+                   <option value="Team B">Team B</option>
+                   <option value="John Doe">John Doe</option>
+                   <option value="Jane Doe">Jane Doe</option>
+                 </Field>
+                 <ErrorMessage name="assignTo" component="div" className="text-red-500 text-sm" />
+               </div>
+   
+               {/* Additional Services with Checkboxes */}
+               <div className="mb-4">
+                 <h3 className="block text-sm font-medium text-gray-700 mb-2">Additional Services</h3>
+                 <div className="space-y-2">
+                   <label className="flex items-center">
+                     <Field type="checkbox" name="additionalServices" value="Laundry" className="mr-2" />
+                     Laundry
+                   </label>
+                   <label className="flex items-center">
+                     <Field type="checkbox" name="additionalServices" value="Room Service" className="mr-2" />
+                     Room Service
+                   </label>
+                   <label className="flex items-center">
+                     <Field type="checkbox" name="additionalServices" value="Security" className="mr-2" />
+                     Security
+                   </label>
+                   <label className="flex items-center">
+                     <Field type="checkbox" name="additionalServices" value="Catering" className="mr-2" />
+                     Catering
+                   </label>
+                 </div>
+               </div>
+   
+               {/* Submit and Cancel Buttons */}
+               <div className="flex justify-end gap-4">
+                 <button
+                   type="button"
+                   className="px-6 py-3 bg-red-700 text-white rounded-md hover:bg-red-800 transition duration-300"
+                   onClick={closeModal}
+                 >
+                   Cancel
+                 </button>
+                 <button
+                   type="submit"
+                   className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
+                 >
+                   Submit
+                 </button>
+               </div>
+             </Form>
+           </Formik>
+         </div>
+       </div>
       )}
     </div>
   );
