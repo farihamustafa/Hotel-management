@@ -1,137 +1,96 @@
-import React, { useState } from 'react';
-import { FaWifi, FaSwimmingPool, FaParking, FaCoffee, FaUtensils } from 'react-icons/fa'; // Example icons
+import React from 'react';
+import { FaWifi, FaSwimmingPool, FaParking, FaCoffee, FaUtensils } from 'react-icons/fa';
 
 function Additionalservice() {
-  // State to manage the facilities and additional services
-  const [facilities, setFacilities] = useState([
-    { id: 1, icon: <FaWifi />, text: 'Free Wi-Fi' },
-    { id: 2, icon: <FaSwimmingPool />, text: 'Swimming Pool' },
-    { id: 3, icon: <FaParking />, text: 'Free Parking' },
-  ]);
-
-  const [additionalServices, setAdditionalServices] = useState([
-    { name: 'Laundry', price: 10 },
-    { name: 'Room Service', price: 15 },
-    { name: 'Airport Shuttle', price: 25 },
-  ]);
-
-  const [facilityInput, setFacilityInput] = useState('');
-  const [serviceInput, setServiceInput] = useState('');
-  const [priceInput, setPriceInput] = useState('');
-  const [selectedIcon, setSelectedIcon] = useState('FaWifi');
-
-  // Icons map for dropdown options
-  const iconMap = {
-    FaWifi: <FaWifi />,
-    FaSwimmingPool: <FaSwimmingPool />,
-    FaParking: <FaParking />,
-    FaCoffee: <FaCoffee />,
-    FaUtensils: <FaUtensils />,
-  };
-
-  // Handler for adding a new facility
-  const addFacility = () => {
-    if (facilityInput.trim()) {
-      setFacilities([
-        ...facilities,
-        {
-          id: facilities.length + 1,
-          icon: iconMap[selectedIcon],
-          text: facilityInput,
-        },
-      ]);
-      setFacilityInput(''); // Clear input after adding
-    }
-  };
-
-  // Handler for adding a new additional service
-  const addService = () => {
-    if (serviceInput.trim() && priceInput.trim() && !isNaN(priceInput)) {
-      setAdditionalServices([
-        ...additionalServices,
-        { name: serviceInput, price: parseFloat(priceInput) },
-      ]);
-      setServiceInput(''); // Clear input after adding
-      setPriceInput('');
-    }
-  };
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-      {/* Facilities Block */}
-      <div className="border border-gray-300 rounded-lg p-6 bg-gray-100">
-        <h2 className="text-xl font-bold mb-4">Facilities</h2>
-        <ul className="list-none space-y-2">
-          {facilities.map((facility) => (
-            <li key={facility.id} className="flex items-center space-x-2">
-              {facility.icon} <span>{facility.text}</span>
+    <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6 p-4 md:p-6">
+
+      {/* Facilities Column */}
+      <div className="flex-1 flex flex-col space-y-4">
+        {/* Add New Facility */}
+        <div className="border border-gray-300 rounded-lg p-4 md:p-6 bg-gray-100">
+          <h2 className="text-lg md:text-xl font-semibold mb-4">Add New Facility</h2>
+          <div className="flex flex-wrap gap-2">
+            <input
+              type="text"
+              placeholder="Add new facility"
+              className="flex-1 border border-gray-300 rounded p-2"
+            />
+            <select
+              className="flex-1 border border-gray-300 rounded p-2"
+            >
+              <option value="FaWifi">Free Wi-Fi</option>
+              <option value="FaSwimmingPool">Swimming Pool</option>
+              <option value="FaParking">Free Parking</option>
+              <option value="FaCoffee">Coffee</option>
+              <option value="FaUtensils">Restaurant</option>
+            </select>
+            <button
+              className="px-4 md:px-6 py-2 md:py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
+            >
+              Add Facility
+            </button>
+          </div>
+        </div>
+
+        {/* Existing Facilities */}
+        <div className="border border-gray-300 rounded-lg p-4 md:p-6 bg-gray-100">
+          <h2 className="text-lg md:text-xl font-semibold mb-4">Existing Facilities</h2>
+          <ul className="list-none space-y-2">
+            <li className="flex items-center space-x-2">
+              <FaWifi /> <span>Free Wi-Fi</span>
             </li>
-          ))}
-        </ul>
-        {/* Input and dropdown to add a new facility */}
-        <div className="mt-4">
-          <input
-            type="text"
-            value={facilityInput}
-            onChange={(e) => setFacilityInput(e.target.value)}
-            placeholder="Add new facility"
-            className="border border-gray-300 rounded p-2 mr-2"
-          />
-          <select
-            value={selectedIcon}
-            onChange={(e) => setSelectedIcon(e.target.value)}
-            className="border border-gray-300 rounded p-2 mr-2"
-          >
-            {Object.keys(iconMap).map((iconKey) => (
-              <option key={iconKey} value={iconKey}>
-                {iconKey}
-              </option>
-            ))}
-          </select>
-          <button
-            onClick={addFacility}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Add Facility
-          </button>
+            <li className="flex items-center space-x-2">
+              <FaSwimmingPool /> <span>Swimming Pool</span>
+            </li>
+            <li className="flex items-center space-x-2">
+              <FaParking /> <span>Free Parking</span>
+            </li>
+          </ul>
         </div>
       </div>
 
-      {/* Additional Services Block */}
-      <div className="border border-gray-300 rounded-lg p-6 bg-gray-100">
-        <h2 className="text-xl font-bold mb-4">Additional Services</h2>
-        <ul className="list-none space-y-2">
-          {additionalServices.map((service, index) => (
-            <li key={index} className="flex justify-between">
-              <span>{service.name}</span>
-              <span>${service.price.toFixed(2)}</span>
+      {/* Additional Services Column */}
+      <div className="flex-1 flex flex-col space-y-4">
+        {/* Add New Additional Service */}
+        <div className="border border-gray-300 rounded-lg p-4 md:p-6 bg-gray-100">
+          <h2 className="text-lg md:text-xl font-semibold mb-4">Add New Additional Service</h2>
+          <div className="flex flex-wrap gap-2">
+            <input
+              type="text"
+              placeholder="Add new service"
+              className="flex-1 border border-gray-300 rounded p-2"
+            />
+            <input
+              type="text"
+              placeholder="Price (USD)"
+              className="flex-1 border border-gray-300 rounded p-2"
+            />
+            <button
+              className="px-4 md:px-6 py-2 md:py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
+            >
+              Add Service
+            </button>
+          </div>
+        </div>
+
+        {/* Existing Additional Services */}
+        <div className="border border-gray-300 rounded-lg p-4 md:p-6 bg-gray-100">
+          <h2 className="text-lg md:text-xl font-semibold mb-4">Existing Additional Services</h2>
+          <ul className="list-none space-y-2">
+            <li className="flex justify-between">
+              <span>Laundry</span>
+              <span>$10.00</span>
             </li>
-          ))}
-        </ul>
-        {/* Input and button to add a new additional service */}
-        <div className="mt-4 flex flex-col space-y-2">
-          <input
-            type="text"
-            value={serviceInput}
-            onChange={(e) => setServiceInput(e.target.value)}
-            placeholder="Add new service"
-            className="border border-gray-300 rounded p-2"
-          />
-          <input
-            type="text"
-            value={priceInput}
-            onChange={(e) => setPriceInput(e.target.value)}
-            placeholder="Price in USD"
-            pattern="\d*"
-            inputMode="numeric"
-            className="border border-gray-300 rounded p-2"
-          />
-          <button
-            onClick={addService}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Add Service
-          </button>
+            <li className="flex justify-between">
+              <span>Room Service</span>
+              <span>$15.00</span>
+            </li>
+            <li className="flex justify-between">
+              <span>Airport Shuttle</span>
+              <span>$25.00</span>
+            </li>
+          </ul>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaTachometerAlt, FaUsers, FaHotel, FaDoorOpen, FaBed, FaCalendarCheck, FaPlusSquare, FaBroom,FaTasks    } from 'react-icons/fa';
+import { FaTachometerAlt, FaUsers, FaHotel, FaDoorOpen, FaBed, FaCalendarCheck, FaPlusSquare, FaBroom,FaTasks ,FaCog    } from 'react-icons/fa';
 
 const SideNavigation = () => {
   const [isRoomDropdownOpen, setRoomDropdownOpen] = useState(false);
@@ -143,7 +143,7 @@ const SideNavigation = () => {
             to="/additionalservices"
             className={`flex items-center p-2 rounded-lg transition-all ${isActive('/guestmanagement') ? 'bg-primary text-white' : 'hover:bg-primary hover:shadow-md hover:text-white'}`}
           >
-            <FaHotel className="text-xl mr-4" />
+            <FaCog  className="text-xl mr-4" />
             <span className="text-lg font-semibold">Additional services</span>
           </Link>
         </li>
