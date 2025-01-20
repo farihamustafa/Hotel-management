@@ -1,34 +1,58 @@
 import React, { useState } from 'react';
-import { FaWifi, FaSwimmingPool, FaParking } from 'react-icons/fa'; // Example icons
+import { FaWifi, FaSwimmingPool, FaParking, FaCoffee, FaUtensils } from 'react-icons/fa'; // Example icons
 
 function Additionalservice() {
   // State to manage the facilities and additional services
   const [facilities, setFacilities] = useState([
     { id: 1, icon: <FaWifi />, text: 'Free Wi-Fi' },
     { id: 2, icon: <FaSwimmingPool />, text: 'Swimming Pool' },
-    { id: 3, icon: <FaParking />, text: 'Free Parking' }
+    { id: 3, icon: <FaParking />, text: 'Free Parking' },
   ]);
-  
+
   const [additionalServices, setAdditionalServices] = useState([
-    'Laundry', 'Room Service', 'Airport Shuttle'
+    { name: 'Laundry', price: 10 },
+    { name: 'Room Service', price: 15 },
+    { name: 'Airport Shuttle', price: 25 },
   ]);
 
   const [facilityInput, setFacilityInput] = useState('');
   const [serviceInput, setServiceInput] = useState('');
+  const [priceInput, setPriceInput] = useState('');
+  const [selectedIcon, setSelectedIcon] = useState('FaWifi');
+
+  // Icons map for dropdown options
+  const iconMap = {
+    FaWifi: <FaWifi />,
+    FaSwimmingPool: <FaSwimmingPool />,
+    FaParking: <FaParking />,
+    FaCoffee: <FaCoffee />,
+    FaUtensils: <FaUtensils />,
+  };
 
   // Handler for adding a new facility
   const addFacility = () => {
     if (facilityInput.trim()) {
-      setFacilities([...facilities, { id: facilities.length + 1, icon: null, text: facilityInput }]);
+      setFacilities([
+        ...facilities,
+        {
+          id: facilities.length + 1,
+          icon: iconMap[selectedIcon],
+          text: facilityInput,
+        },
+      ]);
       setFacilityInput(''); // Clear input after adding
     }
   };
 
   // Handler for adding a new additional service
   const addService = () => {
-    if (serviceInput.trim()) {
-      setAdditionalServices([...additionalServices, serviceInput]);
+    if (serviceInput.trim() && priceInput.trim() && !isNaN(priceInput)) {
+      setAdditionalServices([
+        ...additionalServices,
+        { name: serviceInput, price: parseFloat(priceInput) },
+      ]);
       setServiceInput(''); // Clear input after adding
+      setPriceInput('');
     }
   };
 
@@ -44,7 +68,7 @@ function Additionalservice() {
             </li>
           ))}
         </ul>
-        {/* Input and button to add a new facility */}
+        {/* Input and dropdown to add a new facility */}
         <div className="mt-4">
           <input
             type="text"
@@ -53,6 +77,17 @@ function Additionalservice() {
             placeholder="Add new facility"
             className="border border-gray-300 rounded p-2 mr-2"
           />
+          <select
+            value={selectedIcon}
+            onChange={(e) => setSelectedIcon(e.target.value)}
+            className="border border-gray-300 rounded p-2 mr-2"
+          >
+            {Object.keys(iconMap).map((iconKey) => (
+              <option key={iconKey} value={iconKey}>
+                {iconKey}
+              </option>
+            ))}
+          </select>
           <button
             onClick={addFacility}
             className="bg-blue-500 text-white px-4 py-2 rounded"
@@ -67,17 +102,29 @@ function Additionalservice() {
         <h2 className="text-xl font-bold mb-4">Additional Services</h2>
         <ul className="list-none space-y-2">
           {additionalServices.map((service, index) => (
-            <li key={index}>{service}</li>
+            <li key={index} className="flex justify-between">
+              <span>{service.name}</span>
+              <span>${service.price.toFixed(2)}</span>
+            </li>
           ))}
         </ul>
         {/* Input and button to add a new additional service */}
-        <div className="mt-4">
+        <div className="mt-4 flex flex-col space-y-2">
           <input
             type="text"
             value={serviceInput}
             onChange={(e) => setServiceInput(e.target.value)}
             placeholder="Add new service"
-            className="border border-gray-300 rounded p-2 mr-2"
+            className="border border-gray-300 rounded p-2"
+          />
+          <input
+            type="text"
+            value={priceInput}
+            onChange={(e) => setPriceInput(e.target.value)}
+            placeholder="Price in USD"
+            pattern="\d*"
+            inputMode="numeric"
+            className="border border-gray-300 rounded p-2"
           />
           <button
             onClick={addService}
