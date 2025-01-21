@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { FaTrash, FaEdit, FaEnvelope } from 'react-icons/fa';
+import { FaTrash, FaEdit, FaEnvelope, FaInfoCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 function Staffmanagement() {
   const navigate = useNavigate();
 
-  const [staffList, setStaffList] = useState([
+  const [staffList] = useState([
     {
       id: 1,
       serialNo: 1,
@@ -30,6 +30,8 @@ function Staffmanagement() {
     },
   ]);
 
+  const [selectedStaff, setSelectedStaff] = useState(null);
+
   const handleCreateNewStaff = () => {
     navigate('/createstaff');
   };
@@ -40,7 +42,15 @@ function Staffmanagement() {
 
   const handleDeleteStaff = (id) => {
     const updatedList = staffList.filter((staff) => staff.id !== id);
-    setStaffList(updatedList);
+    console.log(updatedList); // For demonstration
+  };
+
+  const handleViewDetails = (staff) => {
+    setSelectedStaff(staff);
+  };
+
+  const closeModal = () => {
+    setSelectedStaff(null);
   };
 
   return (
@@ -112,12 +122,82 @@ function Staffmanagement() {
                   <button className="text-yellow-500 hover:text-yellow-700" title="Send Email">
                     <FaEnvelope size={18} />
                   </button>
+                  <button
+                    onClick={() => handleViewDetails(staff)}
+                    className="text-gray-500 hover:text-gray-700"
+                    title="View Details"
+                  >
+                    <FaInfoCircle size={18} />
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {/* Modal */}
+      {selectedStaff && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+          onClick={closeModal}
+        >
+          <div
+  className="bg-white rounded-lg p-8 max-w-lg w-full shadow-lg transform transition-all"
+  onClick={(e) => e.stopPropagation()}
+>
+  <div className="flex justify-between items-center border-b pb-4 mb-4">
+    <h2 className="text-2xl font-bold text-gray-800">Staff Details</h2>
+    <button
+      className="text-gray-500 hover:text-gray-800"
+      onClick={closeModal}
+      aria-label="Close"
+    >
+      ✕
+    </button>
+  </div>
+  <div className="space-y-3">
+    <div className="flex items-center">
+      <strong className="w-24 text-gray-600">Name:</strong>
+      <span className="text-gray-800">{selectedStaff.name}</span>
+    </div>
+    <div className="flex items-center">
+      <strong className="w-24 text-gray-600">Email:</strong>
+      <span className="text-gray-800">{selectedStaff.email}</span>
+    </div>
+    <div className="flex items-center">
+      <strong className="w-24 text-gray-600">Role:</strong>
+      <span className="text-gray-800">{selectedStaff.role}</span>
+    </div>
+    <div className="flex items-center">
+      <strong className="w-24 text-gray-600">Phone:</strong>
+      <span className="text-gray-800">{selectedStaff.phone}</span>
+    </div>
+    <div className="flex items-center">
+      <strong className="w-24 text-gray-600">Address:</strong>
+      <span className="text-gray-800">{selectedStaff.address}</span>
+    </div>
+    <div className="flex items-center">
+      <strong className="w-24 text-gray-600">CNIC:</strong>
+      <span className="text-gray-800">{selectedStaff.cnic}</span>
+    </div>
+    <div className="flex items-center">
+      <strong className="w-24 text-gray-600">Status:</strong>
+      <span
+        className={`px-3 py-1 rounded-full text-sm font-medium ${
+          selectedStaff.status === 'Active'
+            ? 'bg-green-100 text-green-800'
+            : 'bg-red-100 text-red-800'
+        }`}
+      >
+        {selectedStaff.status}
+      </span>
+    </div>
+  </div>
+</div>
+
+        </div>
+      )}
     </div>
   );
 }
