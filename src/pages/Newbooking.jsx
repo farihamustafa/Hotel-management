@@ -6,7 +6,8 @@ import toast, { Toaster } from 'react-hot-toast';
 
 const NewBooking = () => {
   const initialValues = {
-    dates: '',
+    checkInDate: '',
+    checkOutDate: '',
     guests: 1,
     roomType: 'Single Room',
     roomNumber: '',
@@ -22,7 +23,10 @@ const NewBooking = () => {
   };
 
   const validationSchema = Yup.object({
-    dates: Yup.string().required('Date is required'),
+    checkInDate: Yup.date().required('Check-in date is required'),
+    checkOutDate: Yup.date()
+      .required('Check-out date is required')
+      .min(Yup.ref('checkInDate'), 'Check-out date must be after check-in date'),
     guests: Yup.number().min(1, 'Minimum 1 guest').required('Number of guests is required'),
     roomType: Yup.string().required('Room type is required'),
     roomNumber: Yup.string().required('Room number is required'),
@@ -51,9 +55,10 @@ const NewBooking = () => {
   ];
 
   return (
-  <>      <Toaster position="top-center"  reverseOrder={false} />
-      <div className="flex flex-wrap justify-between items-center mb-8">
-        <h1 className="text-xl sm:text-3xl font-bold " >
+    <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 rounded-lg shadow-md">
+      <Toaster position="top-center" reverseOrder={false} />
+      <div className="flex flex-wrap justify-between items-center mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold">
           New <span className="border-b-4 border-red-800">Booking</span>
         </h1>
       </div>
@@ -65,15 +70,20 @@ const NewBooking = () => {
       >
         {({ setFieldValue, errors, touched }) => (
           <Form>
-            <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-4 lg:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
               {/* About Booking Section */}
               <div>
                 <h2 className="text-lg font-semibold mb-4">About Booking</h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium">Dates:</label>
-                    <Field type="date" name="dates" className="w-full border rounded-md p-2" />
-                    <ErrorMessage name="dates" component="div" className="text-red-600 text-sm" />
+                    <label className="block text-sm font-medium">Check-in Date</label>
+                    <Field type="date" name="checkInDate" className="w-full border rounded-md p-2" />
+                    <ErrorMessage name="checkInDate" component="div" className="text-red-600 text-sm" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium">Check-out Date</label>
+                    <Field type="date" name="checkOutDate" className="w-full border rounded-md p-2" />
+                    <ErrorMessage name="checkOutDate" component="div" className="text-red-600 text-sm" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium">Guests</label>
@@ -185,8 +195,7 @@ const NewBooking = () => {
           </Form>
         )}
       </Formik>
-      </>
-
+    </div>
   );
 };
 

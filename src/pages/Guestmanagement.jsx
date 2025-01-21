@@ -27,6 +27,8 @@ function Guestmanagement() {
     },
   ]);
 
+  const [searchTerm, setSearchTerm] = useState('');
+
   const handleCreateNewGuest = () => {
     navigate('/createguest');
   };
@@ -40,20 +42,33 @@ function Guestmanagement() {
     setGuests(updatedGuests);
   };
 
+  // Filter guests based on the search term
+  const filteredGuests = guests.filter((guest) =>
+    guest.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="p-6 bg-light min-h-screen">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Guest Management</h1>
-      </div>
-
-      <div className="mb-4">
-        <button
-          onClick={handleCreateNewGuest}
-          className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
-        >
-          + Create New Guest
-        </button>
-      </div>
+      
+      <div className="mb-6 flex justify-between items-center">
+  <div>
+    <button
+      onClick={handleCreateNewGuest}
+      className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
+    >
+      + Create New Guest
+    </button>
+  </div>
+  <div>
+    <input
+      type="text"
+      placeholder="Search guest..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="px-4 py-2 border rounded-md w-64 focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+  </div>
+</div>
 
       <div className="overflow-x-auto rounded-lg shadow-lg bg-white">
         <table className="min-w-full text-sm text-left text-gray-800">
@@ -70,7 +85,7 @@ function Guestmanagement() {
             </tr>
           </thead>
           <tbody>
-            {guests.map((guest, index) => (
+            {filteredGuests.map((guest, index) => (
               <tr key={guest.id} className="border-b hover:bg-gray-100 transition">
                 <td className="px-6 py-4">{index + 1}</td>
                 <td className="px-6 py-4">{guest.name}</td>
@@ -116,3 +131,4 @@ function Guestmanagement() {
 }
 
 export default Guestmanagement;
+

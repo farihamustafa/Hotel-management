@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const RoomInventory = () => {
+  const [searchQuery, setSearchQuery] = useState('');
   const rooms = [
     {
       id: 1,
@@ -32,9 +33,26 @@ const RoomInventory = () => {
     },
   ];
 
+  const filteredRooms = rooms.filter((room) =>
+    Object.values(room).some((value) =>
+      value.toString().toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
+
   return (
-    <div className="p-6 bg-light min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Room Inventory</h1>
+    <div className="p-4 bg-light min-h-screen">
+      <h1 className="text-3xl font-bold text-gray-800 mb-2">Room Inventory</h1>
+
+      {/* Search Bar */}
+      <div className="flex justify-end mb-4">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+        />
+      </div>
 
       <div className="overflow-x-auto rounded-lg shadow-lg bg-white">
         <table className="min-w-full text-sm text-left text-gray-800">
@@ -49,7 +67,7 @@ const RoomInventory = () => {
             </tr>
           </thead>
           <tbody>
-            {rooms.map((room) => (
+            {filteredRooms.map((room) => (
               <tr key={room.id} className="border-b hover:bg-gray-100 transition">
                 <td className="px-6 py-4">{room.id}</td>
                 <td className="px-6 py-4">{room.type}</td>
@@ -81,6 +99,13 @@ const RoomInventory = () => {
                 </td>
               </tr>
             ))}
+            {filteredRooms.length === 0 && (
+              <tr>
+                <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
+                  No matching rooms found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

@@ -28,7 +28,21 @@ function Staffmanagement() {
       cnic: '98765-4321098-7',
       status: 'Inactive',
     },
+    {
+      id: 2,
+      serialNo: 2,
+      name: 'Fariha Mustafa',
+      email: 'fariha@example.com',
+      role: 'Admin',
+      phone: '987-654-3210',
+      address: '456 Elm St',
+      cnic: '98765-4321098-7',
+      status: 'active',
+    },
+  
   ]);
+
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleCreateNewStaff = () => {
     navigate('/createstaff');
@@ -43,20 +57,32 @@ function Staffmanagement() {
     setStaffList(updatedList);
   };
 
+  const filteredStaff = staffList.filter((staff) =>
+    staff.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="p-6 bg-light min-h-screen">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Staff Management</h1>
-      </div>
+      <div className="mb-6 flex justify-between items-center">
+  <div>
+    <button
+      onClick={handleCreateNewStaff}
+      className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
+    >
+      + Create New Staff
+    </button>
+  </div>
+  <div>
+    <input
+      type="text"
+      placeholder="Search guest..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="px-4 py-2 border rounded-md w-64 focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+  </div>
+</div>
 
-      <div className="mb-4">
-        <button
-          onClick={handleCreateNewStaff}
-          className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
-        >
-          + Create New Staff
-        </button>
-      </div>
 
       <div className="overflow-x-auto rounded-lg shadow-lg bg-white">
         <table className="min-w-full text-sm text-left text-gray-800">
@@ -74,7 +100,7 @@ function Staffmanagement() {
             </tr>
           </thead>
           <tbody>
-            {staffList.map((staff) => (
+            {filteredStaff.map((staff) => (
               <tr key={staff.id} className="border-b hover:bg-gray-100 transition">
                 <td className="px-6 py-4">{staff.serialNo}</td>
                 <td className="px-6 py-4">{staff.name}</td>
