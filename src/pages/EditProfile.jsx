@@ -45,7 +45,7 @@ function EditProfile() {
           <FiX className="h-6 w-6" aria-hidden="true" />
         </button>
 
-        <h1 className="text-4xl font-bold text-gray-800 mb-6 border-b pb-4 text-center border-gray-300">
+        <h1 className="text-4xl font-bold text-gray-800 mb-6 border-b pb-4 text-center border-gray-400">
           Edit Profile
         </h1>
 
