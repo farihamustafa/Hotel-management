@@ -21,10 +21,36 @@ import CreateRoom from './pages/Createroom';
 import Task from './pages/Task';
 import Taskdetail from './pages/Taskdetail';
 import Additionalservice from './pages/Additionalservice';
+import EditProfile from './pages/EditProfile';
+import { apiService } from './services/apiservice';
+import { useEffect ,useState} from 'react';
 
 
 
 function App() {
+const [data, setData] = useState(null);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState(null);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const result = await apiService.getData('/products');  // Replace with your API endpoint
+      setData(result);
+      console.log(result)
+    } catch (err) {
+      setError('Error fetching data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, []);
+
+if (loading) return <div>Loading...</div>;
+if (error) return <div>{error}</div>;
+
 
 
   return (<>
@@ -48,6 +74,7 @@ function App() {
   <Route path='/notifications' element={<Authlayout><Notification/></Authlayout>}  />
   <Route path='/housekeeping/tasks' element={<Authlayout><Task/></Authlayout>}  />
   <Route path='/additionalservices' element={<Authlayout><Additionalservice/></Authlayout>}  />
+  <Route path='/profile' element={<Authlayout><EditProfile/></Authlayout>}  />
   
 
  

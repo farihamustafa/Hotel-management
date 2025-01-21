@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaBell, FaUser } from 'react-icons/fa';
 
 const Breadcrumb = () => {
@@ -46,6 +46,7 @@ const Navbar = () => {
   const [isProfileDropdownVisible, setIsProfileDropdownVisible] = useState(false);
   const notificationDropdownRef = useRef(null);
   const profileDropdownRef = useRef(null);
+  const navigate = useNavigate(); // Use the navigate hook
 
   const toggleNotificationDropdown = () => {
     setIsNotificationDropdownVisible(!isNotificationDropdownVisible);
@@ -75,6 +76,12 @@ const Navbar = () => {
   // Close notification dropdown when "See all" is clicked
   const handleSeeAllClick = () => {
     setIsNotificationDropdownVisible(false);
+  };
+
+  // Handle profile navigation to Profile page
+  const handleProfileClick = () => {
+    setIsProfileDropdownVisible(false);
+    navigate('/profile'); // Navigate to Profile page
   };
 
   return (
@@ -141,7 +148,7 @@ const Navbar = () => {
             >
               <ul>
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  <Link to="/profile">Profile</Link>
+                  <button onClick={handleProfileClick}>Profile</button> {/* Correct Navigation */}
                 </li>
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                   <Link to="/settings">Settings</Link>
