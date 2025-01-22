@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { FaTrash, FaEdit, FaEnvelope } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
+import { FaTrash, FaEdit, FaEnvelope, FaInfoCircle } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 function Guestmanagement() {
   const navigate = useNavigate();
 
-  // State to manage the guests list
   const [guests, setGuests] = useState([
     {
       id: 1,
@@ -27,6 +26,9 @@ function Guestmanagement() {
     },
   ]);
 
+  const [selectedGuest, setSelectedGuest] = useState(null); // State to manage the selected guest
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
+
   const handleCreateNewGuest = () => {
     navigate('/createguest');
   };
@@ -38,6 +40,16 @@ function Guestmanagement() {
   const handleDeleteGuest = (id) => {
     const updatedGuests = guests.filter((guest) => guest.id !== id);
     setGuests(updatedGuests);
+  };
+
+  const handleOpenDetails = (guest) => {
+    setSelectedGuest(guest);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedGuest(null);
   };
 
   return (
@@ -102,8 +114,12 @@ function Guestmanagement() {
                   >
                     <FaTrash size={18} />
                   </button>
-                  <button className="text-yellow-500 hover:text-yellow-700" title="Send Email">
-                    <FaEnvelope size={18} />
+                  <button
+                    onClick={() => handleOpenDetails(guest)}
+                    className="text-gray-500 hover:text-gray-700"
+                    title="Details"
+                  >
+                    <FaInfoCircle size={18} />
                   </button>
                 </td>
               </tr>
@@ -111,6 +127,68 @@ function Guestmanagement() {
           </tbody>
         </table>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && selectedGuest && (
+       <div
+       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+       onClick={handleCloseModal}
+     >
+       <div
+         className="bg-white rounded-lg p-8 max-w-lg w-full shadow-lg transform transition-all"
+         onClick={(e) => e.stopPropagation()}
+       >
+         {/* Modal Header */}
+         <div className="flex justify-between items-center border-b pb-4 mb-4">
+           <h2 className="text-2xl font-bold text-gray-800">Guest Details</h2>
+           <button
+             className="text-gray-500 hover:text-gray-800"
+             onClick={handleCloseModal}
+             aria-label="Close"
+           >
+             ✕
+           </button>
+         </div>
+     
+         {/* Modal Content */}
+         <div className="space-y-3">
+           <div className="flex items-center">
+             <strong className="w-24 text-gray-600">Name:</strong>
+             <span className="text-gray-800">{selectedGuest.name}</span>
+           </div>
+           <div className="flex items-center">
+             <strong className="w-24 text-gray-600">Email:</strong>
+             <span className="text-gray-800">{selectedGuest.email}</span>
+           </div>
+           <div className="flex items-center">
+             <strong className="w-24 text-gray-600">Contact:</strong>
+             <span className="text-gray-800">{selectedGuest.contact}</span>
+           </div>
+           <div className="flex items-center">
+             <strong className="w-24 text-gray-600">Address:</strong>
+             <span className="text-gray-800">{selectedGuest.address}</span>
+           </div>
+           <div className="flex items-center">
+             <strong className="w-24 text-gray-600">National ID:</strong>
+             <span className="text-gray-800">{selectedGuest.nationalId}</span>
+           </div>
+           <div className="flex items-center">
+             <strong className="w-24 text-gray-600">Status:</strong>
+             <span
+               className={`px-3 py-1 rounded-full text-sm font-medium ${
+                 selectedGuest.status === 'Active'
+                   ? 'bg-green-100 text-green-800'
+                   : 'bg-red-100 text-red-800'
+               }`}
+             >
+               {selectedGuest.status}
+             </span>
+           </div>
+         </div>
+       </div>
+     </div>
+     
+      )}
     </div>
   );
 }
