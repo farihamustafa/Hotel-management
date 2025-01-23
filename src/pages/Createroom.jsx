@@ -58,7 +58,7 @@ const CreateRoom = () => {
 
   return (
     <div className="px-4 py-8 max-w-6xl mx-auto">
-      <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Create a Room</h2>
+      <h2 className="text-3xl font-bold text-gray-800 mb-6">Create a Room</h2>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
