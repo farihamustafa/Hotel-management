@@ -55,7 +55,7 @@ const NewBooking = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 rounded-lg shadow-md">
+   <>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="flex flex-wrap justify-between items-center mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold">
@@ -184,18 +184,18 @@ const NewBooking = () => {
               </div>
             </div>
 
-            <div className="mt-6">
+            <div className="mt-8 text-right">
               <button
                 type="submit"
                 className="bg-red-800 text-white px-4 py-2 rounded-md hover:bg-red-700 transition"
               >
-                Save
+                Book Now
               </button>
             </div>
           </Form>
         )}
       </Formik>
-    </div>
+      </>
   );
 };
 
