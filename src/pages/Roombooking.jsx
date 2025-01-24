@@ -165,13 +165,13 @@ const RoomBooking = () => {
               <div className="flex items-center justify-end p-6 space-x-2 border-t border-gray-200 rounded-b">
                 <button
                   onClick={closeStatusModal}
-                  className="text-gray-500 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:ring-blue-300 rounded-lg text-sm px-5 py-2.5 focus:z-10"
+                   className="px-6 py-3 bg-red-700 text-white rounded-md hover:bg-red-800 transition duration-300"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={saveStatus}
-                  className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-sm px-5 py-2.5"
+                  className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
                 >
                   Save Status
                 </button>

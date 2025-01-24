@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { FaTrash, FaEdit } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';  // Import useNavigate
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
 const RoomInventory = () => {
+  const navigate = useNavigate(); // Initialize useNavigate hook
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false); // New modal for status
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
-  const [tempStatus, setTempStatus] = useState(''); // Temp status for the modal
+  const [tempStatus, setTempStatus] = useState('');
   const [rooms, setRooms] = useState([
     { id: 1, code: 'R001', type: 'Single Room', availability: 'Available', status: 'Available', price: '$100' },
     { id: 2, code: 'R002', type: 'Double Room', availability: 'Occupied', status: 'Occupied', price: '$150' },
@@ -28,7 +30,7 @@ const RoomInventory = () => {
   // Status Modal Functions
   const openStatusModal = (room) => {
     setSelectedRoom(room);
-    setTempStatus(room.status); // Set the current status in temp state
+    setTempStatus(room.status);
     setIsStatusModalOpen(true);
   };
 
@@ -38,14 +40,14 @@ const RoomInventory = () => {
   };
 
   const handleTempStatusChange = (newStatus) => {
-    setTempStatus(newStatus); // Update temp status, not the room directly
+    setTempStatus(newStatus);
   };
 
   const saveStatus = () => {
     const updatedRooms = rooms.map((room) =>
       room.id === selectedRoom.id ? { ...room, status: tempStatus } : room
     );
-    setRooms(updatedRooms); // Update room status
+    setRooms(updatedRooms);
     closeStatusModal();
   };
 
@@ -97,7 +99,7 @@ const RoomInventory = () => {
                         ? 'bg-blue-100 text-blue-800'
                         : 'bg-red-100 text-red-800'
                       }`}
-                    onClick={() => openStatusModal(room)} // Open status modal on click
+                    onClick={() => openStatusModal(room)}
                   >
                     {room.status}
                   </span>
@@ -113,6 +115,7 @@ const RoomInventory = () => {
                   <button
                     className="text-blue-500 text-lg hover:text-blue-700"
                     title="Edit Room"
+                    onClick={() => navigate('/roommanagement/createroom')} // Redirect to RoomCreate page
                   >
                     <FaEdit />
                   </button>
@@ -131,72 +134,72 @@ const RoomInventory = () => {
 
       {/* Status Modal */}
       {isStatusModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-1/3">
-            <h2 className="text-xl font-bold mb-4">Change Room Status</h2>
-            <div className="mb-4">
-
-              {/* Radio Buttons for Status */}
-              <div className="space-y-2">
-                <div>
-                  <input
-                    type="radio"
-                    id="available"
-                    name="status"
-                    value="Available"
-                    checked={tempStatus === 'Available'}
-                    onChange={(e) => handleTempStatusChange(e.target.value)}
-                    className="mr-2"
-                  />
-                  <label htmlFor="available">Available</label>
-                </div>
-                <div>
-                  <input
-                    type="radio"
-                    id="occupied"
-                    name="status"
-                    value="Occupied"
-                    checked={tempStatus === 'Occupied'}
-                    onChange={(e) => handleTempStatusChange(e.target.value)}
-                    className="mr-2"
-                  />
-                  <label htmlFor="occupied">Occupied</label>
-                </div>
-                <div>
-                  <input
-                    type="radio"
-                    id="cleaning"
-                    name="status"
-                    value="Cleaning"
-                    checked={tempStatus === 'Cleaning'}
-                    onChange={(e) => handleTempStatusChange(e.target.value)}
-                    className="mr-2"
-                  />
-                  <label htmlFor="cleaning">Cleaning</label>
+        <div
+          id="statusModal"
+          tabIndex="-1"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+          aria-hidden="true"
+        >
+          <div className="relative w-full max-w-md">
+            <div className="relative bg-white rounded-lg shadow">
+              <div className="flex justify-between items-center p-5 rounded-t border-b">
+                <h3 className="text-xl font-medium text-gray-900">Change Room Status</h3>
+              </div>
+              <div className="p-6 space-y-6">
+                <div className="flex flex-col space-y-2">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="status"
+                      value="Available"
+                      checked={tempStatus === 'Available'}
+                      onChange={(e) => handleTempStatusChange(e.target.value)}
+                      className="mr-2"
+                    />
+                    Available
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="status"
+                      value="Occupied"
+                      checked={tempStatus === 'Occupied'}
+                      onChange={(e) => handleTempStatusChange(e.target.value)}
+                      className="mr-2"
+                    />
+                    Occupied
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="status"
+                      value="Cleaning"
+                      checked={tempStatus === 'Cleaning'}
+                      onChange={(e) => handleTempStatusChange(e.target.value)}
+                      className="mr-2"
+                    />
+                    Cleaning
+                  </label>
                 </div>
               </div>
-            </div>
-
-            <div className="flex justify-end gap-4">
-              <button
-                type="button"
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                onClick={closeStatusModal}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                onClick={saveStatus} // Save status on button click
-              >
-                Save
-              </button>
+              <div className="flex items-center justify-end p-6 space-x-2 border-t border-gray-200 rounded-b">
+                <button
+                  onClick={closeStatusModal}
+                  className="px-6 py-3 bg-red-700 text-white rounded-md hover:bg-red-800 transition duration-300"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={saveStatus}
+                  className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
+                >
+                  Save Status
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
-
       {/* Maintenance Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -215,7 +218,6 @@ const RoomInventory = () => {
             >
               <Form>
                 <div className="grid grid-cols-3 gap-4 mb-4">
-                  {/* Maintenance Type */}
                   <div>
                     <label
                       htmlFor="maintenanceType"
@@ -239,8 +241,6 @@ const RoomInventory = () => {
                       className="text-red-600 text-sm mt-1"
                     />
                   </div>
-
-                  {/* Priority */}
                   <div>
                     <label
                       htmlFor="priority"
@@ -264,8 +264,6 @@ const RoomInventory = () => {
                       className="text-red-600 text-sm mt-1"
                     />
                   </div>
-
-                  {/* Deadline */}
                   <div>
                     <label
                       htmlFor="deadline"
@@ -284,8 +282,8 @@ const RoomInventory = () => {
                       className="text-red-600 text-sm mt-1"
                     />
                   </div>
-
-                  {/* Assign To */}
+                </div>
+                <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
                     <label
                       htmlFor="assignTo"
@@ -294,7 +292,6 @@ const RoomInventory = () => {
                       Assign To
                     </label>
                     <Field
-                      type="text"
                       name="assignTo"
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
                     />
@@ -304,38 +301,34 @@ const RoomInventory = () => {
                       className="text-red-600 text-sm mt-1"
                     />
                   </div>
+                  <div>
+                    <label
+                      htmlFor="additionalServices"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Additional Services
+                    </label>
+                    <Field
+                      name="additionalServices"
+                      as="textarea"
+                      rows="3"
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+                    />
+                  </div>
                 </div>
-
-                {/* Additional Services */}
-                <div className="mb-4">
-                  <label
-                    htmlFor="additionalServices"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Additional Services
-                  </label>
-                  <Field
-                    as="textarea"
-                    name="additionalServices"
-                    rows="3"
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
-                  />
-                </div>
-
-         
                 <div className="flex justify-end gap-4">
                   <button
                     type="button"
-                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                     onClick={closeModal}
+                    className="px-6 py-2 text-gray-600 border border-gray-300 rounded-md"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    className="px-6 py-2 bg-blue-500 text-white rounded-md"
                   >
-                    Schedule
+                    Schedule Maintenance
                   </button>
                 </div>
               </Form>
