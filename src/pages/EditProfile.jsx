@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { FiX } from 'react-icons/fi';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../layouts/Authlayout';
 
 function EditProfile() {
   const { state } = useLocation();
   const navigate = useNavigate();
 
+  
+  const {user} = useAuthContext();
+
   const [profile, setProfile] = useState({
-    name: '',
-    email: '',
+    name: user?.name || '',
+    email: user?.email ||  '',
     phone: '',
     address: '',
     status: 'active',
@@ -48,6 +52,7 @@ function EditProfile() {
     navigate('/profile'); 
   };
 
+
   return (
     <div className="bg-slate-200 min-h-screen flex items-center justify-center px-4">
       <div className="max-w-3xl w-full bg-white shadow-2xl rounded-3xl p-8 relative">
@@ -63,7 +68,7 @@ function EditProfile() {
         </h1>
 
         {/* Image Upload Section */}
-        <div className="mb-6 text-center">
+        {/* <div className="mb-6 text-center">
           <label htmlFor="profile-image" className="cursor-pointer">
             <div className="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4">
               {profile.image ? (
@@ -82,7 +87,7 @@ function EditProfile() {
               className="hidden"
             />
           </label>
-        </div>
+        </div> */}
 
         <form onSubmit={handleSave}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
@@ -103,14 +108,15 @@ function EditProfile() {
                 type="email"
                 name="email"
                 value={profile.email}
+                disabled
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition"
+                className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition disabled:bg-gray-300 "
                 placeholder="john@example.com"
               />
             </div>
   
            
-            <div>
+            {/* <div>
               <label className="block text-sm text-gray-600 mb-2">Status</label>
               <select
                 name="status"
@@ -121,7 +127,7 @@ function EditProfile() {
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
               </select>
-            </div>
+            </div> */}
           </div>
 
           <div className="text-left">

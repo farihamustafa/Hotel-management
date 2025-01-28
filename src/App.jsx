@@ -32,24 +32,24 @@ const [data, setData] = useState(null);
 const [loading, setLoading] = useState(true);
 const [error, setError] = useState(null);
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const result = await apiService.getData('/products');  // Replace with your API endpoint
-      setData(result);
-      console.log(result)
-    } catch (err) {
-      setError('Error fetching data');
-    } finally {
-      setLoading(false);
-    }
-  };
+// useEffect(() => {
+//   const fetchData = async () => {
+//     try {
+//       const result = await apiService.getData('/products');  // Replace with your API endpoint
+//       setData(result);
+//       console.log(result)
+//     } catch (err) {
+//       setError('Error fetching data');
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
 
-  fetchData();
-}, []);
+//   fetchData();
+// }, []);
 
-if (loading) return <div>Loading...</div>;
-if (error) return <div>{error}</div>;
+// if (loading) return <div>Loading...</div>;
+// if (error) return <div>{error}</div>;
 
 
 

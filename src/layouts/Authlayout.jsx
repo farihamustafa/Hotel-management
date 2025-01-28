@@ -1,9 +1,33 @@
-import React from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import SideNavigation from '../components/Sidebar'; // Ensure this import path is correct
+import { jwtDecode } from 'jwt-decode';
+
+const context = createContext();
+
+export function useAuthContext()  {
+  return useContext(context);
+};
 
 function AuthLayout({ children }) {
+  const [authAllow , setAuthAllow] = React.useState(false);
+  const token = localStorage.getItem('token');
+  
+  const user = token ? jwtDecode(token) : null;
+  
+
+  useEffect(()=>{
+    if(!user || !user.id || !token){ 
+      window.location.href = '/login'
+      }
+      else{
+        setAuthAllow(true)
+      }
+  },[])
+
   return (
+    authAllow ? (
+    <context.Provider value={{token,user}} >
     <div className="flex flex-col lg:flex-row min-h-screen bg-light">
       {/* Sidebar */}
       <div
@@ -30,6 +54,10 @@ function AuthLayout({ children }) {
         </div>
       </div>
     </div>
+    </context.Provider>
+    ) : (
+      <div className="flex flex-col lg:flex-row min-h-screen bg-light">Checking Authorization</div>
+      )
   );
 }
 
