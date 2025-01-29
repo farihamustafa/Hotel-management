@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect } from 'react';
 import Navbar from '../components/Navbar';
-import SideNavigation from '../components/Sidebar'; // Ensure this import path is correct
+import SideNavigation from '../components/Sidebar';
 import { jwtDecode } from 'jwt-decode';
 
 const context = createContext();

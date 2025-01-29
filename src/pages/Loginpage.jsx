@@ -19,8 +19,8 @@ const LoginPage = () => {
 //       setLoading(false);
 //     }
 //   };
+ const navigate = useNavigate();
 
-const router = useNavigate();
 
   return (
     <div className="flex min-h-screen">
@@ -109,6 +109,7 @@ const router = useNavigate();
             <button
               type="submit"
               className="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary-dark transition"
+        
             >
               Login
             </button>
