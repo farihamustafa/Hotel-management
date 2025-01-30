@@ -232,7 +232,7 @@ const CreateRoom = () => {
               </button>
               <button
                 type="button"
-                className="px-6 py-3 bg-red-700 text-white rounded-md hover:bg-red-800 transition duration-300"
+                className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
               >
                 Cancel
               </button>

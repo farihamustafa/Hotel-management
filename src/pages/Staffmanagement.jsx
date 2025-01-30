@@ -31,6 +31,7 @@ function Staffmanagement() {
   ]);
 
   const [selectedStaff, setSelectedStaff] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleCreateNewStaff = () => {
     navigate('/createstaff');
@@ -53,19 +54,32 @@ function Staffmanagement() {
     setSelectedStaff(null);
   };
 
+  // Filter staff based on the search query
+  const filteredStaff = staffList.filter(
+    (staff) =>
+      staff.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      staff.email.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="p-6 bg-light min-h-screen">
-      <div className="mb-6">
+      <div className="mb-6 flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-800">Staff Management</h1>
-      </div>
-
-      <div className="mb-4">
-        <button
-          onClick={handleCreateNewStaff}
-          className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
-        >
-          + Create New Staff
-        </button>
+        <div className="flex items-center space-x-4 ml-auto">
+          <button
+            onClick={handleCreateNewStaff}
+            className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
+          >
+            + Create New Staff
+          </button>
+          <input
+            type="text"
+            placeholder="Search staff..."
+            className="px-4 py-2 border rounded-md"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
       </div>
 
       <div className="overflow-x-auto rounded-lg shadow-lg bg-white">
@@ -84,7 +98,7 @@ function Staffmanagement() {
             </tr>
           </thead>
           <tbody>
-            {staffList.map((staff) => (
+            {filteredStaff.map((staff) => (
               <tr key={staff.id} className="border-b hover:bg-gray-100 transition">
                 <td className="px-6 py-4">{staff.serialNo}</td>
                 <td className="px-6 py-4">{staff.name}</td>
@@ -143,59 +157,58 @@ function Staffmanagement() {
           onClick={closeModal}
         >
           <div
-  className="bg-white rounded-lg p-8 max-w-lg w-full shadow-lg transform transition-all"
-  onClick={(e) => e.stopPropagation()}
->
-  <div className="flex justify-between items-center border-b pb-4 mb-4">
-    <h2 className="text-2xl font-bold text-gray-800">Staff Details</h2>
-    <button
-      className="text-gray-500 hover:text-gray-800"
-      onClick={closeModal}
-      aria-label="Close"
-    >
-      ✕
-    </button>
-  </div>
-  <div className="space-y-3">
-    <div className="flex items-center">
-      <strong className="w-24 text-gray-600">Name:</strong>
-      <span className="text-gray-800">{selectedStaff.name}</span>
-    </div>
-    <div className="flex items-center">
-      <strong className="w-24 text-gray-600">Email:</strong>
-      <span className="text-gray-800">{selectedStaff.email}</span>
-    </div>
-    <div className="flex items-center">
-      <strong className="w-24 text-gray-600">Role:</strong>
-      <span className="text-gray-800">{selectedStaff.role}</span>
-    </div>
-    <div className="flex items-center">
-      <strong className="w-24 text-gray-600">Phone:</strong>
-      <span className="text-gray-800">{selectedStaff.phone}</span>
-    </div>
-    <div className="flex items-center">
-      <strong className="w-24 text-gray-600">Address:</strong>
-      <span className="text-gray-800">{selectedStaff.address}</span>
-    </div>
-    <div className="flex items-center">
-      <strong className="w-24 text-gray-600">CNIC:</strong>
-      <span className="text-gray-800">{selectedStaff.cnic}</span>
-    </div>
-    <div className="flex items-center">
-      <strong className="w-24 text-gray-600">Status:</strong>
-      <span
-        className={`px-3 py-1 rounded-full text-sm font-medium ${
-          selectedStaff.status === 'Active'
-            ? 'bg-green-100 text-green-800'
-            : 'bg-red-100 text-red-800'
-        }`}
-      >
-        {selectedStaff.status}
-      </span>
-    </div>
-  </div>
-</div>
-
+            className="bg-white rounded-lg p-8 max-w-lg w-full shadow-lg transform transition-all"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center border-b pb-4 mb-4">
+              <h2 className="text-2xl font-bold text-gray-800">Staff Details</h2>
+              <button
+                className="text-gray-500 hover:text-gray-800"
+                onClick={closeModal}
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Name:</strong>
+                <span className="text-gray-800">{selectedStaff.name}</span>
+              </div>
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Email:</strong>
+                <span className="text-gray-800">{selectedStaff.email}</span>
+              </div>
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Role:</strong>
+                <span className="text-gray-800">{selectedStaff.role}</span>
+              </div>
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Phone:</strong>
+                <span className="text-gray-800">{selectedStaff.phone}</span>
+              </div>
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Address:</strong>
+                <span className="text-gray-800">{selectedStaff.address}</span>
+              </div>
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">CNIC:</strong>
+                <span className="text-gray-800">{selectedStaff.cnic}</span>
+              </div>
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Status:</strong>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    selectedStaff.status === 'Active'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-red-100 text-red-800'
+                  }`}
+                >
+                  {selectedStaff.status}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

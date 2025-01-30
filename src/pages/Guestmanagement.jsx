@@ -28,6 +28,7 @@ function Guestmanagement() {
 
   const [selectedGuest, setSelectedGuest] = useState(null); // State to manage the selected guest
   const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
+  const [searchQuery, setSearchQuery] = useState(''); // State for search query
 
   const handleCreateNewGuest = () => {
     navigate('/createguest');
@@ -52,19 +53,32 @@ function Guestmanagement() {
     setSelectedGuest(null);
   };
 
+  // Filter guests based on the search query
+  const filteredGuests = guests.filter(
+    (guest) =>
+      guest.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      guest.email.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="p-6 bg-light min-h-screen">
-      <div className="mb-6">
+      <div className="mb-6 flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-800">Guest Management</h1>
-      </div>
-
-      <div className="mb-4">
-        <button
-          onClick={handleCreateNewGuest}
-          className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
-        >
-          + Create New Guest
-        </button>
+        <div className="flex items-center space-x-4 ml-auto">
+          <button
+            onClick={handleCreateNewGuest}
+            className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
+          >
+            + Create New Guest
+          </button>
+          <input
+            type="text"
+            placeholder="Search guests..."
+            className="px-4 py-2 border rounded-md"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
       </div>
 
       <div className="overflow-x-auto rounded-lg shadow-lg bg-white">
@@ -82,7 +96,7 @@ function Guestmanagement() {
             </tr>
           </thead>
           <tbody>
-            {guests.map((guest, index) => (
+            {filteredGuests.map((guest, index) => (
               <tr key={guest.id} className="border-b hover:bg-gray-100 transition">
                 <td className="px-6 py-4">{index + 1}</td>
                 <td className="px-6 py-4">{guest.name}</td>
@@ -130,64 +144,63 @@ function Guestmanagement() {
 
       {/* Modal */}
       {isModalOpen && selectedGuest && (
-       <div
-       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-       onClick={handleCloseModal}
-     >
-       <div
-         className="bg-white rounded-lg p-8 max-w-lg w-full shadow-lg transform transition-all"
-         onClick={(e) => e.stopPropagation()}
-       >
-         {/* Modal Header */}
-         <div className="flex justify-between items-center border-b pb-4 mb-4">
-           <h2 className="text-2xl font-bold text-gray-800">Guest Details</h2>
-           <button
-             className="text-gray-500 hover:text-gray-800"
-             onClick={handleCloseModal}
-             aria-label="Close"
-           >
-             ✕
-           </button>
-         </div>
-     
-         {/* Modal Content */}
-         <div className="space-y-3">
-           <div className="flex items-center">
-             <strong className="w-24 text-gray-600">Name:</strong>
-             <span className="text-gray-800">{selectedGuest.name}</span>
-           </div>
-           <div className="flex items-center">
-             <strong className="w-24 text-gray-600">Email:</strong>
-             <span className="text-gray-800">{selectedGuest.email}</span>
-           </div>
-           <div className="flex items-center">
-             <strong className="w-24 text-gray-600">Contact:</strong>
-             <span className="text-gray-800">{selectedGuest.contact}</span>
-           </div>
-           <div className="flex items-center">
-             <strong className="w-24 text-gray-600">Address:</strong>
-             <span className="text-gray-800">{selectedGuest.address}</span>
-           </div>
-           <div className="flex items-center">
-             <strong className="w-24 text-gray-600">National ID:</strong>
-             <span className="text-gray-800">{selectedGuest.nationalId}</span>
-           </div>
-           <div className="flex items-center">
-             <strong className="w-24 text-gray-600">Status:</strong>
-             <span
-               className={`px-3 py-1 rounded-full text-sm font-medium ${
-                 selectedGuest.status === 'Active'
-                   ? 'bg-green-100 text-green-800'
-                   : 'bg-red-100 text-red-800'
-               }`}
-             >
-               {selectedGuest.status}
-             </span>
-           </div>
-         </div>
-       </div>
-     </div>
-     
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+          onClick={handleCloseModal}
+        >
+          <div
+            className="bg-white rounded-lg p-8 max-w-lg w-full shadow-lg transform transition-all"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex justify-between items-center border-b pb-4 mb-4">
+              <h2 className="text-2xl font-bold text-gray-800">Guest Details</h2>
+              <button
+                className="text-gray-500 hover:text-gray-800"
+                onClick={handleCloseModal}
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="space-y-3">
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Name:</strong>
+                <span className="text-gray-800">{selectedGuest.name}</span>
+              </div>
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Email:</strong>
+                <span className="text-gray-800">{selectedGuest.email}</span>
+              </div>
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Contact:</strong>
+                <span className="text-gray-800">{selectedGuest.contact}</span>
+              </div>
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Address:</strong>
+                <span className="text-gray-800">{selectedGuest.address}</span>
+              </div>
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">National ID:</strong>
+                <span className="text-gray-800">{selectedGuest.nationalId}</span>
+              </div>
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Status:</strong>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    selectedGuest.status === 'Active'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-red-100 text-red-800'
+                  }`}
+                >
+                  {selectedGuest.status}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

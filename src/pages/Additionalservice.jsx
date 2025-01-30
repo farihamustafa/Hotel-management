@@ -40,28 +40,32 @@ function Additionalservice() {
               }}
             >
               {() => (
-                <Form className="flex flex-wrap gap-2">
-                  <Field
-                    type="text"
-                    name="facility"
-                    placeholder="Add new facility"
-                    className="flex-1 border border-gray-300 rounded p-2"
-                  />
-                  <ErrorMessage name="facility" component="div" className="text-red-500 text-sm" />
+                <Form className="flex flex-wrap gap-4">
+                  <div className="w-full">
+                    <Field
+                      type="text"
+                      name="facility"
+                      placeholder="Add new facility"
+                      className="flex-1 border border-gray-300 rounded p-2"
+                    />
+                    <ErrorMessage name="facility" component="div" className="text-red-500 text-sm mt-2" />
+                  </div>
 
-                  <Field as="select" name="icon" className="flex-1 border border-gray-300 rounded p-2">
-                    <option value="">Select Icon</option>
-                    <option value="FaWifi">Free Wi-Fi</option>
-                    <option value="FaSwimmingPool">Swimming Pool</option>
-                    <option value="FaParking">Free Parking</option>
-                    <option value="FaCoffee">Coffee</option>
-                    <option value="FaUtensils">Restaurant</option>
-                  </Field>
-                  <ErrorMessage name="icon" component="div" className="text-red-500 text-sm" />
+                  <div className="w-full">
+                    <Field as="select" name="icon" className="flex-1 border border-gray-300 rounded p-2">
+                      <option value="">Select Icon</option>
+                      <option value="FaWifi">Free Wi-Fi</option>
+                      <option value="FaSwimmingPool">Swimming Pool</option>
+                      <option value="FaParking">Free Parking</option>
+                      <option value="FaCoffee">Coffee</option>
+                      <option value="FaUtensils">Restaurant</option>
+                    </Field>
+                    <ErrorMessage name="icon" component="div" className="text-red-500 text-sm mt-2" />
+                  </div>
 
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
+                    className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300 mt-4"
                   >
                     Add Facility
                   </button>
@@ -83,7 +87,6 @@ function Additionalservice() {
               <li className="flex items-center space-x-2">
                 <FaParking /> <span>Free Parking</span>
               </li> 
-              
             </ul>
           </div>
         </div>
@@ -102,26 +105,30 @@ function Additionalservice() {
               }}
             >
               {() => (
-                <Form className="flex flex-wrap gap-2">
-                  <Field
-                    type="text"
-                    name="service"
-                    placeholder="Add new service"
-                    className="flex-1 border border-gray-300 rounded p-2"
-                  />
-                  <ErrorMessage name="service" component="div" className="text-red-500 text-sm" />
+                <Form className="flex flex-wrap gap-4">
+                  <div className="w-full">
+                    <Field
+                      type="text"
+                      name="service"
+                      placeholder="Add new service"
+                      className="flex-1 border border-gray-300 rounded p-2"
+                    />
+                    <ErrorMessage name="service" component="div" className="text-red-500 text-sm mt-2" />
+                  </div>
 
-                  <Field
-                    type="text"
-                    name="price"
-                    placeholder="Price (USD)"
-                    className="flex-1 border border-gray-300 rounded p-2"
-                  />
-                  <ErrorMessage name="price" component="div" className="text-red-500 text-sm" />
+                  <div className="w-full">
+                    <Field
+                      type="text"
+                      name="price"
+                      placeholder="Price (USD)"
+                      className="flex-1 border border-gray-300 rounded p-2"
+                    />
+                    <ErrorMessage name="price" component="div" className="text-red-500 text-sm mt-2" />
+                  </div>
 
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
+                    className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300 mt-4"
                   >
                     Add Service
                   </button>
@@ -151,7 +158,6 @@ function Additionalservice() {
         </div>
       </div>
 
-    
       <div className="border border-gray-300 rounded-lg p-4 bg-gray-100 mt-6">
         <h2 className="text-lg font-semibold mb-4">Add New Maintenance Type</h2>
 
@@ -164,18 +170,20 @@ function Additionalservice() {
           }}
         >
           {() => (
-            <Form className="flex flex-wrap gap-2">
-              <Field
-                type="text"
-                name="maintenanceType"
-                placeholder="Maintenance type"
-                className="flex-1 border border-gray-300 rounded p-2"
-              />
-              <ErrorMessage name="maintenanceType" component="div" className="text-red-500 text-sm" />
+            <Form className="flex flex-wrap gap-4">
+              <div className="w-full">
+                <Field
+                  type="text"
+                  name="maintenanceType"
+                  placeholder="Maintenance type"
+                  className="flex-1 border border-gray-300 rounded p-2"
+                />
+                <ErrorMessage name="maintenanceType" component="div" className="text-red-500 text-sm mt-2" />
+              </div>
 
               <button
                 type="submit"
-                className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
+                className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300 mt-4"
               >
                 Add Maintenance Type
               </button>

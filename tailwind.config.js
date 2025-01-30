@@ -8,9 +8,9 @@ export default {
   ],
   theme: {
     colors: {
-      primary: "#850b11		", 
-      hoverbutton:"#404040",
-      secondary: "#5A5A5A",//colour for button
+      primary: "#a37d4c", 
+      hoverbutton:"#967142",
+      secondary: "#a37d4c",//colour for button
       light: "#FAFAFA", 
   },
 },

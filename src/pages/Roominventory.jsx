@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FaTrash, FaEdit } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
@@ -16,6 +16,7 @@ const RoomInventory = () => {
     { id: 3, code: 'R003', type: 'Suite', availability: 'Available', status: 'Available', price: '$300' },
     { id: 4, code: 'R004', type: 'Single Room', availability: 'Available', status: 'Cleaning', price: '$100' },
   ]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const openModal = (room) => {
     setSelectedRoom(room);
@@ -27,7 +28,6 @@ const RoomInventory = () => {
     setSelectedRoom(null);
   };
 
-  // Status Modal Functions
   const openStatusModal = (room) => {
     setSelectedRoom(room);
     setTempStatus(room.status);
@@ -64,13 +64,36 @@ const RoomInventory = () => {
     closeModal();
   };
 
+  const filteredRooms = rooms.filter((room) =>
+    room.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    room.type.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Room Inventory</h1>
+    <div className="p-6 flex flex-col">
+    
+      <div className="mb-6 flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-gray-800">Room Inventory</h1>
+        <div className="flex items-center space-x-4 ml-auto">
+          <button
+            onClick={() => navigate('/roommanagement/createroom')}
+            className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
+          >
+            + Create New Room
+          </button>
+          <input
+            type="text"
+            placeholder="Search Room..."
+            className="px-4 py-2 border rounded-md"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
 
       <div className="overflow-x-auto rounded-lg shadow-md bg-white">
         <table className="w-full text-sm text-left text-gray-800">
-          <thead className="bg-gray-700 text-white uppercase text-base">
+          <thead className="bg-secondary text-white uppercase text-base">
             <tr>
               <th className="px-6 py-3">#</th>
               <th className="px-6 py-3">Room Code</th>
@@ -82,11 +105,8 @@ const RoomInventory = () => {
             </tr>
           </thead>
           <tbody>
-            {rooms.map((room) => (
-              <tr
-                key={room.id}
-                className="border-b hover:bg-gray-100 transition duration-200"
-              >
+            {filteredRooms.map((room) => (
+              <tr key={room.id} className="border-b hover:bg-gray-100 transition duration-200">
                 <td className="px-4 py-2">{room.id}</td>
                 <td className="px-4 py-2">{room.code}</td>
                 <td className="px-4 py-2">{room.type}</td>
@@ -106,10 +126,7 @@ const RoomInventory = () => {
                 </td>
                 <td className="px-4 py-2">{room.price}</td>
                 <td className="px-4 py-2 flex justify-center gap-4">
-                  <button
-                    className="text-red-500 text-lg hover:text-red-700"
-                    title="Delete Room"
-                  >
+                  <button className="text-red-500 text-lg hover:text-red-700" title="Delete Room">
                     <FaTrash />
                   </button>
                   <button
@@ -200,6 +217,7 @@ const RoomInventory = () => {
           </div>
         </div>
       )}
+
       {/* Maintenance Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -320,13 +338,13 @@ const RoomInventory = () => {
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="px-6 py-2 text-gray-600 border border-gray-300 rounded-md"
+                    className="px-6 py-2 bg-secondary hover:bg-hoverbutton text-white rounded-md"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2 bg-blue-500 text-white rounded-md"
+                    className="px-6 py-2 bg-secondary hover:bg-hoverbutton text-white rounded-md"
                   >
                     Schedule Maintenance
                   </button>

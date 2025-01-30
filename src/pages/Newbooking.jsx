@@ -54,7 +54,7 @@ const NewBooking = () => {
   <>      <Toaster position="top-center"  reverseOrder={false} />
       <div className="flex flex-wrap justify-between items-center mb-8">
         <h1 className="text-xl sm:text-3xl font-bold " >
-          New <span className="border-b-4 border-red-800">Booking</span>
+          New <span className="border-b-4 border-secondary-800">Booking</span>
         </h1>
       </div>
 
@@ -177,7 +177,7 @@ const NewBooking = () => {
             <div className="mt-6">
               <button
                 type="submit"
-                className="bg-red-800 text-white px-4 py-2 rounded-md hover:bg-red-700 transition"
+                className="px-6 py-3 rounded-xl bg-secondary text-white font-medium hover:bg-hoverbutton transition shadow-lg"
               >
                 Save
               </button>

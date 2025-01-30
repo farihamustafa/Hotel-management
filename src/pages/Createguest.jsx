@@ -151,7 +151,7 @@ function Createguest() {
               <div className="text-left">
                 <button
                   type="submit"
-                  className="px-6 py-3 rounded-xl bg-gray-600 text-white font-medium hover:bg-red-800 transition shadow-lg"
+                  className= "px-6 py-3 rounded-xl bg-secondary text-white font-medium hover:bg-hoverbutton transition shadow-lg"
                 >
                   Save Guest
                 </button>
