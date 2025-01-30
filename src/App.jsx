@@ -75,12 +75,13 @@ const [error, setError] = useState(null);
   <Route path='/housekeeping/tasks' element={<Authlayout><Task/></Authlayout>}  />
   <Route path='/additionalservices' element={<Authlayout><Additionalservice/></Authlayout>}  />
   <Route path='/profile' element={<Authlayout><EditProfile/></Authlayout>}  />
-  
+ 
 
  
 
   </Routes>
   </BrowserRouter>
+  
   <BrowserRouter>
   <Routes>
     <Route path='/login' element={<LoginPage/>}/>
