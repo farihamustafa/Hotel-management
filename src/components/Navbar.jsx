@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaBell, FaUser } from 'react-icons/fa';
+import toast, { Toaster } from 'react-hot-toast'; // Import react-hot-toast
 
 const Breadcrumb = () => {
   const location = useLocation();
@@ -46,7 +47,7 @@ const Navbar = () => {
   const [isProfileDropdownVisible, setIsProfileDropdownVisible] = useState(false);
   const notificationDropdownRef = useRef(null);
   const profileDropdownRef = useRef(null);
-  const navigate = useNavigate(); // Use the navigate hook
+  const navigate = useNavigate();
 
   const toggleNotificationDropdown = () => {
     setIsNotificationDropdownVisible(!isNotificationDropdownVisible);
@@ -73,16 +74,43 @@ const Navbar = () => {
     };
   }, []);
 
-  // Close notification dropdown when "See all" is clicked
-  const handleSeeAllClick = () => {
-    setIsNotificationDropdownVisible(false);
-  };
-
   // Handle profile navigation to Profile page
   const handleProfileClick = () => {
     setIsProfileDropdownVisible(false);
     navigate('/profile'); // Navigate to Profile page
   };
+
+  const handleLogoutClick = () => {
+    toast((t) => (
+      <div className="flex justify-center items-center space-x-4">
+        <span className="text-center ">Are you sure you want to logout?</span>
+        <div className="flex space-x-4 w-full justify-between">
+          {/* Cancel Button on the Left */}
+          <button
+            className="bg-gray-500 text-white px-3 py-1 rounded-md"
+            onClick={() => toast.dismiss(t.id)} // Dismiss the toast without logging out
+          >
+            Cancel
+          </button>
+          {/* Confirm Button on the Right */}
+          <button
+            className="bg-yellow-500 text-white px-3 py-1 rounded-md"
+            onClick={() => {
+              toast.dismiss(t.id);
+             
+              navigate('/login'); // Redirect to login page
+            }}
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    ), {
+      duration: 3000, // Show toast for 5 seconds
+      position: 'top-center',
+    });
+  };
+  
 
   return (
     <header className="bg-primary border border-gray-300 rounded-xl m-4 shadow-lg">
@@ -124,7 +152,7 @@ const Navbar = () => {
                   <span className="text-gray-500 text-xs">8:30 PM</span>
                 </li>
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex justify-center items-center">
-                  <Link to="/notifications" className="text-gray-500 text-sm" onClick={handleSeeAllClick}>
+                  <Link to="/notifications" className="text-gray-500 text-sm">
                     See all
                   </Link>
                 </li>
@@ -148,19 +176,22 @@ const Navbar = () => {
             >
               <ul>
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  <button onClick={handleProfileClick}>Profile</button> {/* Correct Navigation */}
+                  <button onClick={handleProfileClick}>Profile</button>
                 </li>
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                   <Link to="/settings">Settings</Link>
                 </li>
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  <Link to="/logout">Logout</Link>
+                  <button onClick={handleLogoutClick}>Logout</button> {/* Logout with confirmation */}
                 </li>
               </ul>
             </div>
           )}
         </div>
       </div>
+
+      {/* Toast container */}
+      <Toaster />
     </header>
   );
 };
