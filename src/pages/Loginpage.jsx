@@ -1,26 +1,25 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import * as Yup from "yup";
 import { apiService } from "../services/apiservice";
 import { useNavigate } from "react-router-dom";
+import { UseAPiContext } from "../App";
+import { jwtDecode } from "jwt-decode";
 
 const LoginPage = () => {
 
-
-  //   const fetchData = async () => {
-//     try {
-//       const result = await apiService.getData('/products');  // Replace with your API endpoint
-//       setData(result);
-//       console.log(result)
-//     } catch (err) {
-//       setError('Error fetching data');
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
  const navigate = useNavigate();
-
+  const token = localStorage.getItem('token');
+  const user = token ? jwtDecode(token) : null;
+ useEffect(()=>{
+  if(user != null){ 
+    window.location.href = '/'
+    }
+    else{
+      
+    }
+ },[])
 
   return (
     <div className="flex min-h-screen">

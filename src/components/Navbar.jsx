@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaBell, FaUser } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast'; // Import react-hot-toast
+import { UseAPiContext } from '../App';
 
 const Breadcrumb = () => {
   const location = useLocation();
@@ -95,10 +96,13 @@ const Navbar = () => {
           {/* Confirm Button on the Right */}
           <button
             className="bg-yellow-500 text-white px-3 py-1 rounded-md"
-            onClick={() => {
+            onClick={async () => {
+              localStorage.removeItem("token");
+              toast.success("logout successfully")
               toast.dismiss(t.id);
-             
-              navigate('/login'); // Redirect to login page
+              setTimeout( () => {
+                window.location.href = '/'
+                }, 2000);
             }}
           >
             Confirm
@@ -181,8 +185,8 @@ const Navbar = () => {
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                   <Link to="/settings">Settings</Link>
                 </li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  <button onClick={handleLogoutClick}>Logout</button> {/* Logout with confirmation */}
+                <li onClick={handleLogoutClick} className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  <button >Logout</button> {/* Logout with confirmation */}
                 </li>
               </ul>
             </div>
