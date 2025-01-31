@@ -27,9 +27,9 @@ const SideNavigation = () => {
         <li className="flex justify-center">
           <Link to="/" className="w-full p-2">
             <img
-              src="https://www.designmantic.com/logo-images/727.png?company=Company%20Name&keyword=hotel&slogan=&verify=1"
+              src="/assets/logo/logo.png"
               alt="Logo"
-              className="w-48 h-16 object-contain"
+              className="w-56 h-56 object-contain"
             />
           </Link>
         </li>

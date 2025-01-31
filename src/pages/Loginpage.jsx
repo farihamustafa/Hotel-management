@@ -13,7 +13,7 @@ const LoginPage = () => {
   const token = localStorage.getItem('token');
   const user = token ? jwtDecode(token) : null;
  useEffect(()=>{
-  if(user != null){ 
+  if(user != null && user.rolename=="SuperAdmin"){ 
     window.location.href = '/'
     }
     else{

@@ -19,8 +19,11 @@ function AuthLayout({ children }) {
   
 
   useEffect(()=>{
-    if(!user || !user.id || !token){ 
-      window.location.href = '/login'
+    if(!user || !user.id || !token || user.rolename != "SuperAdmin"){ 
+      window.location.href = '/login';
+      setTimeout(() => {
+        window.location.reload();
+    }, 100);
       }
       else{
         setAuthAllow(true)

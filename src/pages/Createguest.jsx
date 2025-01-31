@@ -6,27 +6,24 @@ import { toast, Toaster } from 'react-hot-toast';
 
 // Validation schema
 const validationSchema = Yup.object().shape({
-  sno: Yup.number().required('S.No is required'),
-  name: Yup.string().required('Name is required'),
+  username: Yup.string().required('Name is required'),
   email: Yup.string().email('Invalid email address').required('Email is required'),
   role: Yup.string().required('Role is required'),
-  phone: Yup.string()
+  contact: Yup.string()
     .matches(/^\d{3}-\d{3}-\d{4}$/, 'Phone must be in the format 123-456-7890')
     .required('Phone is required'),
   address: Yup.string().required('Address is required'),
-  nationality: Yup.string().required('Nationality is required'),
+  CNIC: Yup.string().required('Nationality is required'),
   status: Yup.string().required('Status is required'),
 });
 
 function Createguest() {
   const initialValues = {
-    sno: '',
-    name: '',
+    username: '',
     email: '',
-    role: 'Guest',
-    phone: '',
+    contact: '',
     address: '',
-    nationality: '',
+    CNIC: '',
     status: 'active',
   };
 
@@ -64,24 +61,14 @@ function Createguest() {
               {/* Input Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
                 <div>
-                  <label className="block text-sm text-gray-600 mb-2">S.No</label>
-                  <Field
-                    name="sno"
-                    type="number"
-                    className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition"
-                    placeholder="1"
-                  />
-                  <ErrorMessage name="sno" component="div" className="text-red-600 text-sm mt-1" />
-                </div>
-                <div>
                   <label className="block text-sm text-gray-600 mb-2">Name</label>
                   <Field
-                    name="name"
+                    name="username"
                     type="text"
                     className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition"
                     placeholder="John Doe"
                   />
-                  <ErrorMessage name="name" component="div" className="text-red-600 text-sm mt-1" />
+                  <ErrorMessage name="username" component="div" className="text-red-600 text-sm mt-1" />
                 </div>
                 <div>
                   <label className="block text-sm text-gray-600 mb-2">Email</label>
@@ -94,24 +81,14 @@ function Createguest() {
                   <ErrorMessage name="email" component="div" className="text-red-600 text-sm mt-1" />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-600 mb-2">Role</label>
-                  <Field
-                    name="role"
-                    type="text"
-                    className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition"
-                    placeholder="Guest"
-                  />
-                  <ErrorMessage name="role" component="div" className="text-red-600 text-sm mt-1" />
-                </div>
-                <div>
                   <label className="block text-sm text-gray-600 mb-2">Phone</label>
                   <Field
-                    name="phone"
+                    name="contact"
                     type="text"
                     className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition"
                     placeholder="123-456-7890"
                   />
-                  <ErrorMessage name="phone" component="div" className="text-red-600 text-sm mt-1" />
+                  <ErrorMessage name="contact" component="div" className="text-red-600 text-sm mt-1" />
                 </div>
                 <div>
                   <label className="block text-sm text-gray-600 mb-2">Address</label>
@@ -124,14 +101,14 @@ function Createguest() {
                   <ErrorMessage name="address" component="div" className="text-red-600 text-sm mt-1" />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-600 mb-2">Nationality</label>
+                  <label className="block text-sm text-gray-600 mb-2">CNIC</label>
                   <Field
-                    name="nationality"
+                    name="CNIC"
                     type="text"
                     className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition"
                     placeholder="American"
                   />
-                  <ErrorMessage name="nationality" component="div" className="text-red-600 text-sm mt-1" />
+                  <ErrorMessage name="CNIC" component="div" className="text-red-600 text-sm mt-1" />
                 </div>
                 <div>
                   <label className="block text-sm text-gray-600 mb-2">Status</label>
@@ -153,7 +130,7 @@ function Createguest() {
                   type="submit"
                   className= "px-6 py-3 rounded-xl bg-secondary text-white font-medium hover:bg-hoverbutton transition shadow-lg"
                 >
-                  Save Guest
+                  Add Guest
                 </button>
               </div>
             </Form>

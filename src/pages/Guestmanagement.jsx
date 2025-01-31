@@ -7,9 +7,10 @@ import { guestManagement } from '../services/GuestManagement';
 function Guestmanagement() {
   const navigate = useNavigate();
   const [guests, setGuests] = useState([]);
+  const [selectedGuest, setSelectedGuest] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const guestsPerPage = 5; // Har page par kitne guests dikhenge
+  const guestsPerPage = 5; 
 
   useEffect(() => {
     fetchUserList();
@@ -45,11 +46,18 @@ function Guestmanagement() {
       console.log("Error changing status:", error);
     }
   };
-
+  const handleCreateNewGuest = () => {
+    navigate('/createguest');
+  };
   const handleEditGuest = (guest) => {
     navigate('/editguest/:id', { state: { guest } });
   };
-
+  const handleViewDetails = (guest) => {
+    setSelectedGuest(guest);
+  };
+  const closeModal = () => {
+    setSelectedGuest(null);
+  };
   // Search filter
   const filteredGuests = guests.filter(
     (guest) =>
@@ -69,6 +77,12 @@ function Guestmanagement() {
       <div className="mb-6 flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-800">Guest Management</h1>
         <div className="flex items-center space-x-4 ml-auto">
+        <button
+            onClick={handleCreateNewGuest}
+            className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
+          >
+            + Create New Guest
+          </button>
           <input
             type="text"
             placeholder="Search guests..."
@@ -116,7 +130,9 @@ function Guestmanagement() {
                       <MdToggleOff size={18} />
                     </button>
                   }
-                  <button className="text-gray-500 hover:text-gray-700" title="Details">
+                  <button className="text-gray-500 hover:text-gray-700" title="Details"
+                  onClick={() => handleViewDetails(guest)}
+                  >
                     <FaInfoCircle size={18} />
                   </button>
                 </td>
@@ -152,6 +168,67 @@ function Guestmanagement() {
           Next
         </button>
       </div>
+      
+      {selectedGuest && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+          onClick={closeModal}
+        >
+          <div
+            className="bg-white rounded-lg p-8 max-w-lg w-full shadow-lg transform transition-all"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center border-b pb-4 mb-4">
+              <h2 className="text-2xl font-bold text-gray-800">Guest Details</h2>
+              <button
+                className="text-gray-500 hover:text-gray-800"
+                onClick={closeModal}
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Name:</strong>
+                <span className="text-gray-800">{selectedGuest.name}</span>
+              </div>
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Email:</strong>
+                <span className="text-gray-800">{selectedGuest.email}</span>
+              </div>
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Role:</strong>
+                <span className="text-gray-800">Guest</span>
+              </div>
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Phone:</strong>
+                <span className="text-gray-800">{selectedGuest.contact}</span>
+              </div>
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Address:</strong>
+                <span className="text-gray-800">{selectedGuest.address || "no Address"}</span>
+              </div>
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Nationality:</strong>
+                <span className="text-gray-800">{selectedGuest.cnic || "no Nationality"}</span>
+              </div>
+              <div className="flex items-center">
+                <strong className="w-24 text-gray-600">Status:</strong>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    selectedGuest.status === 'Active'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-red-100 text-red-800'
+                  }`}
+                >
+                  {selectedGuest.status}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
