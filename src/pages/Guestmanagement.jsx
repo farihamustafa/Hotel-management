@@ -211,7 +211,7 @@ function Guestmanagement() {
               </div>
               <div className="flex items-center">
                 <strong className="w-24 text-gray-600">Nationality:</strong>
-                <span className="text-gray-800">{selectedGuest.cnic || "no Nationality"}</span>
+                <span className="text-gray-800">{selectedGuest.CNIC || "no Nationality"}</span>
               </div>
               <div className="flex items-center">
                 <strong className="w-24 text-gray-600">Status:</strong>

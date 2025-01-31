@@ -57,8 +57,8 @@ const LoginPage = () => {
                       window.location.href = '/'
                       }, 2000);
                   } catch (err) {
-                    console.log(err.response.data.message)
-                    toast.error(err.response.data.message || 'Network Error');
+                    console.log(err.response.data.msg)
+                    toast.error(err.response.data.msg || 'Network Error');
                   } finally {
                    
                   }

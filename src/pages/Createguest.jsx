@@ -2,16 +2,14 @@ import React from 'react';
 import { FiX } from 'react-icons/fi';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { toast, Toaster } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
+import { apiService } from '../services/apiservice';
 
 // Validation schema
 const validationSchema = Yup.object().shape({
   username: Yup.string().required('Name is required'),
   email: Yup.string().email('Invalid email address').required('Email is required'),
-  role: Yup.string().required('Role is required'),
-  contact: Yup.string()
-    .matches(/^\d{3}-\d{3}-\d{4}$/, 'Phone must be in the format 123-456-7890')
-    .required('Phone is required'),
+  contact: Yup.string(), // Optional but will be sent as empty string if blank
   address: Yup.string().required('Address is required'),
   CNIC: Yup.string().required('Nationality is required'),
   status: Yup.string().required('Status is required'),
@@ -24,22 +22,49 @@ function Createguest() {
     contact: '',
     address: '',
     CNIC: '',
-    status: 'active',
+    password:'',
+    status: 'Active',
   };
 
-  const handleSubmit = (values) => {
-    console.log('Form Submitted:', values);
-    // Perform actions like sending data to the server
+  const handleSubmit = async (values, {resetForm }) => {
+    try {
+      const updatedValues = {
+        ...values,
+        contact: values.contact || "", 
+      };
 
-    // Show success notification
-    toast.success('New guest created successfully!');
-  };
+      console.log('Submitting Data:', updatedValues);
+      const response = await apiService.postData(`auth/usercreate`, { role: "Guest", ...updatedValues });
+      console.log(response)
+      if (response.msg) {
+        toast.success(response.msg);
+        resetForm(); 
+      } else {
+        toast.error(`Failed to create guest: ${response.error}`);
+      }
+    } catch (error) {
+      const errorMessage = error?.response?.data?.errors;
+      
+      if (Array.isArray(errorMessage)) {
+        if (errorMessage[0]?.msg) {
+          toast.error(`Error: ${errorMessage[0].msg}`);
+          console.log(errorMessage[0].msg); 
+        }
+      } else {
+        const errorMsg = errorMessage?.msg || error?.msg;
+        if (errorMsg) {
+          toast.error(`Error: ${errorMsg}`);
+          console.log(errorMsg);
+        }
+      }
+    } 
+};
+
 
   return (
     <div className="bg-slate-200 min-h-screen flex items-center justify-center px-4">
       {/* Toaster to display notifications */}
-      <Toaster position="top-right" reverseOrder={false} />
-
+      
       <div className="max-w-3xl w-full bg-white shadow-2xl rounded-3xl p-8 relative">
         {/* Cancel Icon Button */}
         <button className="absolute top-4 right-4 text-gray-500 hover:text-gray-800">
@@ -56,7 +81,7 @@ function Createguest() {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {() => (
+          {({ isSubmitting }) => (
             <Form>
               {/* Input Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
@@ -79,6 +104,16 @@ function Createguest() {
                     placeholder="john@example.com"
                   />
                   <ErrorMessage name="email" component="div" className="text-red-600 text-sm mt-1" />
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-600 mb-2">Password</label>
+                  <Field
+                    name="password"
+                    type="password"
+                    className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition"
+                    placeholder="123-456-7890"
+                  />
+                  <ErrorMessage name="password" component="div" className="text-red-600 text-sm mt-1" />
                 </div>
                 <div>
                   <label className="block text-sm text-gray-600 mb-2">Phone</label>
@@ -117,8 +152,8 @@ function Createguest() {
                     as="select"
                     className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition"
                   >
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
+                    <option value="Active">Active</option>
+                    <option value="InActive">InActive</option>
                   </Field>
                   <ErrorMessage name="status" component="div" className="text-red-600 text-sm mt-1" />
                 </div>
@@ -128,9 +163,10 @@ function Createguest() {
               <div className="text-left">
                 <button
                   type="submit"
-                  className= "px-6 py-3 rounded-xl bg-secondary text-white font-medium hover:bg-hoverbutton transition shadow-lg"
+                  className="px-6 py-3 rounded-xl bg-secondary text-white font-medium hover:bg-hoverbutton transition shadow-lg"
+                  disabled={isSubmitting}
                 >
-                  Add Guest
+                  {isSubmitting ? "Adding..." : "Add Guest"}
                 </button>
               </div>
             </Form>
