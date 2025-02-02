@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as FaIcons from "react-icons/fa";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import ReactPaginate from "react-paginate";
 import { Fa0, FaCarBattery } from "react-icons/fa6";
+import { apiService } from "../services/apiservice";
+import toast from "react-hot-toast";
 
 const facilityValidationSchema = Yup.object().shape({
-  facility: Yup.string().required("Facility is required"),
+  name: Yup.string().required("Facility is required"),
   icon: Yup.string().required("Icon selection is required"),
 });
 
@@ -30,22 +32,37 @@ const allIcons = Object.keys(FaIcons).map((iconName) => ({
 function AdditionalService() {
   const [selectedIcon, setSelectedIcon] = useState(null);
   const [iconSearch, setIconSearch] = useState("");
-  
+
   // State for holding data with initial mock data
-  const [facilities, setFacilities] = useState([
-    { facility: "Gym", icon: "FaDumbbell" },
-    { facility: "Pool", icon: "FaSwimmingPool" },
-    { facility: "Spa", icon: "FaSpa" },
-    { facility: "Parking", icon: "FaParking" },
-  ]);
-  
+  const [facilities, setFacilities] = useState([]);
+
+  useEffect(() => {
+    fetchUserList();
+  }, []);
+
+  const fetchUserList = async () => {
+    try {
+      const response = await apiService.getData("facility/list");
+      console.log(response.data)
+      setFacilities(response.data)
+
+
+    } catch (error) {
+      console.error("Error fetching guest list:", error);
+
+    }
+  };
+
   const [services, setServices] = useState([
     { service: "Cleaning", price: 50 },
     { service: "Laundry", price: 30 },
     { service: "Room Service", price: 20 },
     { service: "Catering", price: 100 },
+    { service: "Cleaning", price: 50 },
+
+    
   ]);
-  
+
   const [maintenanceTypes, setMaintenanceTypes] = useState([
     { maintenanceType: "Electrical" },
     { maintenanceType: "Plumbing" },
@@ -69,29 +86,42 @@ function AdditionalService() {
   const serviceData = services.slice(currentPageService * itemsPerPage, (currentPageService + 1) * itemsPerPage);
   const maintenanceData = maintenanceTypes.slice(currentPageMaintenance * itemsPerPage, (currentPageMaintenance + 1) * itemsPerPage);
 
+  const pageCount = Math.ceil(facilities.length / itemsPerPage);
+
+
+
   return (
-    <div className="p-6 max-w-5xl mx-auto bg-white shadow-lg rounded-lg space-y-6">
+    <div className="p-6 max-w-5xl mx-auto rounded-lg space-y-6">
       {/* Facilities Section */}
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="p-6 bg-gray-100 rounded-lg shadow">
+        <div className="p-6 bg-white rounded-lg shadow-lg">
           <h2 className="text-xl font-semibold text-gray-700 mb-4">Add New Facility</h2>
           <Formik
-            initialValues={{ facility: "", icon: "" }}
+            initialValues={{ name: "", icon: "" }}
             validationSchema={facilityValidationSchema}
-            onSubmit={(values, { resetForm }) => {
-              setFacilities([...facilities, values]);
-              resetForm();
+            onSubmit={async (values, { resetForm }) => {
+              try {
+                const response = await apiService.postData("facility/create", values)
+                toast.success(response.msg)
+                console.log(response)
+                setFacilities([...facilities, values]);
+                resetForm();
+              } catch (error) {
+                toast.error(error)
+              }
+
+
             }}
           >
             {({ setFieldValue }) => (
               <Form className="space-y-4">
                 <Field
                   type="text"
-                  name="facility"
+                  name="name"
                   placeholder="Add new facility"
                   className="w-full p-2 border rounded"
                 />
-                <ErrorMessage name="facility" component="div" className="text-red-500 text-sm" />
+                <ErrorMessage name="name" component="div" className="text-red-500 text-sm" />
                 <input
                   type="text"
                   placeholder="Search icon..."
@@ -114,7 +144,8 @@ function AdditionalService() {
                     .filter((icon) => icon.id.toLowerCase().includes(iconSearch.toLowerCase()))
                     .map((icon) => (
                       <option key={icon.id} value={icon.id}>
-                        {`${icon.id} `} 
+                        <i className={`icon-${icon.id}`} style={{ marginRight: 10 }}></i>
+                        {icon.id}
                       </option>
                     ))}
                 </Field>
@@ -138,7 +169,7 @@ function AdditionalService() {
           <div className="mt-6">
             <h3 className="text-lg font-semibold">Facilities</h3>
             <table className="w-full mt-4 table-auto">
-              <thead>
+              <thead className="bg-gray-900 text-white border-2 border-black">
                 <tr>
                   <th className="border px-4 py-2">Facility</th>
                   <th className="border px-4 py-2">Icon</th>
@@ -147,7 +178,7 @@ function AdditionalService() {
               <tbody>
                 {facilityData.map((facility, index) => (
                   <tr key={index}>
-                    <td className="border px-4 py-2">{facility.facility}</td>
+                    <td className="border px-4 py-2">{facility.name}</td>
                     <td className="border px-4 py-2">
                       {allIcons.find((icon) => icon.id === facility.icon)?.icon}
                     </td>
@@ -155,23 +186,25 @@ function AdditionalService() {
                 ))}
               </tbody>
             </table>
-            <div className="flex justify-center mt-8">
+            <div className="flex flex-wrap justify-center mt-8">
               <ReactPaginate
                 previousLabel={<span className="px-3 py-2 bg-gray-200 rounded-l">←</span>}
                 nextLabel={<span className="px-3 py-2 bg-gray-200 rounded-r">→</span>}
-                pageCount={Math.ceil(facilities.length / itemsPerPage)}
+                pageCount={pageCount}
                 onPageChange={handlePageClickFacility}
                 containerClassName={"flex space-x-2"}
                 pageLinkClassName={"px-4 py-2 bg-gray-100 border rounded-md hover:bg-primary hover:text-white cursor-pointer"}
                 activeLinkClassName={"bg-primary text-white"}
                 disabledLinkClassName={"text-gray-400 cursor-not-allowed"}
+                pageRangeDisplayed={1}  // Show 4 pages at a time
+                marginPagesDisplayed={1}  // Show 1 page at the start/end of the page range
               />
             </div>
           </div>
         </div>
 
         {/* Additional Services */}
-        <div className="p-6 bg-gray-100 rounded-lg shadow">
+        <div className="p-6 bg-white rounded-lg shadow-lg">
           <h2 className="text-xl font-semibold text-gray-700 mb-4">Add New Additional Service</h2>
           <Formik
             initialValues={{ service: "", price: "" }}
@@ -196,7 +229,7 @@ function AdditionalService() {
           <div className="mt-6">
             <h3 className="text-lg font-semibold">Additional Services</h3>
             <table className="w-full mt-4 table-auto">
-              <thead>
+              <thead className="bg-gray-900 text-white border-2 border-black">
                 <tr>
                   <th className="border px-4 py-2">Service</th>
                   <th className="border px-4 py-2">Price</th>
@@ -221,6 +254,8 @@ function AdditionalService() {
                 pageLinkClassName={"px-4 py-2 bg-gray-100 border rounded-md hover:bg-primary hover:text-white cursor-pointer"}
                 activeLinkClassName={"bg-primary text-white"}
                 disabledLinkClassName={"text-gray-400 cursor-not-allowed"}
+                pageRangeDisplayed={1}  // Show 4 pages at a time
+                marginPagesDisplayed={1}  // Show 1 page at the start/end of the page range
               />
             </div>
           </div>
@@ -228,7 +263,7 @@ function AdditionalService() {
       </div>
 
       {/* Maintenance Section */}
-      <div className="p-6 bg-gray-100 rounded-lg shadow">
+      <div className="p-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-xl font-semibold text-gray-700 mb-4">Add New Maintenance Type</h2>
         <Formik
           initialValues={{ maintenanceType: "" }}
@@ -246,7 +281,7 @@ function AdditionalService() {
               className="w-full p-2 border rounded"
             />
             <ErrorMessage name="maintenanceType" component="div" className="text-red-500 text-sm" />
-            <button type="submit" className="w-full bg-primary text-white py-2 rounded">
+            <button type="submit" className="w-100 px-2 text-center bg-primary text-white py-2 rounded">
               Add Maintenance Type
             </button>
           </Form>
@@ -254,9 +289,8 @@ function AdditionalService() {
 
         {/* Maintenance Table */}
         <div className="mt-6">
-          <h3 className="text-lg font-semibold">Maintenance Types</h3>
           <table className="w-full mt-4 table-auto">
-            <thead>
+            <thead className="bg-gray-900 text-white border-2 border-black">
               <tr>
                 <th className="border px-4 py-2">Maintenance Type</th>
               </tr>
@@ -279,6 +313,8 @@ function AdditionalService() {
               pageLinkClassName={"px-4 py-2 bg-gray-100 border rounded-md hover:bg-primary hover:text-white cursor-pointer"}
               activeLinkClassName={"bg-primary text-white"}
               disabledLinkClassName={"text-gray-400 cursor-not-allowed"}
+              pageRangeDisplayed={1}  // Show 4 pages at a time
+              marginPagesDisplayed={1}  // Show 1 page at the start/end of the page range
             />
           </div>
         </div>

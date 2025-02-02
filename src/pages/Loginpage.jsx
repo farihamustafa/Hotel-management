@@ -50,7 +50,7 @@ const LoginPage = () => {
 
           onSubmit={async (values)=>{
             try {
-                    const result = await apiService.postData('/auth/admin/login',values);
+                    const result = await apiService.postData('auth/admin/login',values);
                     toast.success("Login successfully")
                     localStorage.setItem('token',result.token)
                     setTimeout( () => {
