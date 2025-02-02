@@ -28,8 +28,8 @@ function EditGuest() {
 
   const handleSave = (values) => {
     console.log('Updated Guest Data:', values);
-    toast.success('Guest details saved successfully!'); // Show success message
-    navigate('/guestmanagement'); // Navigate back to Guest Management
+    toast.success('Guest details saved successfully!'); 
+    navigate('/guestmanagement'); 
   };
 
   return (
@@ -56,16 +56,6 @@ function EditGuest() {
           {() => (
             <Form>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-                <div>
-                  <label className="block text-sm text-gray-600 mb-2">S.No</label>
-                  <Field
-                    name="serialNo"
-                    type="number"
-                    className="w-full px-4 py-3 rounded-xl border bg-gray-100 focus:bg-white focus:border-blue-400 focus:outline-none transition"
-                    placeholder="1"
-                  />
-                  <ErrorMessage name="serialNo" component="div" className="text-red-600 text-sm mt-1" />
-                </div>
                 <div>
                   <label className="block text-sm text-gray-600 mb-2">Name</label>
                   <Field
