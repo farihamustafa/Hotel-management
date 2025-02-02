@@ -3,6 +3,9 @@ import Navbar from '../components/Navbar';
 import SideNavigation from '../components/Sidebar';
 import { jwtDecode } from 'jwt-decode';
 import { UseAPiContext } from '../App';
+import { apiService } from '../services/apiservice';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const context = createContext();
 
@@ -17,6 +20,46 @@ function AuthLayout({ children }) {
   
   const user = token ? jwtDecode(token) : null;
   
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const verifyUser = async () => {
+      try {
+        const token = localStorage.getItem("token"); // Get token from local storage
+
+        if (!token) {
+          console.log("No token found, redirecting to login...");
+          navigate("/login");
+          return;
+        }
+
+        const response = await apiService.postData(
+          "auth/verifyuser",
+          {},
+          {
+            headers: { Authorization: `Bearer ${token}` }, 
+          }
+        );
+
+        console.log("User verified:", response.data);
+      } catch (error) {
+        if (error.response) {
+          console.log("Error verifying user:", error.response.data.message);
+
+          if (error.response.status === 401) {
+            toast.error("Token expired, redirecting to login...");
+            localStorage.removeItem("token"); 
+            navigate("/login"); 
+          }
+        } else {
+          console.error("Network Error:", error.message);
+        }
+      }
+    };
+
+    verifyUser();
+  }, [navigate]);
 
   useEffect(()=>{
     if(!user || !user.id || !token || user.rolename != "SuperAdmin"){ 

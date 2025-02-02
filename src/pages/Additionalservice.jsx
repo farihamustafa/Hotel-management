@@ -1,213 +1,290 @@
-import React from 'react';
-import { FaWifi, FaSwimmingPool, FaParking, FaCoffee, FaUtensils } from 'react-icons/fa';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import React, { useState } from "react";
+import * as FaIcons from "react-icons/fa";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import ReactPaginate from "react-paginate";
+import { Fa0, FaCarBattery } from "react-icons/fa6";
 
-// Validation Schema for Facilities, Additional Services, and Maintenance Types
 const facilityValidationSchema = Yup.object().shape({
-  facility: Yup.string().required('Facility is required'),
-  icon: Yup.string().required('Icon selection is required'),
+  facility: Yup.string().required("Facility is required"),
+  icon: Yup.string().required("Icon selection is required"),
 });
 
 const serviceValidationSchema = Yup.object().shape({
-  service: Yup.string().required('Service is required'),
+  service: Yup.string().required("Service is required"),
   price: Yup.number()
-    .typeError('Price must be a number')
-    .positive('Price must be positive')
-    .required('Price is required'),
+    .typeError("Price must be a number")
+    .positive("Price must be positive")
+    .required("Price is required"),
 });
 
 const maintenanceValidationSchema = Yup.object().shape({
-  maintenanceType: Yup.string().required('Maintenance type is required'),
+  maintenanceType: Yup.string().required("Maintenance type is required"),
 });
 
-function Additionalservice() {
+const allIcons = Object.keys(FaIcons).map((iconName) => ({
+  id: iconName,
+  icon: React.createElement(FaIcons[iconName]),
+}));
+
+function AdditionalService() {
+  const [selectedIcon, setSelectedIcon] = useState(null);
+  const [iconSearch, setIconSearch] = useState("");
+  
+  // State for holding data with initial mock data
+  const [facilities, setFacilities] = useState([
+    { facility: "Gym", icon: "FaDumbbell" },
+    { facility: "Pool", icon: "FaSwimmingPool" },
+    { facility: "Spa", icon: "FaSpa" },
+    { facility: "Parking", icon: "FaParking" },
+  ]);
+  
+  const [services, setServices] = useState([
+    { service: "Cleaning", price: 50 },
+    { service: "Laundry", price: 30 },
+    { service: "Room Service", price: 20 },
+    { service: "Catering", price: 100 },
+  ]);
+  
+  const [maintenanceTypes, setMaintenanceTypes] = useState([
+    { maintenanceType: "Electrical" },
+    { maintenanceType: "Plumbing" },
+    { maintenanceType: "HVAC" },
+    { maintenanceType: "Carpentry" },
+  ]);
+
+  // Pagination State
+  const [currentPageFacility, setCurrentPageFacility] = useState(0);
+  const [currentPageService, setCurrentPageService] = useState(0);
+  const [currentPageMaintenance, setCurrentPageMaintenance] = useState(0);
+
+  // Helper for pagination
+  const handlePageClickFacility = (data) => setCurrentPageFacility(data.selected);
+  const handlePageClickService = (data) => setCurrentPageService(data.selected);
+  const handlePageClickMaintenance = (data) => setCurrentPageMaintenance(data.selected);
+
+  // Table data per page
+  const itemsPerPage = 3;
+  const facilityData = facilities.slice(currentPageFacility * itemsPerPage, (currentPageFacility + 1) * itemsPerPage);
+  const serviceData = services.slice(currentPageService * itemsPerPage, (currentPageService + 1) * itemsPerPage);
+  const maintenanceData = maintenanceTypes.slice(currentPageMaintenance * itemsPerPage, (currentPageMaintenance + 1) * itemsPerPage);
+
   return (
-    <div className="p-4 md:p-6">
-      {/* First Row: Facilities and Additional Services */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Facilities Column */}
-        <div className="flex flex-col space-y-4">
-          <div className="border border-gray-300 rounded-lg p-4 bg-gray-100">
-            <h2 className="text-lg font-semibold mb-4">Add New Facility</h2>
-
-            <Formik
-              initialValues={{ facility: '', icon: '' }}
-              validationSchema={facilityValidationSchema}
-              onSubmit={(values, { resetForm }) => {
-                console.log('Facility added:', values);
-                resetForm();
-              }}
-            >
-              {() => (
-                <Form className="flex flex-wrap gap-4">
-                  <div className="w-full">
-                    <Field
-                      type="text"
-                      name="facility"
-                      placeholder="Add new facility"
-                      className="flex-1 border border-gray-300 rounded p-2"
-                    />
-                    <ErrorMessage name="facility" component="div" className="text-red-500 text-sm mt-2" />
+    <div className="p-6 max-w-5xl mx-auto bg-white shadow-lg rounded-lg space-y-6">
+      {/* Facilities Section */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="p-6 bg-gray-100 rounded-lg shadow">
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">Add New Facility</h2>
+          <Formik
+            initialValues={{ facility: "", icon: "" }}
+            validationSchema={facilityValidationSchema}
+            onSubmit={(values, { resetForm }) => {
+              setFacilities([...facilities, values]);
+              resetForm();
+            }}
+          >
+            {({ setFieldValue }) => (
+              <Form className="space-y-4">
+                <Field
+                  type="text"
+                  name="facility"
+                  placeholder="Add new facility"
+                  className="w-full p-2 border rounded"
+                />
+                <ErrorMessage name="facility" component="div" className="text-red-500 text-sm" />
+                <input
+                  type="text"
+                  placeholder="Search icon..."
+                  className="w-full p-2 border rounded"
+                  value={iconSearch}
+                  onChange={(e) => setIconSearch(e.target.value)}
+                />
+                <Field
+                  as="select"
+                  name="icon"
+                  className="w-full p-2 border rounded"
+                  onChange={(e) => {
+                    const selected = e.target.value;
+                    setSelectedIcon(selected);
+                    setFieldValue("icon", selected);
+                  }}
+                >
+                  <option value="">Select an Icon</option>
+                  {allIcons
+                    .filter((icon) => icon.id.toLowerCase().includes(iconSearch.toLowerCase()))
+                    .map((icon) => (
+                      <option key={icon.id} value={icon.id}>
+                        {`${icon.id} `} 
+                      </option>
+                    ))}
+                </Field>
+                <ErrorMessage name="icon" component="div" className="text-red-500 text-sm" />
+                {selectedIcon && (
+                  <div className="mt-4 flex items-center space-x-2">
+                    <span className="text-lg">
+                      {allIcons.find((icon) => icon.id === selectedIcon)?.icon}
+                    </span>
+                    <span>{selectedIcon}</span>
                   </div>
+                )}
+                <button type="submit" className="w-full bg-primary text-white py-2 rounded">
+                  Add Facility
+                </button>
+              </Form>
+            )}
+          </Formik>
 
-                  <div className="w-full">
-                    <Field as="select" name="icon" className="flex-1 border border-gray-300 rounded p-2">
-                      <option value="">Select Icon</option>
-                      <option value="FaWifi">Free Wi-Fi</option>
-                      <option value="FaSwimmingPool">Swimming Pool</option>
-                      <option value="FaParking">Free Parking</option>
-                      <option value="FaCoffee">Coffee</option>
-                      <option value="FaUtensils">Restaurant</option>
-                    </Field>
-                    <ErrorMessage name="icon" component="div" className="text-red-500 text-sm mt-2" />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300 mt-4"
-                  >
-                    Add Facility
-                  </button>
-                </Form>
-              )}
-            </Formik>
-          </div>
-
-          {/* Existing Facilities */}
-          <div className="border border-gray-300 rounded-lg p-4 bg-gray-100">
-            <h2 className="text-lg font-semibold mb-4">Existing Facilities</h2>
-            <ul className="list-none space-y-2">
-              <li className="flex items-center space-x-2">
-                <FaWifi /> <span>Free Wi-Fi</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <FaSwimmingPool /> <span>Swimming Pool</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <FaParking /> <span>Free Parking</span>
-              </li> 
-            </ul>
+          {/* Facility Table */}
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold">Facilities</h3>
+            <table className="w-full mt-4 table-auto">
+              <thead>
+                <tr>
+                  <th className="border px-4 py-2">Facility</th>
+                  <th className="border px-4 py-2">Icon</th>
+                </tr>
+              </thead>
+              <tbody>
+                {facilityData.map((facility, index) => (
+                  <tr key={index}>
+                    <td className="border px-4 py-2">{facility.facility}</td>
+                    <td className="border px-4 py-2">
+                      {allIcons.find((icon) => icon.id === facility.icon)?.icon}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="flex justify-center mt-8">
+              <ReactPaginate
+                previousLabel={<span className="px-3 py-2 bg-gray-200 rounded-l">←</span>}
+                nextLabel={<span className="px-3 py-2 bg-gray-200 rounded-r">→</span>}
+                pageCount={Math.ceil(facilities.length / itemsPerPage)}
+                onPageChange={handlePageClickFacility}
+                containerClassName={"flex space-x-2"}
+                pageLinkClassName={"px-4 py-2 bg-gray-100 border rounded-md hover:bg-primary hover:text-white cursor-pointer"}
+                activeLinkClassName={"bg-primary text-white"}
+                disabledLinkClassName={"text-gray-400 cursor-not-allowed"}
+              />
+            </div>
           </div>
         </div>
 
-        {/* Additional Services Column */}
-        <div className="flex flex-col space-y-4">
-          <div className="border border-gray-300 rounded-lg p-4 bg-gray-100">
-            <h2 className="text-lg font-semibold mb-4">Add New Additional Service</h2>
+        {/* Additional Services */}
+        <div className="p-6 bg-gray-100 rounded-lg shadow">
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">Add New Additional Service</h2>
+          <Formik
+            initialValues={{ service: "", price: "" }}
+            validationSchema={serviceValidationSchema}
+            onSubmit={(values, { resetForm }) => {
+              setServices([...services, values]);
+              resetForm();
+            }}
+          >
+            <Form className="space-y-4">
+              <Field type="text" name="service" placeholder="Service Name" className="w-full p-2 border rounded" />
+              <ErrorMessage name="service" component="div" className="text-red-500 text-sm" />
+              <Field type="text" name="price" placeholder="Price (USD)" className="w-full p-2 border rounded" />
+              <ErrorMessage name="price" component="div" className="text-red-500 text-sm" />
+              <button type="submit" className="w-full bg-primary text-white py-2 rounded">
+                Add Service
+              </button>
+            </Form>
+          </Formik>
 
-            <Formik
-              initialValues={{ service: '', price: '' }}
-              validationSchema={serviceValidationSchema}
-              onSubmit={(values, { resetForm }) => {
-                console.log('Service added:', values);
-                resetForm();
-              }}
-            >
-              {() => (
-                <Form className="flex flex-wrap gap-4">
-                  <div className="w-full">
-                    <Field
-                      type="text"
-                      name="service"
-                      placeholder="Add new service"
-                      className="flex-1 border border-gray-300 rounded p-2"
-                    />
-                    <ErrorMessage name="service" component="div" className="text-red-500 text-sm mt-2" />
-                  </div>
-
-                  <div className="w-full">
-                    <Field
-                      type="text"
-                      name="price"
-                      placeholder="Price (USD)"
-                      className="flex-1 border border-gray-300 rounded p-2"
-                    />
-                    <ErrorMessage name="price" component="div" className="text-red-500 text-sm mt-2" />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300 mt-4"
-                  >
-                    Add Service
-                  </button>
-                </Form>
-              )}
-            </Formik>
-          </div>
-
-          {/* Existing Additional Services */}
-          <div className="border border-gray-300 rounded-lg p-4 bg-gray-100">
-            <h2 className="text-lg font-semibold mb-4">Existing Additional Services</h2>
-            <ul className="list-none space-y-2">
-              <li className="flex justify-between">
-                <span>Laundry</span>
-                <span>$10.00</span>
-              </li>
-              <li className="flex justify-between">
-                <span>Room Service</span>
-                <span>$15.00</span>
-              </li>
-              <li className="flex justify-between">
-                <span>Airport Shuttle</span>
-                <span>$25.00</span>
-              </li>
-            </ul>
+          {/* Service Table */}
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold">Additional Services</h3>
+            <table className="w-full mt-4 table-auto">
+              <thead>
+                <tr>
+                  <th className="border px-4 py-2">Service</th>
+                  <th className="border px-4 py-2">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {serviceData.map((service, index) => (
+                  <tr key={index}>
+                    <td className="border px-4 py-2">{service.service}</td>
+                    <td className="border px-4 py-2">{service.price}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="flex justify-center mt-8">
+              <ReactPaginate
+                previousLabel={<span className="px-3 py-2 bg-gray-200 rounded-l">←</span>}
+                nextLabel={<span className="px-3 py-2 bg-gray-200 rounded-r">→</span>}
+                pageCount={Math.ceil(services.length / itemsPerPage)}
+                onPageChange={handlePageClickService}
+                containerClassName={"flex space-x-2"}
+                pageLinkClassName={"px-4 py-2 bg-gray-100 border rounded-md hover:bg-primary hover:text-white cursor-pointer"}
+                activeLinkClassName={"bg-primary text-white"}
+                disabledLinkClassName={"text-gray-400 cursor-not-allowed"}
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="border border-gray-300 rounded-lg p-4 bg-gray-100 mt-6">
-        <h2 className="text-lg font-semibold mb-4">Add New Maintenance Type</h2>
-
+      {/* Maintenance Section */}
+      <div className="p-6 bg-gray-100 rounded-lg shadow">
+        <h2 className="text-xl font-semibold text-gray-700 mb-4">Add New Maintenance Type</h2>
         <Formik
-          initialValues={{ maintenanceType: '' }}
+          initialValues={{ maintenanceType: "" }}
           validationSchema={maintenanceValidationSchema}
           onSubmit={(values, { resetForm }) => {
-            console.log('Maintenance type added:', values);
+            setMaintenanceTypes([...maintenanceTypes, values]);
             resetForm();
           }}
         >
-          {() => (
-            <Form className="flex flex-wrap gap-4">
-              <div className="w-full">
-                <Field
-                  type="text"
-                  name="maintenanceType"
-                  placeholder="Maintenance type"
-                  className="flex-1 border border-gray-300 rounded p-2"
-                />
-                <ErrorMessage name="maintenanceType" component="div" className="text-red-500 text-sm mt-2" />
-              </div>
-
-              <button
-                type="submit"
-                className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300 mt-4"
-              >
-                Add Maintenance Type
-              </button>
-            </Form>
-          )}
+          <Form className="space-y-4">
+            <Field
+              type="text"
+              name="maintenanceType"
+              placeholder="Maintenance Type"
+              className="w-full p-2 border rounded"
+            />
+            <ErrorMessage name="maintenanceType" component="div" className="text-red-500 text-sm" />
+            <button type="submit" className="w-full bg-primary text-white py-2 rounded">
+              Add Maintenance Type
+            </button>
+          </Form>
         </Formik>
-      </div>
 
-      {/* Existing Maintenance Types */}
-      <div className="border border-gray-300 rounded-lg p-4 bg-gray-100 mt-4">
-        <h2 className="text-lg font-semibold mb-4">Existing Maintenance Types</h2>
-        <ul className="list-none space-y-2">
-          <li className="flex justify-between">
-            <span>HVAC Repair</span>
-            <span></span>
-          </li>
-          <li className="flex justify-between">
-            <span>Electrical Check</span>
-            <span></span>
-          </li>
-        </ul>
+        {/* Maintenance Table */}
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold">Maintenance Types</h3>
+          <table className="w-full mt-4 table-auto">
+            <thead>
+              <tr>
+                <th className="border px-4 py-2">Maintenance Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              {maintenanceData.map((maintenance, index) => (
+                <tr key={index}>
+                  <td className="border px-4 py-2">{maintenance.maintenanceType}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="flex justify-center mt-8">
+            <ReactPaginate
+              previousLabel={<span className="px-3 py-2 bg-gray-200 rounded-l">←</span>}
+              nextLabel={<span className="px-3 py-2 bg-gray-200 rounded-r">→</span>}
+              pageCount={Math.ceil(maintenanceTypes.length / itemsPerPage)}
+              onPageChange={handlePageClickMaintenance}
+              containerClassName={"flex space-x-2"}
+              pageLinkClassName={"px-4 py-2 bg-gray-100 border rounded-md hover:bg-primary hover:text-white cursor-pointer"}
+              activeLinkClassName={"bg-primary text-white"}
+              disabledLinkClassName={"text-gray-400 cursor-not-allowed"}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-export default Additionalservice;
+export default AdditionalService;

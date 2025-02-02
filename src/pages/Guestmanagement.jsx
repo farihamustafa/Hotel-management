@@ -50,7 +50,7 @@ function Guestmanagement() {
     navigate('/createguest');
   };
   const handleEditGuest = (guest) => {
-    navigate('/editguest/:id', { state: { guest } });
+    navigate(`/editguest/${guest._id}`, { state: { guest } });
   };
   const handleViewDetails = (guest) => {
     setSelectedGuest(guest);

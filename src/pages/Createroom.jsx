@@ -12,6 +12,7 @@ import {
   FaGlassCheers,
   FaTshirt,
 } from "react-icons/fa";
+import axios from "axios";
 
 // Facilities data
 const facilitiesData = [
@@ -51,14 +52,57 @@ const CreateRoom = () => {
     imagelg:""
   };
 
-  const handleSubmit = (values) => {
-    console.log(values);
-    // Submit form data to backend or perform desired actions
+  const handleSubmit = async (values) => {
+    const formData = new FormData();
+  
+    formData.append("roomTitle", values.roomTitle);
+    formData.append("roomCode", values.roomCode);
+    formData.append("roomType", values.roomType);
+    formData.append("description", values.description);
+    formData.append("size", values.size);
+    formData.append("person", values.maxPerson);
+    formData.append("price", values.price);
+  
+    // Convert image files to Base64
+    if (values.image) {
+      const image = values.image[0];
+      const base64Image = await encodeImageToBase64(image);
+      formData.append("image", base64Image);
+    }
+  
+    if (values.imagelg) {
+      const imagelg = values.imagelg[0];
+      const base64ImageLg = await encodeImageToBase64(imagelg);
+      formData.append("imagelg", base64ImageLg);
+    }
+  
+    // Facilities (if applicable)
+    // formData.append("facility", JSON.stringify(values.facilities || []));
+  
+    // Send request to server
+    try {
+      const response = await axios.post("http://localhost:90/api/v1/room/create", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      console.log("Response:", response.data);
+    } catch (error) {
+      console.error("Error:", error.response?.data || error.message);
+    }
   };
+  
+  const encodeImageToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (err) => reject(err);
+      reader.readAsDataURL(file);
+    });
+  };
+  
 
   return (
     <div className="px-4 py-8 max-w-6xl mx-auto">
-      <h2 className="text-3xl font-bold text-gray-800 mb-6">Create a Room</h2>
+      <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Create a Room</h2>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -97,19 +141,25 @@ const CreateRoom = () => {
             </div>
 
             {/* Room Type */}
-            <div className="col-span-1 sm:col-span-1 lg:col-span-1">
-              <label htmlFor="roomType" className="block text-gray-700 mb-1">
-                Room Type
-              </label>
-              <Field
-                type="text"
-                id="roomType"
-                name="roomType"
-                placeholder="Enter Room Type"
-                className="w-full p-3 border border-gray-300 rounded-lg"
-              />
-              <ErrorMessage name="roomType" component="div" className="text-red-600 text-sm" />
-            </div>
+<div className="col-span-1 sm:col-span-1 lg:col-span-1">
+  <label htmlFor="roomType" className="block text-gray-700 mb-1">
+    Room Type
+  </label>
+  <Field
+    as="select"
+    id="roomType"
+    name="roomType"
+    className="w-full p-3 border border-gray-300 rounded-lg"
+  >
+    <option value="">Select Room Type</option>
+    <option value="doubleBed">doubleBed</option>
+    <option value="singleBed">singleBed</option>
+    <option value="Luxury">Luxury Room</option>
+    {/* Add more options as needed */}
+  </Field>
+  <ErrorMessage name="roomType" component="div" className="text-red-600 text-sm" />
+</div>
+
 
             {/* Size */}
             <div className="col-span-1">
@@ -229,12 +279,6 @@ const CreateRoom = () => {
                 className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
               >
                 Create
-              </button>
-              <button
-                type="button"
-                className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
-              >
-                Cancel
               </button>
             </div>
           </Form>

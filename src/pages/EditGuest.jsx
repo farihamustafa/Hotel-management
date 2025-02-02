@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import toast, { Toaster } from 'react-hot-toast'; // Import react-hot-toast
+import { apiService } from '../services/apiservice';
 
 // Validation Schema
 const validationSchema = Yup.object().shape({
@@ -18,7 +19,7 @@ const validationSchema = Yup.object().shape({
 function EditGuest() {
   const { state } = useLocation();
   const navigate = useNavigate();
-
+  
   const initialValues = {
     username: state?.guest?.name || '',
     contact: state?.guest?.phone || '',
@@ -26,10 +27,18 @@ function EditGuest() {
     status: state?.guest?.status || 'Active',
   };
 
-  const handleSave = (values) => {
-    console.log('Updated Guest Data:', values);
-    toast.success('Guest details saved successfully!'); 
-    navigate('/guestmanagement'); 
+  const handleSave =async (values) => {
+    const id=state?.guest?._id || '';
+    try {
+      const response = await apiService.putData(`auth/editprofile/${id}`, values);
+      console.log(response);
+      console.log('Updated Guest Data:', values);
+      toast.success('Guest details saved successfully!');
+      navigate('/guestmanagement');
+    } catch (error) {
+      console.error('Error updating guest:', error);
+      toast.error('Failed to update guest details.');
+    } 
   };
 
   return (
