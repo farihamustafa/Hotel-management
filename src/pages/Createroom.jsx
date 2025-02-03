@@ -1,31 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import {
-  FaWifi,
-  FaCoffee,
-  FaBath,
-  FaParking,
-  FaSwimmer,
-  FaUtensils,
-  FaDumbbell,
-  FaGlassCheers,
-  FaTshirt,
-} from "react-icons/fa";
+import * as favicon from "react-icons/fa";
 import axios from "axios";
-
-// Facilities data
-const facilitiesData = [
-  { name: "WiFi", icon: <FaWifi /> },
-  { name: "Coffee", icon: <FaCoffee /> },
-  { name: "Bath", icon: <FaBath /> },
-  { name: "Parking Space", icon: <FaParking /> },
-  { name: "Swimming Pool", icon: <FaSwimmer /> },
-  { name: "Breakfast", icon: <FaUtensils /> },
-  { name: "Gym", icon: <FaDumbbell /> },
-  { name: "Drinks", icon: <FaGlassCheers /> },
-  { name: "Laundry", icon: <FaTshirt /> },
-];
+import { apiService } from "../services/apiservice";
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
@@ -39,6 +17,23 @@ const validationSchema = Yup.object({
 });
 
 const CreateRoom = () => {
+  const [facilitiesData, setFacilities] = useState([]);
+
+  // Fetch facilities data
+  useEffect(() => {
+    const facilitiesList = async () => {
+      try {
+        const response = await apiService.getData("facility/list");
+        console.log(response.data);
+        setFacilities(response.data);
+      } catch (error) {
+        console.error("Error fetching facilities:", error);
+      }
+    };
+    facilitiesList();
+  }, []);
+
+  // Initial form values
   const initialValues = {
     roomTitle: "",
     roomCode: "",
@@ -48,13 +43,15 @@ const CreateRoom = () => {
     description: "",
     facilities: [],
     price: "",
-    image:"",
-    imagelg:""
+    image: "",
+    imagelg: "",
   };
 
+  // Handle form submission
   const handleSubmit = async (values) => {
+    console.log("Selected Facilities:", values.facilities);  // Log the selected facilities
+
     const formData = new FormData();
-  
     formData.append("roomTitle", values.roomTitle);
     formData.append("roomCode", values.roomCode);
     formData.append("roomType", values.roomType);
@@ -62,34 +59,36 @@ const CreateRoom = () => {
     formData.append("size", values.size);
     formData.append("person", values.maxPerson);
     formData.append("price", values.price);
-  
-    // Convert image files to Base64
+
+    // Convert image files to Base64 if provided
     if (values.image) {
-      const image = values.image[0];
-      const base64Image = await encodeImageToBase64(image);
-      formData.append("image", base64Image);
+        const base64Image = await encodeImageToBase64(values.image[0]);
+        formData.append("image", base64Image);
     }
-  
+
     if (values.imagelg) {
-      const imagelg = values.imagelg[0];
-      const base64ImageLg = await encodeImageToBase64(imagelg);
-      formData.append("imagelg", base64ImageLg);
+        const base64ImageLg = await encodeImageToBase64(values.imagelg[0]);
+        formData.append("imagelg", base64ImageLg);
     }
-  
-    // Facilities (if applicable)
-    // formData.append("facility", JSON.stringify(values.facilities || []));
-  
-    // Send request to server
+
+    // Log facilities before appending them
+    console.log("Formatted Facilities:", values.facilities);
+
+    // Append facilities (ensure it's an array)
+    formData.append("facility", JSON.stringify(values.facilities));
+
     try {
-      const response = await axios.post("http://localhost:90/api/v1/room/create", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      console.log("Response:", response.data);
+        const response = await axios.post("http://localhost:90/api/v1/room/create", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+        console.log("Response:", response.data);
     } catch (error) {
-      console.error("Error:", error.response?.data || error.message);
+        console.error("Error:", error.response?.data?.msg || error.message);
     }
-  };
-  
+};
+
+
+  // Function to encode images to Base64
   const encodeImageToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -98,7 +97,17 @@ const CreateRoom = () => {
       reader.readAsDataURL(file);
     });
   };
-  
+
+  // Handle facility checkbox changes
+  const handleFacilityChange = (e, setFieldValue, facilities) => {
+    const { checked, value } = e.target;
+
+    if (checked) {
+      setFieldValue("facilities", [...facilities, value]);
+    } else {
+      setFieldValue("facilities", facilities.filter((facilityId) => facilityId !== value));
+    }
+  };
 
   return (
     <div className="px-4 py-8 max-w-6xl mx-auto">
@@ -108,7 +117,7 @@ const CreateRoom = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ setFieldValue }) => (
+        {({ setFieldValue, values }) => (
           <Form className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Room Title */}
             <div className="col-span-1 sm:col-span-2 lg:col-span-2">
@@ -141,25 +150,23 @@ const CreateRoom = () => {
             </div>
 
             {/* Room Type */}
-<div className="col-span-1 sm:col-span-1 lg:col-span-1">
-  <label htmlFor="roomType" className="block text-gray-700 mb-1">
-    Room Type
-  </label>
-  <Field
-    as="select"
-    id="roomType"
-    name="roomType"
-    className="w-full p-3 border border-gray-300 rounded-lg"
-  >
-    <option value="">Select Room Type</option>
-    <option value="doubleBed">doubleBed</option>
-    <option value="singleBed">singleBed</option>
-    <option value="Luxury">Luxury Room</option>
-    {/* Add more options as needed */}
-  </Field>
-  <ErrorMessage name="roomType" component="div" className="text-red-600 text-sm" />
-</div>
-
+            <div className="col-span-1 sm:col-span-1 lg:col-span-1">
+              <label htmlFor="roomType" className="block text-gray-700 mb-1">
+                Room Type
+              </label>
+              <Field
+                as="select"
+                id="roomType"
+                name="roomType"
+                className="w-full p-3 border border-gray-300 rounded-lg"
+              >
+                <option value="">Select Room Type</option>
+                <option value="doubleBed">doubleBed</option>
+                <option value="singleBed">singleBed</option>
+                <option value="Luxury">Luxury Room</option>
+              </Field>
+              <ErrorMessage name="roomType" component="div" className="text-red-600 text-sm" />
+            </div>
 
             {/* Size */}
             <div className="col-span-1">
@@ -211,20 +218,22 @@ const CreateRoom = () => {
             <div className="col-span-1 sm:col-span-2 lg:col-span-3">
               <label className="block text-gray-700 mb-2">Facilities</label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-gray-700">
-                {facilitiesData.map((facility) => (
-                  <label key={facility.name} className="flex items-center">
-                    <Field
-                      type="checkbox"
-                      name="facilities"
-                      value={facility.name}
-                      className="mr-2 rounded w-5 h-5 border border-gray-300"
-                    />
-                    <span className="flex items-center space-x-2">
-                      {facility.icon}
-                      <span>{facility.name}</span>
-                    </span>
-                  </label>
-                ))}
+                {facilitiesData.map((facility) => {
+                  const IconComponent = favicon[facility.icon];
+                  return (
+                    <label key={facility._id} className="flex items-center">
+                      <Field
+                        type="checkbox"
+                        name="facilities"
+                        value={facility._id}
+                        onChange={(e) => handleFacilityChange(e, setFieldValue, values.facilities)}
+                        className="mr-2 w-5 h-5 border border-gray-300"
+                      />
+                      {IconComponent && <IconComponent className="text-gray-700" />}
+                      <span> - {facility.name}</span>
+                    </label>
+                  );
+                })}
               </div>
             </div>
 
@@ -243,34 +252,33 @@ const CreateRoom = () => {
               <ErrorMessage name="price" component="div" className="text-red-600 text-sm" />
             </div>
 
-            {/* Images */} 
-<div className="col-span-1 sm:col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-4">
-  <div>
-    <label className="block text-gray-700 mb-1" htmlFor="image">
-      Upload Image
-    </label>
-    <input
-      type="file"
-      id="image"
-      name="image"
-      onChange={(event) => setFieldValue("image", event.currentTarget.files)}
-      className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
-    />
-  </div>
-  <div>
-    <label className="block text-gray-700 mb-1" htmlFor="imagelg">
-      Upload Large Image
-    </label>
-    <input
-      type="file"
-      id="imagelg"
-      name="imagelg"
-      onChange={(event) => setFieldValue("imagelg", event.currentTarget.files)}
-      className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
-    />
-  </div>
-</div>
-
+            {/* Images */}
+            <div className="col-span-1 sm:col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-700 mb-1" htmlFor="image">
+                  Upload Image
+                </label>
+                <input
+                  type="file"
+                  id="image"
+                  name="image"
+                  onChange={(event) => setFieldValue("image", event.currentTarget.files)}
+                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 mb-1" htmlFor="imagelg">
+                  Upload Large Image
+                </label>
+                <input
+                  type="file"
+                  id="imagelg"
+                  name="imagelg"
+                  onChange={(event) => setFieldValue("imagelg", event.currentTarget.files)}
+                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+                />
+              </div>
+            </div>
 
             {/* Submit and Cancel Buttons */}
             <div className="flex justify-end items-center col-span-1 sm:col-span-2 lg:col-span-3 space-x-4">
