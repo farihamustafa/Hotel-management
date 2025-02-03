@@ -22,7 +22,7 @@ function EditGuest() {
   
   const initialValues = {
     username: state?.guest?.name || '',
-    contact: state?.guest?.phone || '',
+    contact: state?.guest?.contact || '',
     address: state?.guest?.address || '',
     status: state?.guest?.status || 'Active',
   };

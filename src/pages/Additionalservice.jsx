@@ -13,7 +13,7 @@ const facilityValidationSchema = Yup.object().shape({
 });
 
 const serviceValidationSchema = Yup.object().shape({
-  service: Yup.string().required("Service is required"),
+  name: Yup.string().required("Service is required"),
   price: Yup.number()
     .typeError("Price must be a number")
     .positive("Price must be positive")
@@ -38,6 +38,7 @@ function AdditionalService() {
 
   useEffect(() => {
     fetchFacilityList();
+    fetchasList();
   }, []);
 
   const fetchFacilityList = async () => {
@@ -48,20 +49,24 @@ function AdditionalService() {
 
 
     } catch (error) {
-      console.error("Error fetching guest list:", error);
+      console.error("Error fetching facility list:", error);
+
+    }
+  };
+  const fetchasList = async () => {
+    try {
+      const response = await apiService.getData("a_service/list");
+      console.log(response.data)
+      setServices(response.data)
+
+
+    } catch (error) {
+      console.error("Error fetching Additional Service list:", error);
 
     }
   };
 
-  const [services, setServices] = useState([
-    { service: "Cleaning", price: 50 },
-    { service: "Laundry", price: 30 },
-    { service: "Room Service", price: 20 },
-    { service: "Catering", price: 100 },
-    { service: "Cleaning", price: 50 },
-
-    
-  ]);
+  const [services, setServices] = useState([]);
 
   const [maintenanceTypes, setMaintenanceTypes] = useState([
     { maintenanceType: "Electrical" },
@@ -207,16 +212,24 @@ function AdditionalService() {
         <div className="p-6 bg-white rounded-lg shadow-lg">
           <h2 className="text-xl font-semibold text-gray-700 mb-4">Add New Additional Service</h2>
           <Formik
-            initialValues={{ service: "", price: "" }}
+            initialValues={{ name: "", price: "" }}
             validationSchema={serviceValidationSchema}
-            onSubmit={(values, { resetForm }) => {
-              setServices([...services, values]);
-              resetForm();
+            onSubmit={async(values, { resetForm }) => {
+              try {
+                const response = await apiService.postData("a_service/create", values)
+                toast.success(response.msg)
+                console.log(response)
+                setServices([...services, values]);
+                resetForm();
+              } catch (error) {
+                toast.error(error)
+              }
+              
             }}
           >
             <Form className="space-y-4">
-              <Field type="text" name="service" placeholder="Service Name" className="w-full p-2 border rounded" />
-              <ErrorMessage name="service" component="div" className="text-red-500 text-sm" />
+              <Field type="text" name="name" placeholder="Service Name" className="w-full p-2 border rounded" />
+              <ErrorMessage name="name" component="div" className="text-red-500 text-sm" />
               <Field type="text" name="price" placeholder="Price (USD)" className="w-full p-2 border rounded" />
               <ErrorMessage name="price" component="div" className="text-red-500 text-sm" />
               <button type="submit" className="w-full bg-primary text-white py-2 rounded">
@@ -238,7 +251,7 @@ function AdditionalService() {
               <tbody>
                 {serviceData.map((service, index) => (
                   <tr key={index}>
-                    <td className="border px-4 py-2">{service.service}</td>
+                    <td className="border px-4 py-2">{service.name}</td>
                     <td className="border px-4 py-2">{service.price}</td>
                   </tr>
                 ))}

@@ -1,53 +1,74 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // <-- Make sure this line is here
+import { useNavigate } from 'react-router-dom';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { FaEdit, FaTrash } from 'react-icons/fa';// Adjust this import based on your file structure
+import { FaEdit, FaTrash } from 'react-icons/fa';
 import { apiService } from '../services/apiservice';
+import ReactPaginate from 'react-paginate';
 import { MdToggleOff, MdToggleOn } from 'react-icons/md';
 import toast from 'react-hot-toast';
+import { UseAPiContext } from '../App';
 
 const RoomInventory = () => {
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [tempStatus, setTempStatus] = useState('');
   const [rooms, setRooms] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(0);
+  const roomsPerPage = 10;
+  const {setRoom} = UseAPiContext()
+  const [loading, setLoading] = useState(true);
+
   const avaibility_Record = async (id) => {
     try {
-        // Find the selected room
-        const room = rooms.find((room) => room._id === id);
+      const room = rooms.find((room) => room._id === id);
 
-        // Prevent status change if the room is occupied
-        if (room.avaibility === "occupied") {
-            toast.error("You cannot change the status of an occupied room.");
-            return;
-        }
+      if (room.avaibility === "occupied") {
+        toast.error("You cannot change the status of an occupied room.");
+        return;
+      }
 
-        // Send the request to update the room status
-        const response = await apiService.postData(`room/status/${id}`);
-        console.log(response);
-        toast.success(response.msg)
-        setRooms((prevRooms) =>
-            prevRooms.map((room) =>
-                room._id === id
-                    ? { ...room, avaibility: room.avaibility === 'available' ? 'disabled' : 'available' }
-                    : room
-            )
-        );
+      const response = await apiService.postData(`room/status/${id}`);
+      console.log(response);
+      toast.success(response.msg);
+
+      setRooms((prevRooms) =>
+        prevRooms.map((room) =>
+          room._id === id
+            ? { ...room, avaibility: room.avaibility === 'available' ? 'disabled' : 'available' }
+            : room
+        )
+      );
     } catch (error) {
-        console.error("Error updating room availability:", error);
+      console.error("Error updating room availability:", error);
     }
-};
+  };
+
+  const handlePageClick = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+
+  const filteredRooms = rooms.filter((room) =>
+    room.roomCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    room.roomType.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const displayedRooms = filteredRooms.slice(
+    currentPage * roomsPerPage,
+    (currentPage + 1) * roomsPerPage
+  );
 
   useEffect(() => {
+    setLoading(true);
     const getData = async () => {
       const response = await apiService.getData("room/list");
-      console.log(response.roomdata)
-      setRooms(response.roomdata)
-    }
+      console.log(response.roomdata);
+      setRooms(response.roomdata);
+      setLoading(false)
+    };
     getData();
   }, []);
 
@@ -97,11 +118,6 @@ const RoomInventory = () => {
     closeModal();
   };
 
-  const filteredRooms = rooms.filter((room) =>
-    room.roomCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    room.roomType.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return (
     <div className="p-6 flex flex-col">
       <div className="mb-6 flex justify-between items-center">
@@ -136,55 +152,70 @@ const RoomInventory = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredRooms.map((room) => (
-              <tr key={room._id} className="border-b hover:bg-gray-100 transition duration-200">
-                <td className="px-4 py-2">{room.roomTitle}</td>
-                <td className="px-4 py-2">{room.roomCode}</td>
-                <td className="px-4 py-2">{room.roomType}</td>
-                <td className="px-4 py-2">
-                  <span
-                    className={`px-3 py-1 rounded-md font-medium ${room.avaibility === 'available'
-                      ? 'bg-green-100 text-green-800'
-                      : room.avaibility === 'occupied'
-                        ? 'bg-blue-100 text-blue-800'
-                        : 'bg-red-100 text-red-800'
-                      }`}
-                    onClick={() => openStatusModal(room)}
-                  >
-                    {room.avaibility}
-                  </span>
-                </td>
-                <td className="px-4 py-2">{room.price} pkr</td>
-                <td className="px-4 py-2 flex justify-center gap-4">
-                  {room.avaibility === 'available' ?
-                    <button onClick={() => avaibility_Record(room._id)} className="text-green-500 hover:text-green-700 duration-100 ease-in" title="Change Status">
-                      <MdToggleOn size={18} />
-                    </button>
-                    :
-                    <button onClick={() => avaibility_Record(room._id)} className="text-red-500 hover:text-red-700 duration-100 ease-in" title="Change Status">
-                      <MdToggleOff size={18} />
-                    </button>
-                  }
-                  <button
-                    className="text-blue-500 text-lg hover:text-blue-700"
-                    title="Edit Room"
-                    onClick={() => navigate('/roommanagement/editroom')} // Redirect to RoomCreate page
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    className="text-white bg-green-500 hover:bg-green-600 px-4 py-2 rounded-md flex items-center gap-2"
-                    onClick={() => openModal(room)}
-                  >
-                    Schedule Maintenance
-                  </button>
-                </td>
-              </tr>
-            ))}
+          {loading ? (
+  <tr>
+    <td colSpan="6" className="px-6 py-4 text-center">
+      <div className="spinner">Loading...</div>
+    </td>
+  </tr>
+) : (
+  displayedRooms.map((room) => (
+    <tr key={room._id} className="border-b hover:bg-gray-100 transition duration-200">
+      <td className="px-4 py-2">{room.roomTitle}</td>
+      <td className="px-4 py-2">{room.roomCode}</td>
+      <td className="px-4 py-2">{room.roomType}</td>
+      <td className="px-4 py-2">
+        <span
+          className={`px-3 py-1 rounded-md font-medium ${room.avaibility === 'available'
+            ? 'bg-green-100 text-green-800'
+            : room.avaibility === 'occupied'
+              ? 'bg-blue-100 text-blue-800'
+              : 'bg-red-100 text-red-800'
+            }`}
+          onClick={() => openStatusModal(room)}
+        >
+          {room.avaibility}
+        </span>
+      </td>
+      <td className="px-4 py-2">{room.price} pkr</td>
+      <td className="px-4 py-2 flex justify-center gap-4">
+        {room.avaibility === 'available' ? (
+          <button
+            onClick={() => avaibility_Record(room._id)}
+            className="text-green-500 hover:text-green-700 duration-100 ease-in"
+            title="Change Status"
+          >
+            <MdToggleOn size={18} />
+          </button>
+        ) : (
+          <button
+            onClick={() => avaibility_Record(room._id)}
+            className="text-red-500 hover:text-red-700 duration-100 ease-in"
+            title="Change Status"
+          >
+            <MdToggleOff size={18} />
+          </button>
+        )}
+        <button
+          className="text-blue-500 text-lg hover:text-blue-700"
+          title="Edit Room"
+          onClick={() => { setRoom(room); navigate('/roommanagement/editroom'); }}
+        >
+          <FaEdit />
+        </button>
+        <button
+          className="text-white bg-green-500 hover:bg-green-600 px-4 py-2 rounded-md flex items-center gap-2"
+          onClick={() => openModal(room)}
+        >
+          Schedule Maintenance
+        </button>
+      </td>
+    </tr>
+  ))
+)}
           </tbody>
         </table>
       </div>
-
 
       {/* Maintenance Modal */}
       {isModalOpen && (
@@ -322,6 +353,22 @@ const RoomInventory = () => {
           </div>
         </div>
       )}
+
+      {/* Pagination */}
+      <ReactPaginate
+        previousLabel={'Previous'}
+        nextLabel={'Next'}
+        breakLabel={'...'}
+        pageCount={Math.ceil(filteredRooms.length / roomsPerPage)}
+        marginPagesDisplayed={1}
+        pageRangeDisplayed={1}
+        onPageChange={handlePageClick}
+        containerClassName={'flex justify-center mt-6 space-x-2'}
+        pageClassName={'px-3 py-1 bg-gray-200 rounded-md cursor-pointer'}
+        activeClassName={'bg-secondary text-white'}
+        previousClassName={'px-3 py-1 bg-gray-300 rounded-md cursor-pointer'}
+        nextClassName={'px-3 py-1 bg-gray-300 rounded-md cursor-pointer'}
+      />
     </div>
   );
 };

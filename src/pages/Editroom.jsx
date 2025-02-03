@@ -5,6 +5,8 @@ import * as favicon from "react-icons/fa";
 import axios from "axios";
 import { apiService } from "../services/apiservice";
 import toast from "react-hot-toast";
+import { UseAPiContext } from "../App";
+import { useNavigate } from "react-router-dom";
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
@@ -19,13 +21,14 @@ const validationSchema = Yup.object({
 
 const EditRoom = () => {
   const [facilitiesData, setFacilities] = useState([]);
+  const { room } = UseAPiContext(); // Get the room from context
+  const navigate = useNavigate();
 
   // Fetch facilities data
   useEffect(() => {
     const facilitiesList = async () => {
       try {
         const response = await apiService.getData("facility/list");
-        console.log(response.data);
         setFacilities(response.data);
       } catch (error) {
         console.error("Error fetching facilities:", error);
@@ -34,72 +37,53 @@ const EditRoom = () => {
     facilitiesList();
   }, []);
 
+  // Redirect if no room is selected
+  useEffect(() => {
+    if (!room) {
+      navigate("/roommanagement/roominventory");
+    }
+  }, [room, navigate]);
+
+  const id = room?._id;
   // Initial form values
   const initialValues = {
-    roomTitle: "",
-    roomCode: "",
-    roomType: "",
-    size: "",
-    maxPerson: "",
-    description: "",
-    facilities: [],
-    price: "",
-    image: "",
-    imagelg: "",
+    roomTitle: room?.roomTitle || "",
+    roomCode: room?.roomCode || "",
+    roomType: room?.roomType || "",
+    size: room?.size || "",
+    maxPerson: room?.person || "",
+    description: room?.description || "",
+    facilities: room?.facilities || [],
+    price: room?.price || "",
   };
 
   // Handle form submission
   const handleSubmit = async (values) => {
-    console.log("Selected Facilities:", values.facilities);  // Log the selected facilities
+    console.log("Selected Facilities:", values.facilities);
 
     const formData = new FormData();
     formData.append("roomTitle", values.roomTitle);
-    formData.append("roomCode", values.roomCode);
     formData.append("roomType", values.roomType);
     formData.append("description", values.description);
     formData.append("size", values.size);
     formData.append("person", values.maxPerson);
     formData.append("price", values.price);
 
-    // Convert image files to Base64 if provided
-    if (values.image) {
-        const base64Image = await encodeImageToBase64(values.image[0]);
-        formData.append("image", base64Image);
-    }
-
-    if (values.imagelg) {
-        const base64ImageLg = await encodeImageToBase64(values.imagelg[0]);
-        formData.append("imagelg", base64ImageLg);
-    }
-
-    // Log facilities before appending them
-    console.log("Formatted Facilities:", values.facilities);
-
-    // Append facilities (ensure it's an array)
+  
+    // Append facilities
     formData.append("facility", JSON.stringify(values.facilities));
 
     try {
-        const response = await axios.post("http://localhost:90/api/v1/room/create", formData, {
-            headers: { "Content-Type": "multipart/form-data" },
-        });
-        console.log("Response:", response.data);
-        toast.success("room registered successfully")
+      const response = await apiService.putData(`room/update/${id}`, formData);
+      console.log("Response:", response.data);
+      toast.success("Room updated successfully");
+      navigate("/roommanagement/roominventory")
     } catch (error) {
-        console.error("Error:", error.response?.data?.msg || error.message);
-        toast.error("Error:", error.response?.data?.msg || error.message)
+      console.error("Error:", error.response?.data?.msg || error.message);
+      toast.error("Error:", error.response?.data?.msg || error.message);
     }
-};
-
-
-  // Function to encode images to Base64
-  const encodeImageToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (err) => reject(err);
-      reader.readAsDataURL(file);
-    });
   };
+
 
   // Handle facility checkbox changes
   const handleFacilityChange = (e, setFieldValue, facilities) => {
@@ -123,7 +107,7 @@ const EditRoom = () => {
         {({ setFieldValue, values }) => (
           <Form className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Room Title */}
-            <div className="col-span-1 sm:col-span-2 lg:col-span-2">
+            <div className="col-span-1 sm:col-span-1 lg:col-span-1">
               <label htmlFor="roomTitle" className="block text-gray-700 mb-1">
                 Room Title
               </label>
@@ -135,21 +119,6 @@ const EditRoom = () => {
                 className="w-full p-3 border border-gray-300 rounded-lg"
               />
               <ErrorMessage name="roomTitle" component="div" className="text-red-600 text-sm" />
-            </div>
-
-            {/* Room Code */}
-            <div className="col-span-1">
-              <label htmlFor="roomCode" className="block text-gray-700 mb-1">
-                Room Code
-              </label>
-              <Field
-                type="text"
-                id="roomCode"
-                name="roomCode"
-                placeholder="Enter Room Code"
-                className="w-full p-3 border border-gray-300 rounded-lg"
-              />
-              <ErrorMessage name="roomCode" component="div" className="text-red-600 text-sm" />
             </div>
 
             {/* Room Type */}
@@ -202,7 +171,7 @@ const EditRoom = () => {
             </div>
 
             {/* Description */}
-            <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+            <div className="col-span-1 sm:col-span-2 lg:col-span-2">
               <label htmlFor="description" className="block text-gray-700 mb-1">
                 Description
               </label>
@@ -211,7 +180,7 @@ const EditRoom = () => {
                 id="description"
                 name="description"
                 placeholder="Enter Description"
-                className="w-full p-3 border border-gray-300 rounded-lg"
+                className="w-full p-3 border border gray-300 rounded-lg"
                 rows="3"
               />
               <ErrorMessage name="description" component="div" className="text-red-600 text-sm" />
@@ -255,33 +224,6 @@ const EditRoom = () => {
               <ErrorMessage name="price" component="div" className="text-red-600 text-sm" />
             </div>
 
-            {/* Images */}
-            <div className="col-span-1 sm:col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-gray-700 mb-1" htmlFor="image">
-                  Upload Image
-                </label>
-                <input
-                  type="file"
-                  id="image"
-                  name="image"
-                  onChange={(event) => setFieldValue("image", event.currentTarget.files)}
-                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 mb-1" htmlFor="imagelg">
-                  Upload Large Image
-                </label>
-                <input
-                  type="file"
-                  id="imagelg"
-                  name="imagelg"
-                  onChange={(event) => setFieldValue("imagelg", event.currentTarget.files)}
-                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
-                />
-              </div>
-            </div>
 
             {/* Submit and Cancel Buttons */}
             <div className="flex justify-end items-center col-span-1 sm:col-span-2 lg:col-span-3 space-x-4">
@@ -289,7 +231,7 @@ const EditRoom = () => {
                 type="submit"
                 className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
               >
-                Create
+                Update
               </button>
             </div>
           </Form>

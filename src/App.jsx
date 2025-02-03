@@ -37,8 +37,9 @@ const [data, setData] = useState(null);
 const [loading, setLoading] = useState(true);
 const [error, setError] = useState(null);
 const [user, setuser] = useState(false);
+const [room, setRoom] = useState(false);
 console.log("data : "+user)
-  return (<context.Provider value={{user,setuser}}>
+  return (<context.Provider value={{user,setuser,room, setRoom}}>
   <BrowserRouter>
   <Routes>
   <Route path='/' element={<Authlayout><Home/></Authlayout>}  />
@@ -52,7 +53,7 @@ console.log("data : "+user)
     <Route path='/createguest' element={<Authlayout><Createguest/></Authlayout>}  />
   <Route path='/roommanagement/roominventory' element={<Authlayout><RoomInventory/></Authlayout>}  />
   <Route path='/roommanagement/roombooking' element={<Authlayout><RoomBooking/></Authlayout>}  />
-  <Route path='/newbooking' element={<Authlayout><Newbooking/></Authlayout>}  />
+  <Route path='/newbooking/:id' element={<Authlayout><Newbooking/></Authlayout>}  />
   <Route path='/roommanagement/createroom' element={<Authlayout><CreateRoom/></Authlayout>}  />
   <Route path='/housekeeping/tasks/taskdetails' element={<Authlayout><Taskdetail/></Authlayout>}  />
 

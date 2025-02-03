@@ -10,7 +10,7 @@ function Guestmanagement() {
   const [selectedGuest, setSelectedGuest] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const guestsPerPage = 5; 
+  const guestsPerPage = 15; 
 
   useEffect(() => {
     fetchUserList();
