@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import * as favicon from "react-icons/fa";
 import axios from "axios";
 import { apiService } from "../services/apiservice";
+import toast from "react-hot-toast";
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
@@ -82,8 +83,10 @@ const CreateRoom = () => {
             headers: { "Content-Type": "multipart/form-data" },
         });
         console.log("Response:", response.data);
+        toast.success("room registered successfully")
     } catch (error) {
         console.error("Error:", error.response?.data?.msg || error.message);
+        toast.error("Error:", error.response?.data?.msg || error.message)
     }
 };
 
