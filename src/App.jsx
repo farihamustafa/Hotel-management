@@ -24,6 +24,7 @@ import Additionalservice from './pages/Additionalservice';
 import EditProfile from './pages/EditProfile';
 import { apiService } from './services/apiservice';
 import { createContext, useContext, useEffect ,useState} from 'react';
+import EditRoom from './pages/EditRoom';
 
 const context=createContext()
 export function UseAPiContext(){
@@ -44,7 +45,7 @@ console.log("data : "+user)
   <Route path='/staffmanagement' element={<Authlayout><Staffmanagement/></Authlayout>}  />
   <Route path="/editstaff/:id" element={<Authlayout><EditStaff/></Authlayout>}/>
   <Route path="/editguest/:id" element={<Authlayout><EditGuest/></Authlayout>}/>
-  
+  <Route path="/roommanagement/editroom" element={<Authlayout><EditRoom/></Authlayout>}/>
 
   <Route path='/guestmanagement' element={<Authlayout><Guestmanagement/></Authlayout>}  />
   <Route path='/createstaff' element={<Authlayout><Createstaff/></Authlayout>}  />

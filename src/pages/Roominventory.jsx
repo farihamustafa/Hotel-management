@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import { FaTrash, FaEdit } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // <-- Make sure this line is here
+import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { FaEdit, FaTrash } from 'react-icons/fa';// Adjust this import based on your file structure
+import { apiService } from '../services/apiservice';
+import { MdToggleOff, MdToggleOn } from 'react-icons/md';
+import toast from 'react-hot-toast';
 
 const RoomInventory = () => {
   const navigate = useNavigate(); // Initialize useNavigate hook
@@ -10,13 +13,43 @@ const RoomInventory = () => {
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [tempStatus, setTempStatus] = useState('');
-  const [rooms, setRooms] = useState([
-    { id: 1, code: 'R001', type: 'Single Room', availability: 'Available', status: 'Available', price: '$100' },
-    { id: 2, code: 'R002', type: 'Double Room', availability: 'Occupied', status: 'Occupied', price: '$150' },
-    { id: 3, code: 'R003', type: 'Suite', availability: 'Available', status: 'Available', price: '$300' },
-    { id: 4, code: 'R004', type: 'Single Room', availability: 'Available', status: 'Cleaning', price: '$100' },
-  ]);
+  const [rooms, setRooms] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const avaibility_Record = async (id) => {
+    try {
+        // Find the selected room
+        const room = rooms.find((room) => room._id === id);
+
+        // Prevent status change if the room is occupied
+        if (room.avaibility === "occupied") {
+            toast.error("You cannot change the status of an occupied room.");
+            return;
+        }
+
+        // Send the request to update the room status
+        const response = await apiService.postData(`room/status/${id}`);
+        console.log(response);
+        toast.success(response.msg)
+        setRooms((prevRooms) =>
+            prevRooms.map((room) =>
+                room._id === id
+                    ? { ...room, avaibility: room.avaibility === 'available' ? 'disabled' : 'available' }
+                    : room
+            )
+        );
+    } catch (error) {
+        console.error("Error updating room availability:", error);
+    }
+};
+
+  useEffect(() => {
+    const getData = async () => {
+      const response = await apiService.getData("room/list");
+      console.log(response.roomdata)
+      setRooms(response.roomdata)
+    }
+    getData();
+  }, []);
 
   const openModal = (room) => {
     setSelectedRoom(room);
@@ -30,7 +63,7 @@ const RoomInventory = () => {
 
   const openStatusModal = (room) => {
     setSelectedRoom(room);
-    setTempStatus(room.status);
+    setTempStatus(room.avaibility);
     setIsStatusModalOpen(true);
   };
 
@@ -45,7 +78,7 @@ const RoomInventory = () => {
 
   const saveStatus = () => {
     const updatedRooms = rooms.map((room) =>
-      room.id === selectedRoom.id ? { ...room, status: tempStatus } : room
+      room._id === selectedRoom._id ? { ...room, avaibility: tempStatus } : room
     );
     setRooms(updatedRooms);
     closeStatusModal();
@@ -65,13 +98,12 @@ const RoomInventory = () => {
   };
 
   const filteredRooms = rooms.filter((room) =>
-    room.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    room.type.toLowerCase().includes(searchQuery.toLowerCase())
+    room.roomCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    room.roomType.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <div className="p-6 flex flex-col">
-    
       <div className="mb-6 flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-800">Room Inventory</h1>
         <div className="flex items-center space-x-4 ml-auto">
@@ -95,44 +127,48 @@ const RoomInventory = () => {
         <table className="w-full text-sm text-left text-gray-800">
           <thead className="bg-secondary text-white uppercase text-base">
             <tr>
-              <th className="px-6 py-3">#</th>
+              <th className="px-6 py-3">Room Name</th>
               <th className="px-6 py-3">Room Code</th>
               <th className="px-6 py-3">Room Type</th>
               <th className="px-6 py-3">Availability</th>
-              <th className="px-6 py-3">Status</th>
               <th className="px-6 py-3">Price</th>
               <th className="px-6 py-3 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredRooms.map((room) => (
-              <tr key={room.id} className="border-b hover:bg-gray-100 transition duration-200">
-                <td className="px-4 py-2">{room.id}</td>
-                <td className="px-4 py-2">{room.code}</td>
-                <td className="px-4 py-2">{room.type}</td>
-                <td className="px-4 py-2">{room.availability}</td>
+              <tr key={room._id} className="border-b hover:bg-gray-100 transition duration-200">
+                <td className="px-4 py-2">{room.roomTitle}</td>
+                <td className="px-4 py-2">{room.roomCode}</td>
+                <td className="px-4 py-2">{room.roomType}</td>
                 <td className="px-4 py-2">
                   <span
-                    className={`px-3 py-1 rounded-md font-medium cursor-pointer ${room.status === 'Available'
+                    className={`px-3 py-1 rounded-md font-medium ${room.avaibility === 'available'
                       ? 'bg-green-100 text-green-800'
-                      : room.status === 'Occupied'
+                      : room.avaibility === 'occupied'
                         ? 'bg-blue-100 text-blue-800'
                         : 'bg-red-100 text-red-800'
                       }`}
                     onClick={() => openStatusModal(room)}
                   >
-                    {room.status}
+                    {room.avaibility}
                   </span>
                 </td>
-                <td className="px-4 py-2">{room.price}</td>
+                <td className="px-4 py-2">{room.price} pkr</td>
                 <td className="px-4 py-2 flex justify-center gap-4">
-                  <button className="text-red-500 text-lg hover:text-red-700" title="Delete Room">
-                    <FaTrash />
-                  </button>
+                  {room.avaibility === 'available' ?
+                    <button onClick={() => avaibility_Record(room._id)} className="text-green-500 hover:text-green-700 duration-100 ease-in" title="Change Status">
+                      <MdToggleOn size={18} />
+                    </button>
+                    :
+                    <button onClick={() => avaibility_Record(room._id)} className="text-red-500 hover:text-red-700 duration-100 ease-in" title="Change Status">
+                      <MdToggleOff size={18} />
+                    </button>
+                  }
                   <button
                     className="text-blue-500 text-lg hover:text-blue-700"
                     title="Edit Room"
-                    onClick={() => navigate('/roommanagement/createroom')} // Redirect to RoomCreate page
+                    onClick={() => navigate('/roommanagement/editroom')} // Redirect to RoomCreate page
                   >
                     <FaEdit />
                   </button>
@@ -149,74 +185,6 @@ const RoomInventory = () => {
         </table>
       </div>
 
-      {/* Status Modal */}
-      {isStatusModalOpen && (
-        <div
-          id="statusModal"
-          tabIndex="-1"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-          aria-hidden="true"
-        >
-          <div className="relative w-full max-w-md">
-            <div className="relative bg-white rounded-lg shadow">
-              <div className="flex justify-between items-center p-5 rounded-t border-b">
-                <h3 className="text-xl font-medium text-gray-900">Change Room Status</h3>
-              </div>
-              <div className="p-6 space-y-6">
-                <div className="flex flex-col space-y-2">
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="status"
-                      value="Available"
-                      checked={tempStatus === 'Available'}
-                      onChange={(e) => handleTempStatusChange(e.target.value)}
-                      className="mr-2"
-                    />
-                    Available
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="status"
-                      value="Occupied"
-                      checked={tempStatus === 'Occupied'}
-                      onChange={(e) => handleTempStatusChange(e.target.value)}
-                      className="mr-2"
-                    />
-                    Occupied
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="status"
-                      value="Cleaning"
-                      checked={tempStatus === 'Cleaning'}
-                      onChange={(e) => handleTempStatusChange(e.target.value)}
-                      className="mr-2"
-                    />
-                    Cleaning
-                  </label>
-                </div>
-              </div>
-              <div className="flex items-center justify-end p-6 space-x-2 border-t border-gray-200 rounded-b">
-                <button
-                  onClick={closeStatusModal}
-                  className="px-6 py-3 bg-red-700 text-white rounded-md hover:bg-red-800 transition duration-300"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={saveStatus}
-                  className="px-6 py-3 bg-secondary text-white rounded-md hover:bg-hoverbutton transition duration-300"
-                >
-                  Save Status
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Maintenance Modal */}
       {isModalOpen && (

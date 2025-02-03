@@ -37,10 +37,10 @@ function AdditionalService() {
   const [facilities, setFacilities] = useState([]);
 
   useEffect(() => {
-    fetchUserList();
+    fetchFacilityList();
   }, []);
 
-  const fetchUserList = async () => {
+  const fetchFacilityList = async () => {
     try {
       const response = await apiService.getData("facility/list");
       console.log(response.data)
