@@ -25,7 +25,7 @@ import EditProfile from './pages/EditProfile';
 import { apiService } from './services/apiservice';
 import { createContext, useContext, useEffect ,useState} from 'react';
 import EditRoom from './pages/EditRoom';
-import Taskassign from './pages/Taskassign';
+import BookingUpdate from './pages/bookingupdate';
 
 const context=createContext()
 export function UseAPiContext(){
@@ -61,8 +61,8 @@ console.log("data : "+user)
   <Route path='/notifications' element={<Authlayout><Notification/></Authlayout>}  />
   <Route path='/housekeeping/tasks' element={<Authlayout><Task/></Authlayout>}  />
   <Route path='/additionalservices' element={<Authlayout><Additionalservice/></Authlayout>}  />
+  <Route path='/updatebooking' element={<Authlayout><BookingUpdate/></Authlayout>}  />
   <Route path='/profile' element={<Authlayout><EditProfile/></Authlayout>}  />
-  <Route path='/housekeeping/taskassign' element={<Authlayout><Taskassign/></Authlayout>}  />
  
 
     <Route path='/login' element={<LoginPage/>}/>

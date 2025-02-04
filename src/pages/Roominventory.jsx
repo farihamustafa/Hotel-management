@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { apiService } from '../services/apiservice';
 import ReactPaginate from 'react-paginate';
+import { startOfDay } from 'date-fns';
 import { MdToggleOff, MdToggleOn } from 'react-icons/md';
 import toast from 'react-hot-toast';
 import { UseAPiContext } from '../App';
@@ -21,7 +22,37 @@ const RoomInventory = () => {
   const roomsPerPage = 10;
   const {setRoom} = UseAPiContext()
   const [loading, setLoading] = useState(true);
+ const [maintenanceTypes, setMaintenanceTypes] = useState([]);
+ const [user, setuser] = useState([]);
 
+  const maintenanceList = async () => {
+    try {
+      const response = await apiService.getData("housekeeping/maintenancelist");
+      console.log(response.data)
+      setMaintenanceTypes(response.data)
+
+
+    } catch (error) {
+      console.error("Error fetching Additional Service list:", error);
+
+    }
+  };
+  const userList = async () => {
+    try {
+      const response = await apiService.postData("auth/list",{role_name:"housekeeping"});
+      console.log(response.data)
+      setuser(response.data)
+
+
+    } catch (error) {
+      console.error("Error fetching Additional Service list:", error);
+
+    }
+  };
+  useEffect(()=>{
+    maintenanceList()
+    userList();
+  },[])
   const avaibility_Record = async (id) => {
     try {
       const room = rooms.find((room) => room._id === id);
@@ -106,16 +137,26 @@ const RoomInventory = () => {
   };
 
   const validationSchema = Yup.object({
-    maintenanceType: Yup.string().required('Maintenance type is required'),
+    maintenance: Yup.string().required('Maintenance type is required'),
     priority: Yup.string().required('Priority is required'),
-    deadline: Yup.date().required('Deadline is required'),
-    assignTo: Yup.string().required('Assign to is required'),
-    additionalServices: Yup.string(),
+    deadline: Yup.date()
+    .required('Deadline date is required')
+    .min(startOfDay(new Date()), 'Deadline date must be today or in the future'), 
+    housekeeper: Yup.string().required('Assign to is required'),
+    task: Yup.string(),
   });
 
-  const handleMaintenanceSubmit = (values) => {
+  const handleMaintenanceSubmit = async(values) => {
+    try{
+    const response = await apiService.postData("housekeeping/taskassign",values)
+    console.log(response)
+    toast.success("Maintenance schedule Successfully")
     console.log('Maintenance scheduled:', values);
     closeModal();
+    }
+    catch(err){
+      console.log(err)
+    }
   };
 
   return (
@@ -224,11 +265,12 @@ const RoomInventory = () => {
             <h2 className="text-2xl font-bold mb-4">Schedule Maintenance</h2>
             <Formik
               initialValues={{
-                maintenanceType: '',
+                maintenance: '',
                 priority: '',
                 deadline: '',
-                assignTo: '',
-                additionalServices: [],
+                housekeeper: '',
+                task: '',
+                room: selectedRoom ? selectedRoom._id : '',
               }}
               validationSchema={validationSchema}
               onSubmit={handleMaintenanceSubmit}
@@ -237,23 +279,24 @@ const RoomInventory = () => {
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   <div>
                     <label
-                      htmlFor="maintenanceType"
+                      htmlFor="maintenance"
                       className="block text-sm font-medium text-gray-700"
                     >
                       Maintenance Type
                     </label>
                     <Field
                       as="select"
-                      name="maintenanceType"
+                      name="maintenance"
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
                     >
                       <option value="">Select type</option>
-                      <option value="plumbing">Plumbing</option>
-                      <option value="electricity">Electricity</option>
-                      <option value="cleaning">Cleaning</option>
+                      {maintenanceTypes.map((type, index) => (
+  <option key={index} value={type._id}>{type.type}</option>
+))}
+
                     </Field>
                     <ErrorMessage
-                      name="maintenanceType"
+                      name="maintenance"
                       component="div"
                       className="text-red-600 text-sm mt-1"
                     />
@@ -301,32 +344,39 @@ const RoomInventory = () => {
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div>
+                <div>
                     <label
-                      htmlFor="assignTo"
+                      htmlFor="housekeeper"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Assign To
+                      Assign Housekeeper
                     </label>
                     <Field
-                      name="assignTo"
+                      as="select"
+                      name="housekeeper"
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
-                    />
+                    >
+                      <option value="">Assign Housekeeper</option>
+                      {user.map((type, index) => (
+  <option value={type._id}>{type.email}</option>
+))}
+
+                    </Field>
                     <ErrorMessage
-                      name="assignTo"
+                      name="housekeeper"
                       component="div"
                       className="text-red-600 text-sm mt-1"
                     />
                   </div>
                   <div>
                     <label
-                      htmlFor="additionalServices"
+                      htmlFor="task"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Additional Services
+                      Additional Notes
                     </label>
                     <Field
-                      name="additionalServices"
+                      name="task"
                       as="textarea"
                       rows="3"
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"

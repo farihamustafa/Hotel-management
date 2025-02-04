@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Select from 'react-select';
 import toast, { Toaster } from 'react-hot-toast';
+import { startOfDay } from 'date-fns';
 import { useParams } from 'react-router-dom';
 import { apiService } from '../services/apiservice';
 import { BiCalendarStar } from 'react-icons/bi';
@@ -108,8 +109,12 @@ const NewBooking = () => {
 
   // Validation schema
   const validationSchema = Yup.object({
-    valid_from: Yup.string().required('Valid From date is required'),
-    valid_to: Yup.string().required('Valid To date is required'),
+    valid_from: Yup.date()
+    .required('Check-in date is required')
+    .min(startOfDay(new Date()), 'Check-in date must be today or in the future'),
+    valid_to: Yup.date()
+    .min(Yup.ref('valid_from'), 'Check-out date must be later than check-in date')
+    .required('Check-out date is required'),
     additionalServices: Yup.array().min(1, 'Please select at least one service').required(),
     days: Yup.number().min(1, 'Minimum 1 day').required('Number of days is required'),
     totalBill: Yup.number().required('Bill is required'),

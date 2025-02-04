@@ -106,6 +106,15 @@ const SideNavigation = () => {
               </li>
               <li>
                 <Link
+                  to="/updatebooking"
+                  className={`flex items-center p-1 rounded-lg transition-all ${isActive('/updatebooking') ? 'bg-primary text-white' : 'hover:bg-primary hover:text-white'}`}
+                >
+                  <FaCalendarCheck className="text-xl mr-4" />
+                  <span className="text-md">Booking History</span>
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/roommanagement/createroom"
                   className={`flex items-center p-1 rounded-lg transition-all ${isActive('/roommanagement/createroom') ? 'bg-primary text-white' : 'hover:bg-primary hover:text-white'}`}
                 >

@@ -21,7 +21,7 @@ const serviceValidationSchema = Yup.object().shape({
 });
 
 const maintenanceValidationSchema = Yup.object().shape({
-  maintenanceType: Yup.string().required("Maintenance type is required"),
+  type: Yup.string().required("Maintenance type is required"),
 });
 
 const allIcons = Object.keys(FaIcons).map((iconName) => ({
@@ -39,6 +39,7 @@ function AdditionalService() {
   useEffect(() => {
     fetchFacilityList();
     fetchasList();
+    maintenanceList();
   }, []);
 
   const fetchFacilityList = async () => {
@@ -68,12 +69,21 @@ function AdditionalService() {
 
   const [services, setServices] = useState([]);
 
-  const [maintenanceTypes, setMaintenanceTypes] = useState([
-    { maintenanceType: "Electrical" },
-    { maintenanceType: "Plumbing" },
-    { maintenanceType: "HVAC" },
-    { maintenanceType: "Carpentry" },
-  ]);
+  const [maintenanceTypes, setMaintenanceTypes] = useState([]);
+
+
+  const maintenanceList = async () => {
+    try {
+      const response = await apiService.getData("housekeeping/maintenancelist");
+      console.log(response.data)
+      setMaintenanceTypes(response.data)
+
+
+    } catch (error) {
+      console.error("Error fetching Additional Service list:", error);
+
+    }
+  };
 
   // Pagination State
   const [currentPageFacility, setCurrentPageFacility] = useState(0);
@@ -279,21 +289,30 @@ function AdditionalService() {
       <div className="p-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-xl font-semibold text-gray-700 mb-4">Add New Maintenance Type</h2>
         <Formik
-          initialValues={{ maintenanceType: "" }}
+          initialValues={{ type: "" }}
           validationSchema={maintenanceValidationSchema}
-          onSubmit={(values, { resetForm }) => {
-            setMaintenanceTypes([...maintenanceTypes, values]);
-            resetForm();
+          onSubmit={async (values, { resetForm }) => {
+            try {
+              console.log("Sending data:", { type: values.type }); // Debugging
+              const response = await apiService.postData("housekeeping/maintenancecreate", { type: values.type });
+              toast.success(response.msg);
+              setMaintenanceTypes([...maintenanceTypes, { type: values.type }]);
+              resetForm();
+            } catch (error) {
+              console.error("Error response:", error);
+              toast.error(error?.response?.data?.msg || "Something went wrong");
+            }
           }}
+          
         >
           <Form className="space-y-4">
             <Field
               type="text"
-              name="maintenanceType"
+              name="type"
               placeholder="Maintenance Type"
               className="w-full p-2 border rounded"
             />
-            <ErrorMessage name="maintenanceType" component="div" className="text-red-500 text-sm" />
+            <ErrorMessage name="type" component="div" className="text-red-500 text-sm" />
             <button type="submit" className="w-100 px-2 text-center bg-primary text-white py-2 rounded">
               Add Maintenance Type
             </button>
@@ -311,7 +330,7 @@ function AdditionalService() {
             <tbody>
               {maintenanceData.map((maintenance, index) => (
                 <tr key={index}>
-                  <td className="border px-4 py-2">{maintenance.maintenanceType}</td>
+                  <td className="border px-4 py-2">{maintenance.type}</td>
                 </tr>
               ))}
             </tbody>
