@@ -182,9 +182,6 @@ const Navbar = () => {
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                   <button onClick={handleProfileClick}>Profile</button>
                 </li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  <Link to="/settings">Settings</Link>
-                </li>
                 <li onClick={handleLogoutClick} className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                   <button >Logout</button> {/* Logout with confirmation */}
                 </li>
