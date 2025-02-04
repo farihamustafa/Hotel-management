@@ -2,7 +2,6 @@ import React, { createContext, useContext, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import SideNavigation from '../components/Sidebar';
 import { jwtDecode } from 'jwt-decode';
-import { UseAPiContext } from '../App';
 import { apiService } from '../services/apiservice';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -14,7 +13,6 @@ export function useAuthContext()  {
 };
 
 function AuthLayout({ children }) {
-  const {setuser} = UseAPiContext();
   const [authAllow , setAuthAllow] = React.useState(false);
   const token = localStorage.getItem('token');
   
@@ -62,7 +60,7 @@ function AuthLayout({ children }) {
   }, [navigate]);
 
   useEffect(()=>{
-    if(!user || !user.id || !token || user.rolename != "SuperAdmin"){ 
+    if(!user || !user.id || !token || user.rolename == "Guest"){ 
       window.location.href = '/login';
       setTimeout(() => {
         window.location.reload();

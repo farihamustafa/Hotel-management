@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaBell, FaUser } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast'; // Import react-hot-toast
-import { UseAPiContext } from '../App';
 
 const Breadcrumb = () => {
   const location = useLocation();

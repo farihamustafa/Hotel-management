@@ -7,7 +7,6 @@ import { apiService } from '../services/apiservice';
 import ReactPaginate from 'react-paginate';
 import { MdToggleOff, MdToggleOn } from 'react-icons/md';
 import toast from 'react-hot-toast';
-import { UseAPiContext } from '../App';
 import { TbBrandBooking } from 'react-icons/tb';
 import { IoCreate } from 'react-icons/io5';
 
@@ -21,7 +20,6 @@ const RoomBooking = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const roomsPerPage = 10;
-  const {setRoom} = UseAPiContext()
   const [loading, setLoading] = useState(true);
 
 

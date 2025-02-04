@@ -4,7 +4,6 @@ import toast, { Toaster } from "react-hot-toast";
 import * as Yup from "yup";
 import { apiService } from "../services/apiservice";
 import { useNavigate } from "react-router-dom";
-import { UseAPiContext } from "../App";
 import { jwtDecode } from "jwt-decode";
 
 const LoginPage = () => {

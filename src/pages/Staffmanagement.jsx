@@ -3,6 +3,7 @@ import { FaTrash, FaEdit, FaEnvelope, FaInfoCircle } from 'react-icons/fa';
 import { MdToggleOff, MdToggleOn } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/apiservice';
+import ProtectedRoute from '../components/PrivateRoute';
 
 function Staffmanagement() {
   const navigate = useNavigate();
@@ -76,6 +77,7 @@ function Staffmanagement() {
   };
 
   const renderStaffList = (staffList) => {
+   
     return staffList.map((staff,index) => (
       <tr key={staff.id} className="border-b hover:bg-gray-100 transition">
         <td className="px-6 py-4">{index+1}</td>
