@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaTachometerAlt, FaUsers, FaHotel, FaDoorOpen, FaBed, FaCalendarCheck, FaPlusSquare, FaBroom,FaTasks ,FaCog    } from 'react-icons/fa';
+import { FaTachometerAlt, FaUsers, FaHotel, FaDoorOpen, FaBed, FaCalendarCheck, FaPlusSquare, FaBroom, FaTasks, FaCog } from 'react-icons/fa';
 
 const SideNavigation = () => {
   const [isRoomDropdownOpen, setRoomDropdownOpen] = useState(false);
@@ -18,7 +18,12 @@ const SideNavigation = () => {
   };
 
   // Helper function to check if the link is active
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => {
+    if (path === '/') {
+      return location.pathname === path;
+    }
+    return location.pathname.startsWith(path);
+  };
 
   return (
     <nav className="min-h-screen w-64 p-4 shadow-lg bg-white text-secondary">
@@ -84,7 +89,7 @@ const SideNavigation = () => {
               <li>
                 <Link
                   to="/roommanagement/roominventory"
-                  className={`flex items-center p-1 rounded-lg transition-all ${isActive('/roommanagement/roominventory') ? 'bg-primary text-white' : 'hover:bg-primary hover:text-white'}`}
+                  className={`flex items-center p-1 rounded-lg transition-all ${isActive('/roommanagement') ? 'bg-primary text-white' : 'hover:bg-primary hover:text-white'}`}
                 >
                   <FaBed className="text-xl mr-4" />
                   <span className="text-md">Room Inventory</span>
@@ -93,7 +98,7 @@ const SideNavigation = () => {
               <li>
                 <Link
                   to="/roommanagement/roombooking"
-                  className={`flex items-center p-1 rounded-lg transition-all ${isActive('/roombooking') ? 'bg-primary text-white' : 'hover:bg-primary hover:text-white'}`}
+                  className={`flex items-center p-1 rounded-lg transition-all ${isActive('/roommanagement/roombooking') ? 'bg-primary text-white' : 'hover:bg-primary hover:text-white'}`}
                 >
                   <FaCalendarCheck className="text-xl mr-4" />
                   <span className="text-md">Room Booking</span>
@@ -102,7 +107,7 @@ const SideNavigation = () => {
               <li>
                 <Link
                   to="/roommanagement/createroom"
-                  className={`flex items-center p-1 rounded-lg transition-all ${isActive('/roombooking') ? 'bg-primary text-white' : 'hover:bg-primary hover:text-white'}`}
+                  className={`flex items-center p-1 rounded-lg transition-all ${isActive('/roommanagement/createroom') ? 'bg-primary text-white' : 'hover:bg-primary hover:text-white'}`}
                 >
                   <FaPlusSquare className="text-xl mr-4" />
                   <span className="text-md">Create Room</span>
@@ -129,22 +134,24 @@ const SideNavigation = () => {
               <li>
                 <Link
                   to="/housekeeping/tasks"
-                  className={`flex items-center p-1 rounded-lg transition-all ${isActive('/housekeeping/cleaning') ? 'bg-primary text-white' : 'hover:bg-primary hover:text-white'}`}
+                  className={`flex items-center p-1 rounded-lg transition-all ${isActive('/housekeeping/tasks') ? 'bg-primary text-white' : 'hover:bg-primary hover:text-white'}`}
                 >
-                  <FaTasks   className="text-xl mr-4" />
+                  <FaTasks className="text-xl mr-4" />
                   <span className="text-md">Tasks</span>
                 </Link>
-             </li>
+              </li>
             </ul>
           )}
         </li>
+
+        {/* Additional Services */}
         <li>
           <Link
             to="/additionalservices"
-            className={`flex items-center p-2 rounded-lg transition-all ${isActive('/guestmanagement') ? 'bg-primary text-white' : 'hover:bg-primary hover:shadow-md hover:text-white'}`}
+            className={`flex items-center p-2 rounded-lg transition-all ${isActive('/additionalservices') ? 'bg-primary text-white' : 'hover:bg-primary hover:shadow-md hover:text-white'}`}
           >
-            <FaCog  className="text-xl mr-4" />
-            <span className="text-lg font-semibold">Additional services</span>
+            <FaCog className="text-xl mr-4" />
+            <span className="text-lg font-semibold">Additional Services</span>
           </Link>
         </li>
       </ul>

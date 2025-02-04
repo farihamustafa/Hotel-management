@@ -13,15 +13,35 @@ const NewBooking = () => {
   const [roomPrice, setRoomPrice] = useState(0); // Store the room price in state
   const [bill, setBill] = useState(0); // Store the total bill in state
   const { id } = useParams();
+  const [newuser, setNewUser] = useState([]); // New user options
+  const [loading, setLoading] = useState(true); // Loading state
 
   // Redirect if the id is undefined
   if (id === undefined) {
     window.location.href = '/';
   }
 
+  // Fetch new users
+  useEffect(() => {
+    const fetchNewUser = async () => {
+      try {
+        const response = await apiService.postData('auth/list', { role_name: 'Guest' });
+        console.log(response);
+        setNewUser(response.data);
+      } catch (error) {
+        console.error('Error fetching new field options:', error);
+        toast.error('Failed to load new field options.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNewUser();
+  }, []);
+
   // Fetch the booking data based on room id
   useEffect(() => {
-    const bookingdata = async () => {
+    const bookingData = async () => {
       try {
         const response = await apiService.postData('booking/listbyroom', { room: id });
         if (response?.Bookingdata) {
@@ -33,12 +53,12 @@ const NewBooking = () => {
       }
     };
 
-    bookingdata();
+    bookingData();
   }, [id]);
 
   // Fetch room data and set roomPrice and initial bill
   useEffect(() => {
-    const roomdata = async () => {
+    const roomData = async () => {
       try {
         const response = await apiService.getData(`room/recordbyid/${id}`);
         if (response?.roomdata?.price) {
@@ -50,7 +70,7 @@ const NewBooking = () => {
         toast.error('Failed to fetch room data.');
       }
     };
-    roomdata();
+    roomData();
   }, [id]);
 
   // Fetch the additional services data
@@ -83,6 +103,7 @@ const NewBooking = () => {
     additionalServices: [],
     days: '',
     totalBill: bill,
+    user: ''
   };
 
   // Validation schema
@@ -92,6 +113,7 @@ const NewBooking = () => {
     additionalServices: Yup.array().min(1, 'Please select at least one service').required(),
     days: Yup.number().min(1, 'Minimum 1 day').required('Number of days is required'),
     totalBill: Yup.number().required('Bill is required'),
+    user: Yup.string().required('User is required') // Validate user selection
   });
 
   // Handle form submission
@@ -103,14 +125,17 @@ const NewBooking = () => {
       valid_from: values.valid_from,
       valid_to: values.valid_to,
       totalBill: values.bill,
-      service: formattedServices, // Properly formatted service IDs
+      service: formattedServices,
+      guest: values.user
     };
-    console.log(requestBody.service);
+
+    console.log('Booking Request:', requestBody);
 
     try {
-      const response = await apiService.postData('booking/create', requestBody);
+      const response = await apiService.postData('booking/createbydashboard', requestBody);
       console.log('Booking Data:', response);
       toast.success('Booking saved successfully!');
+      window.location.href = `/newbooking/${id}`
     } catch (error) {
       console.error('Error creating booking:', error);
       toast.error('An error occurred while saving the booking.');
@@ -150,86 +175,117 @@ const NewBooking = () => {
         New <span className="border-b-4 border-secondary-800">Booking</span>
       </h1>
 
-      <Formik
-        initialValues={initialValues} 
-        validationSchema={validationSchema} 
-        onSubmit={handleSubmit}
-      >
-        {({ setFieldValue, values, errors, touched }) => (
-          <Form className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div>
-              <label className="block text-sm font-medium mb-4">Valid From:</label>
-              <Field 
-                type="date" 
-                name="valid_from" 
-                className="w-full border rounded-md p-2" 
-                onChange={e => {
-                  const validFrom = e.target.value;
-                  setFieldValue('valid_from', validFrom);
-                  const days = calculateDays(validFrom, values.valid_to);
-                  setFieldValue('days', days);
-                  const totalBill = roomPrice * days + values.additionalServices.reduce((acc, service) => acc + service.price, 0);
-                  setFieldValue('bill', totalBill);
-                  setBill(totalBill);
-                }} 
-              />
-              <ErrorMessage name="valid_from" component="div" className="text-red-600 text-sm" />
-            </div>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ setFieldValue, values, errors, touched }) => (
+            <Form className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Valid From Field */}
+              <div>
+                <label className="block text-sm font-medium mb-4">Valid From:</label>
+                <Field
+                  type="date"
+                  name="valid_from"
+                  className="w-full border rounded-md p-2"
+                  onChange={e => {
+                    const validFrom = e.target.value;
+                    setFieldValue('valid_from', validFrom);
+                    const days = calculateDays(validFrom, values.valid_to);
+                    setFieldValue('days', days);
+                    const totalBill = roomPrice * days + values.additionalServices.reduce((acc, service) => acc + service.price, 0);
+                    setFieldValue('bill', totalBill);
+                    setBill(totalBill);
+                  }}
+                />
+                <ErrorMessage name="valid_from" component="div" className="text-red-600 text-sm" />
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-4">Valid To:</label>
-              <Field 
-                type="date" 
-                name="valid_to" 
-                className="w-full border rounded-md p-2" 
-                onChange={e => {
-                  const validTo = e.target.value;
-                  setFieldValue('valid_to', validTo);
-                  const days = calculateDays(values.valid_from, validTo);
-                  setFieldValue('days', days);
-                  const totalBill = roomPrice * days + values.additionalServices.reduce((acc, service) => acc + service.price, 0);
-                  setFieldValue('bill', totalBill);
-                  setBill(totalBill);
-                }} 
-              />
-              <ErrorMessage name="valid_to" component="div" className="text-red-600 text-sm" />
-            </div>
+              {/* Valid To Field */}
+              <div>
+                <label className="block text-sm font-medium mb-4">Valid To:</label>
+                <Field
+                  type="date"
+                  name="valid_to"
+                  className="w-full border rounded-md p-2"
+                  onChange={e => {
+                    const validTo = e.target.value;
+                    setFieldValue('valid_to', validTo);
+                    const days = calculateDays(values.valid_from, validTo);
+                    setFieldValue('days', days);
+                    const totalBill = roomPrice * days + values.additionalServices.reduce((acc, service) => acc + service.price, 0);
+                    setFieldValue('bill', totalBill);
+                    setBill(totalBill);
+                  }}
+                />
+                <ErrorMessage name="valid_to" component="div" className="text-red-600 text-sm" />
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-4">Additional Services</label>
-              <Select
-                isMulti
-                name="additionalServices"
-                options={additionalServicesOptions}
-                className="w-full"
-                onChange={selectedOptions => handleServiceChange(selectedOptions, setFieldValue, values)}
-              />
-              {errors.additionalServices && touched.additionalServices && (
-                <div className="text-red-600 text-sm">{errors.additionalServices}</div>
-              )}
-            </div>
+              {/* User (Guest) Selection */}
+              <div>
+                <label className="block text-sm font-medium mb-4">Guest</label>
+                <select
+                  name="user"
+                  className="w-full border rounded-md p-2"
+                  onChange={e => setFieldValue('user', e.target.value)}
+                >
+                  <option value="" disabled>Select an option</option>
+                  {newuser.map(option => (
+                    <option key={option._id} value={option._id}>
+                      {option.email}
+                    </option>
+                  ))}
+                </select>
+                <ErrorMessage name="user" component="div" className="text-red-600 text-sm" />
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-4">Days</label>
-              <Field type="number" name="days" className="w-full border rounded-md p-2" readOnly />
-              <ErrorMessage name="days" component="div" className="text-red-600 text-sm" />
-            </div>
+              {/* Additional Services */}
+              <div>
+                <label className="block text-sm font-medium mb-4">Additional Services</label>
+                <Select
+                  isMulti
+                  name="additionalServices"
+                  options={additionalServicesOptions}
+                  className="w-full"
+                  onChange={selectedOptions => handleServiceChange(selectedOptions, setFieldValue, values)}
+                />
+                {errors.additionalServices && touched.additionalServices && (
+                  <div className="text-red-600 text-sm">{errors.additionalServices}</div>
+                )}
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-4">Bill</label>
-              <Field type="number" name="totalBill" value={bill} className="w-full border rounded-md p-2" readOnly />
-              <ErrorMessage name="totalBill" component="div" className="text-red-600 text-sm" />
-            </div><br />
+              {/* Days */}
+              <div>
+                <label className="block text-sm font-medium mb-4">Days</label>
+                <Field type="number" name="days" className="w-full border rounded-md p-2" readOnly />
+                <ErrorMessage name="days" component="div" className="text-red-600 text-sm" />
+              </div>
 
-            <button type="submit" className="px-2 py-2 rounded-xl bg-secondary text-white font-medium hover:bg-hoverbutton transition shadow-lg mt-4">
-              Create Booking
-            </button>
-          </Form>
-        )}
-      </Formik>
+              {/* Bill */}
+              <div>
+                <label className="block text-sm font-medium mb-4">Bill</label>
+                <Field type="number" name="totalBill" value={bill} className="w-full border rounded-md p-2" readOnly />
+                <ErrorMessage name="totalBill" component="div" className="text-red-600 text-sm" />
+              </div>
 
+              <br />
+              <button type="submit" className="px-2 py-2 rounded-xl bg-secondary text-white font-medium hover:bg-hoverbutton transition shadow-lg mt-4">
+                Create Booking
+              </button>
+            </Form>
+          )}
+        </Formik>
+      )}
+
+      {/* Bookings Table */}
       <div className="mt-8">
-        <h2 className="text-lg font-semibold mb-4 flex">Booked Dates <BiCalendarStar className='mt-1 mx-2'/></h2>
+        <h2 className="text-lg font-semibold mb-4 flex">
+          Booked Dates <BiCalendarStar className="mt-1 mx-2" />
+        </h2>
         <table className="w-full border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-200">
@@ -241,7 +297,7 @@ const NewBooking = () => {
           </thead>
           <tbody>
             {records.length > 0 ? (
-              records.map((record) => (
+              records.map(record => (
                 <tr key={record.id} className="text-center">
                   <td className="border border-gray-300 px-4 py-2">{record.booking_code}</td>
                   <td className="border border-gray-300 px-4 py-2">{record.guest?.username || 'N/A'}</td>
