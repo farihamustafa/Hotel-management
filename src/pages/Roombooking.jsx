@@ -126,7 +126,7 @@ displayedRooms.map((room) => (
         {room.avaibility}
       </span>
     </td>
-    <td className="px-4 py-2">{room.price} pkr</td>
+    <td className="px-4 py-2">${room.price}</td>
     <td className="px-4 py-2 flex justify-center gap-4">
        <button
                   onClick={() => navigate(`/newbooking/${room._id}`)}
