@@ -39,8 +39,9 @@ const [loading, setLoading] = useState(true);
 const [error, setError] = useState(null);
 const [user, setuser] = useState(false);
 const [room, setRoom] = useState(false);
+const [taskdata, settask] = useState(false);
 console.log("data : "+user)
-  return (<context.Provider value={{user,setuser,room, setRoom}}>
+  return (<context.Provider value={{user,setuser,room, setRoom,taskdata, settask}}>
   <BrowserRouter>
   <Routes>
   <Route path='/' element={<Authlayout><Home/></Authlayout>}  />

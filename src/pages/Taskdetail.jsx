@@ -1,18 +1,9 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 function TaskDetails() {
-  const task = {
-    assignedBy: "John Doe",
-    roomCode: "R103",
-    taskName: "Clean the room",
-    priority: "Low",
-    status: "Pending",
-    deadline: "2025-01-20",
-    guest: "Jane Smith",
-    instructions: "Please focus on the bathroom area and change the linens.",
-  };
-
- 
+  const location = useLocation();
+  const task = location.state?.task || {}; // Navigate se data milega, warna empty object
 
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto bg-gray-50 min-h-screen">
@@ -28,57 +19,46 @@ function TaskDetails() {
           <tbody>
             <tr className="hover:bg-gray-100">
               <td className="py-3 px-4 border border-gray-300">Assigned By</td>
-              <td className="py-3 px-4 border border-gray-300">{task.assignedBy}</td>
+              <td className="py-3 px-4 border border-gray-300">{task.housekeeper.username || "N/A"}</td>
             </tr>
             <tr className="hover:bg-gray-100">
               <td className="py-3 px-4 border border-gray-300">Room Code</td>
-              <td className="py-3 px-4 border border-gray-300">{task.roomCode}</td>
+              <td className="py-3 px-4 border border-gray-300">{task.room.roomCode || "N/A"}</td>
             </tr>
             <tr className="hover:bg-gray-100">
-              <td className="py-3 px-4 border border-gray-300">Task Name</td>
-              <td className="py-3 px-4 border border-gray-300">{task.taskName}</td>
+              <td className="py-3 px-4 border border-gray-300">Task</td>
+              <td className="py-3 px-4 border border-gray-300">{task.task || "N/A"}</td>
             </tr>
             <tr className="hover:bg-gray-100">
               <td className="py-3 px-4 border border-gray-300">Priority</td>
               <td className="py-3 px-4 border border-gray-300">
                 <span
                   className={`px-2 py-1 text-white rounded-full ${
-                    task.priority === 'High'
+                    task.priority === 'high'
                       ? 'bg-red-500'
-                      : task.priority === 'Medium'
+                      : task.priority === 'medium'
                       ? 'bg-yellow-500'
                       : 'bg-green-500'
                   }`}
                 >
-                  {task.priority}
+                  {task.priority || "N/A"}
                 </span>
               </td>
             </tr>
             <tr className="hover:bg-gray-100">
               <td className="py-3 px-4 border border-gray-300">Status</td>
-              <td className="py-3 px-4 border border-gray-300">{task.status}</td>
+              <td className="py-3 px-4 border border-gray-300">{task.status || "N/A"}</td>
             </tr>
             <tr className="hover:bg-gray-100">
               <td className="py-3 px-4 border border-gray-300">Deadline</td>
-              <td className="py-3 px-4 border border-gray-300">{task.deadline}</td>
-            </tr>
-            <tr className="hover:bg-gray-100">
-              <td className="py-3 px-4 border border-gray-300">Guest</td>
-              <td className="py-3 px-4 border border-gray-300">{task.guest}</td>
-            </tr>
-            <tr className="hover:bg-gray-100">
-              <td className="py-3 px-4 border border-gray-300">Additional Instructions</td>
-              <td className="py-3 px-4 border border-gray-300">{task.instructions}</td>
+              <td className="py-3 px-4 border border-gray-300">{task.deadline || "N/A"}</td>
             </tr>
           </tbody>
         </table>
       </div>
       <div className="mt-8 text-right">
-        <button
-        
-          className="bg-secondary text-white py-3 px-6 rounded-lg shadow-md hover:hoverbutton transition-all"
-        >
-          Mark as Done
+        <button className="bg-secondary text-white py-3 px-6 rounded-lg shadow-md hover:hoverbutton transition-all">
+          Mark as Read
         </button>
       </div>
     </div>

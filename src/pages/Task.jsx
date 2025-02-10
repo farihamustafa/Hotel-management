@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import 'flowbite';
 import { jwtDecode } from 'jwt-decode';
 import { apiService } from '../services/apiservice';
+import { UseAPiContext } from '../App';
 
 function Task() {
   const [tasksData, setTasksData] = useState([]);
+  const {settask} = UseAPiContext();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,9 +15,10 @@ function Task() {
       try {
         const token = localStorage.getItem("token");
         const user = jwtDecode(token);
+        console.log(token)
         console.log(user.id);
         const response = await apiService.getData(`housekeeping/tasklist/${user.id}`);
-
+        console.log(response)
         // Ensure response.data is an array
         setTasksData(Array.isArray(response.data) ? response.data : []);
         console.log(response.data);
@@ -72,15 +75,25 @@ function Task() {
                 <tr key={task._id} className="border-b hover:bg-gray-100 transition duration-200">
                   <td className="px-6 py-2">{task.room?.roomCode || 'N/A'}</td>
                   <td className="px-6 py-2">{task.task}</td>
-                  <td className="px-6 py-2">{task.priority}</td>
-                  <td className="px-6 py-2 cursor-pointer" onClick={() => openStatusModal(task)}>
-                    <span className={`px-3 py-1 rounded-md font-medium ${task.read === "true" ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                      {task.read === "true" ? "Done" : "Pending"}
+                  <td className="px-6 py-2">
+                  <span
+                  className={`px-2 py-1 text-white rounded-full ${
+                    task.priority === 'high'
+                      ? 'bg-red-500'
+                      : task.priority === 'medium'
+                      ? 'bg-yellow-500'
+                      : 'bg-green-500'
+                  }`}
+                >{task.priority}</span>
+                  </td>
+                  <td className="px-6 py-2">
+                    <span className={`px-3 py-1 rounded-md font-medium ${task.status === "success" ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                      {task.status }
                     </span>
                   </td>
                   <td className="px-6 py-2">{formatDate(task.deadline)}</td>
                   <td className="px-6 py-2 text-center flex justify-center gap-4">
-                    <button className="text-white bg-green-500 hover:bg-green-600 px-6 py-2 rounded-md flex items-center gap-2" onClick={() => handleDetailsClick(task)}>
+                    <button className="text-white bg-green-500 hover:bg-green-600 px-6 py-2 rounded-md flex items-center gap-2" onClick={() => {settask(task);handleDetailsClick(task)}}>
                       Details
                     </button>
                   </td>
